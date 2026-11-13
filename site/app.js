@@ -8,7 +8,7 @@
 
   const marks = store.get("radar.marks", {}); // url -> "applied" | "skip" | "save"
   const st = Object.assign(
-    { win: 1, kind: "all", fields: [], places: [], term: "", q: "", noCanada: true, hideDone: true },
+    { win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true },
     store.get("radar.filters", {})
   );
   let data = { meta: null, jobs: [] };
@@ -45,7 +45,6 @@
     if (st.kind !== "all" && j.kind !== st.kind) return false;
     if (st.fields.length && !st.fields.includes(j.field)) return false;
     if (st.places.length && !st.places.some((p) => j.places.includes(p))) return false;
-    if (st.noCanada && j.places.includes("Canada")) return false;
     if (st.term && !j.terms.includes(st.term)) return false;
     if (st.hideDone && (marks[j.url] === "applied" || marks[j.url] === "skip")) return false;
     if (st.q) {
@@ -103,7 +102,11 @@
     const gen = new Date(m.generated * 1000);
     $("status").textContent = `${m.count_24h} new in the last 24 h · updated ${ago(m.generated)} (${gen.toLocaleString()})`;
     $("health").textContent = "Source health: " + Object.entries(m.sources)
-      .map(([k, v]) => `${k} ${v.ok ? "ok, " + v.rows + " live rows" : "FAILED"}`).join(" · ");
+      .map(([k, v]) => {
+        if (!v.ok) return `${k} FAILED`;
+        if (v.boards !== undefined) return `${k} ${v.boards - v.failed}/${v.boards} boards, ${v.rows} US intern/co-op jobs`;
+        return `${k} ok, ${v.rows} live US rows`;
+      }).join(" · ") + (m.polled ? ` · boards polled ${ago(m.polled)}` : "");
 
     const fields = [...new Set(d.jobs.map((j) => j.field))].sort();
     $("fields").innerHTML = fields.map((f) => `<button data-v="${esc(f)}">${esc(f)}</button>`).join("");
@@ -118,8 +121,6 @@
     $("q").value = st.q;
     $("q").oninput = (e) => { st.q = e.target.value.trim(); save(); render(); };
     $("term").onchange = (e) => { st.term = e.target.value; save(); render(); };
-    $("noCanada").checked = st.noCanada;
-    $("noCanada").onchange = (e) => { st.noCanada = e.target.checked; save(); render(); };
     $("hideDone").checked = st.hideDone;
     $("hideDone").onchange = (e) => { st.hideDone = e.target.checked; save(); render(); };
     render();

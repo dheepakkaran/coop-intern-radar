@@ -4,6 +4,10 @@ on:
   schedule:
     - cron: "7,37 * * * *"   # every 30 min (GitHub may start it a few minutes late)
   workflow_dispatch:
+    inputs:
+      poll:
+        description: "Poll company boards: auto (every ~3 h), yes, no"
+        default: auto
   push:
     branches: [main]
 
@@ -19,7 +23,7 @@ concurrency:
 jobs:
   update:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
     environment:
       name: github-pages
       url: ${{ steps.deploy.outputs.page_url }}
@@ -43,7 +47,7 @@ jobs:
           fi
 
       - name: Build
-        run: python -m radar.build --state state/seen.json.gz --out site/data
+        run: python -m radar.build --state state/seen.json.gz --out site/data --poll "${{ inputs.poll || 'auto' }}"
 
       - name: Save seen store (one orphan commit, force-pushed so the repo does not grow)
         run: |

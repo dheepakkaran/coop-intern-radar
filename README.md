@@ -2,21 +2,28 @@
 
 **Live page: https://dheepakkaran.github.io/coop-intern-radar/**
 
-One page that shows every co-op and intern job **first seen in the last 24 hours** (3 and 7 days too),
-refreshed every 30 minutes by GitHub Actions and served by GitHub Pages. $0 to run.
+One page that shows every **US** co-op and intern job **first seen in the last 24 hours** (3 and 7 days too),
+refreshed by GitHub Actions and served by GitHub Pages. $0 to run.
 
 ## How it works
 
 ```
-every 30 min (GitHub Actions)
-  SimplifyJobs + vanshb03 listings.json ──► merge same job across lists ──► seen store (data branch)
-                                                                         └─► site/data/jobs.json ──► GitHub Pages
+every 30 min   SimplifyJobs + vanshb03 listings.json ─┐
+every ~3 h     company job boards (public ATS APIs) ───┼─► US only ─► merge same job ─► seen store (data branch)
+               Greenhouse · Lever · Ashby ·            │                                └─► site/data/jobs.json ─► Pages
+               SmartRecruiters                         ┘
 ```
 
 - **Sources (phase 1):** the public `listings.json` feeds of
   [SimplifyJobs/Summer2027-Internships](https://github.com/SimplifyJobs/Summer2027-Internships) and
   [vanshb03/Summer2027-Internships](https://github.com/vanshb03/Summer2027-Internships).
   vanshb03 shortlinks are resolved to the real apply page once and cached.
+- **Company boards (phase 2):** every Greenhouse, Lever, Ashby and SmartRecruiters board those lists ever linked to
+  (about 1,200 companies that hire interns) is polled through its public job-board API, about every 3 hours,
+  a few requests at a time. Only co-op / intern titles are kept. This catches jobs before the lists add them,
+  and co-ops the lists skip. A board that returns 404 three times in a row is dropped.
+- **US only:** a job is kept if any of its places is in the US (state code or name, US city shorthand, or the
+  country the ATS reports) or if no place says where it is (e.g. just "Remote"). Canada and other countries are dropped.
 - **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).
@@ -36,14 +43,16 @@ python -m pytest -q
 Python 3.12, standard library only (pytest for tests).
 
 ## Roadmap
-1. ✅ Lists → merge → page (this)
-2. Poll company job boards directly (Greenhouse, Lever, Ashby, SmartRecruiters) for jobs the lists miss
+1. ✅ Lists → merge → page
+2. ✅ Company job boards: Greenhouse, Lever, Ashby, SmartRecruiters
 3. Workday and Oracle Cloud boards
 4. Alerts
 5. Bigger company list
 
 ## Credits
-Job data comes from the SimplifyJobs and vanshb03 community lists; all credit for the listings goes to them.
+Job data comes from the SimplifyJobs and vanshb03 community lists and from companies' public job boards; credit for
+the lists goes to their maintainers. Board API details follow the MIT-licensed
+[kalil0321/ats-scrapers](https://github.com/kalil0321/ats-scrapers).
 This project only links to the original postings.
 
 MIT licence (code only).
