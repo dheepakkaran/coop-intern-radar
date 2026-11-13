@@ -1,3 +1,4 @@
+import re
 import json
 import os
 
@@ -237,3 +238,111 @@ def test_vansh_shortlink_merges_with_board_by_url(tmp_path):
               poll="yes", poll_fn=lambda b: (list(board), {}), now=now)
     jobs = json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]
     assert len(jobs) == 1 and set(jobs[0]["sources"]) == {"vanshb03", "Greenhouse"}
+
+
+def test_discover_workday_and_oracle():
+    b = ats.discover([
+        ("NVIDIA", "https://nvidia.wd5.myworkdayjobs.com/en-US/NVIDIAExternalCareerSite/job/US-CA-Santa-Clara/Intern_JR1"),
+        ("Acme", "https://wd3.myworkdaysite.com/recruiting/acme/AcmeCareers/job/Boston/X_1"),
+        ("WTW", "https://eedu.fa.em3.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1003/job/202607277"),
+    ])
+    assert b["wd:nvidia.wd5.myworkdayjobs.com|nvidia|nvidiaexternalcareersite"]["token"] == \
+        "nvidia.wd5.myworkdayjobs.com|nvidia|NVIDIAExternalCareerSite"
+    assert "wd:wd3.myworkdaysite.com|acme|acmecareers" in b
+    assert b["oracle:eedu.fa.em3.oraclecloud.com|cx_1003"]["token"] == "eedu.fa.em3.oraclecloud.com|CX_1003"
+
+
+def test_workday_posted_text():
+    now = 2_000_000_000
+    assert ats.workday_posted("Posted Today", now) == now
+    assert ats.workday_posted("Posted Yesterday", now) == now - 36 * 3600
+    assert ats.workday_posted("Posted 3 Days Ago", now) == now - int(3.5 * 86400)
+    assert ats.workday_posted("Posted 30+ Days Ago", now) == now - 31 * 86400
+    assert ats.workday_posted(None, now) is None
+
+
+def test_workday_uses_job_type_facet(monkeypatch):
+    now = 2_000_000_000
+    calls = []
+    facets = [{"facetParameter": "jobFamilyGroup", "values": [{"descriptor": "Engineering", "id": "e"}]},
+              {"facetParameter": "locationMainGroup", "values": [
+                  {"facetParameter": "locationHierarchy1", "descriptor": "Locations",
+                   "values": [{"descriptor": "China", "id": "cn"}, {"descriptor": "United States of America", "id": "us"}]}]},
+              {"facetParameter": "workerSubType", "values": [
+                  {"descriptor": "Regular Employee", "id": "r"}, {"descriptor": "Intern (Fixed Term)", "id": "i"},
+                  {"descriptor": "New College Graduate", "id": "g"}]}]
+    posts = [{"title": "Hardware Engineer - Summer 2027", "externalPath": "/job/US-CA/HW_1",
+              "locationsText": "US, CA, Santa Clara", "postedOn": "Posted Today"},
+             {"title": "Software Intern", "externalPath": "/job/China/SW_2", "locationsText": "China, Shanghai",
+              "postedOn": "Posted Today"},
+             {"title": "ML Intern", "externalPath": "/job/x/ML_3", "locationsText": "3 Locations", "postedOn": None}]
+
+    def fake(url, body=None, **k):
+        calls.append(body)
+        return {"facets": facets, "total": 3} if body["limit"] == 1 else {"jobPostings": posts, "total": 3}
+    monkeypatch.setattr(ats, "get_json", fake)
+    jobs = [j for j in ats.fetch_workday("nvidia.wd5.myworkdayjobs.com|nvidia|Ext", "NVIDIA", now=now) if j]
+    assert calls[1]["appliedFacets"] == {"workerSubType": ["i"], "locationHierarchy1": ["us"]}
+    assert calls[1]["searchText"] == ""
+    # trusted facets: every returned job counts (the fake server ignores facets, real Workday filters China out)
+    assert [j["title"] for j in jobs] == ["Hardware Engineer - Summer 2027", "Software Intern", "ML Intern"]
+    assert jobs[0]["url"] == "https://nvidia.wd5.myworkdayjobs.com/Ext/job/US-CA/HW_1" and jobs[0]["posted"] == now
+
+
+def test_workday_falls_back_to_text_search(monkeypatch):
+    bodies = []
+
+    def fake(url, body=None, **k):
+        bodies.append(body)
+        if body["limit"] == 1:
+            return {"facets": [{"facetParameter": "timeType", "values": [{"descriptor": "Full time", "id": "f"}]}]}
+        return {"jobPostings": [{"title": "Account Specialist", "externalPath": "/job/a", "locationsText": "Chicago, Illinois"},
+                                {"title": "Risk Co-op", "externalPath": "/job/b", "locationsText": "Chicago, Illinois"}],
+                "total": 2}
+    monkeypatch.setattr(ats, "get_json", fake)
+    jobs = [j for j in ats.fetch_workday("x.wd1.myworkdayjobs.com|x|S", "X") if j]
+    assert [b["searchText"] for b in bodies[1:]] == ["intern", "co-op"]
+    assert [j["title"] for j in jobs] == ["Risk Co-op"]  # fuzzy text hits need an intern/co-op title
+
+
+def test_workday_board_without_us_is_skipped_and_no_facet_needs_us_place(monkeypatch):
+    fr = [{"facetParameter": "locationMainGroup", "values": [{"facetParameter": "locationCountry",
+          "descriptor": "Location Country", "values": [{"descriptor": "France", "id": "fr"}]}]}]
+    monkeypatch.setattr(ats, "get_json", lambda url, body=None, **k: {"facets": fr, "total": 0})
+    assert ats.fetch_workday("t.wd3.myworkdayjobs.com|t|C", "T") == []
+
+    def fake(url, body=None, **k):
+        if body["limit"] == 1:
+            return {"facets": []}
+        return {"jobPostings": [{"title": "Stage Intern", "externalPath": "/a", "locationsText": "Cannes"},
+                                {"title": "Data Intern", "externalPath": "/b", "locationsText": "Austin, TX"}], "total": 2}
+    monkeypatch.setattr(ats, "get_json", fake)
+    assert [j["title"] for j in ats.fetch_workday("t.wd3.myworkdayjobs.com|t|C", "T") if j] == ["Data Intern"]
+
+
+def test_oracle_stops_paging_past_window(monkeypatch):
+    now = 2_000_000_000
+    from datetime import datetime, timezone
+    day = lambda n: datetime.fromtimestamp(now - n * 86400, timezone.utc).strftime("%Y-%m-%d")
+    urls = []
+
+    def fake(url, **k):
+        urls.append(url)
+        kw = "intern" if "keyword=intern" in url else "co-op"
+        page = int(re.search(r"offset=(\d+)", url).group(1)) // ats.ORACLE_PAGE
+        reqs = [{"Id": f"{kw}{page}{i}", "Title": f"Data Intern {kw} {page}-{i}", "PostedDate": day(page * 6 + i // 10),
+                 "PrimaryLocation": "Austin, TX, United States", "PrimaryLocationCountry": "US"} for i in range(25)]
+        return {"items": [{"requisitionList": reqs}]}
+    monkeypatch.setattr(ats, "get_json", fake)
+    jobs = [j for j in ats.fetch_oracle("h.fa.oraclecloud.com|CX_1", "H", now=now) if j]
+    assert sum("keyword=intern" in u for u in urls) == 3  # pages 0-2; page 2 is 12+ days old -> stop
+    assert jobs[0]["url"] == "https://h.fa.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1/job/intern00"
+
+
+def test_foreign_codes_and_titles():
+    assert classify.loc_country("MX-BCN-MEXICALI-238 ~ Blvd Venustiano Carranza") == "X"
+    assert classify.loc_country("US-CA-SANTA-CLARA") == "US"
+    for t in ["Werkstudent Lean Management (m/w/d)", "STAGE - Ingénieur F/H", "Working Student (m/f/d)", "Year in Industry- Engineering"]:
+        assert classify.FOREIGN_TITLE.search(t), t
+    assert not classify.FOREIGN_TITLE.search("Software Engineering Intern - Summer 2027")
+    assert classify.kind("2027 Spring Co op Biologics Design", []) == "co-op"

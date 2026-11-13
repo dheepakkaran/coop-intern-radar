@@ -1,7 +1,10 @@
 """Tag a job: co-op or intern, field, place."""
 import re
 
-COOP = re.compile(r"\bco-?op\b|\bcoop\b|\bco-operative\b|\bcooperative education\b", re.I)
+COOP = re.compile(r"\bco[- ]?op\b|\bco-operative\b|\bcooperative education\b", re.I)
+# Non-US job titles that slip through: French/German internship words and gender tags.
+FOREIGN_TITLE = re.compile(r"\(?\b[mwfd]/[mwfd](/[mwfd])?\)?|\b(h/f|f/h)\b|werkstudent|praktikant|praktikum|stagiaire|"
+                           r"\bstage\b|alternan(ce|t)|\bbecario\b|\bpr[aá]cticas\b|year in industry", re.I)
 INTERN = re.compile(r"\bintern(ship)?s?\b|\bco-?op\b|\bapprentice(ship)?\b|\bsummer (analyst|associate)s?\b", re.I)
 
 # Off-season terms are where co-ops live.
@@ -67,6 +70,9 @@ US_STRICT = re.compile(r",\s*(" + "|".join(STATE_CODES) + r")\s*(?:,\s*(?:us|usa
 def loc_country(s: str) -> str | None:
     """'US', 'X' (outside the US) or None (can't tell, e.g. 'Remote')."""
     s = s.strip()
+    m = re.match(r"^([A-Z]{2})-[A-Z0-9]{2,3}-", s)  # Workday site codes like "MX-BCN-MEXICALI-238", "US-CA-..."
+    if m:
+        return "US" if m.group(1) == "US" else "X"
     if re.search(r"\bnew mexico\b", s, re.I):
         return "US"
     if CA_PROVINCE.search(s):

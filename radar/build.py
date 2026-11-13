@@ -100,7 +100,9 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     do_poll = poll == "yes" or (poll == "auto" and now - last.get("at", 0) >= POLL_EVERY)
     if do_poll and state["boards"]:
         got, ats_health = poll_fn(state["boards"])
-        last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries"} for j in got], "health": ats_health}
+        # Keep only jobs that can still be "new": undated ones (dated by first_seen) or dated inside the window.
+        keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
+        last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries"} for j in keep], "health": ats_health}
         state["ats"] = last
     else:
         first_poll = False

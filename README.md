@@ -10,18 +10,22 @@ refreshed by GitHub Actions and served by GitHub Pages. $0 to run.
 ```
 every 30 min   SimplifyJobs + vanshb03 listings.json ─┐
 every ~3 h     company job boards (public ATS APIs) ───┼─► US only ─► merge same job ─► seen store (data branch)
-               Greenhouse · Lever · Ashby ·            │                                └─► site/data/jobs.json ─► Pages
-               SmartRecruiters                         ┘
+               Greenhouse · Lever · Ashby · Workday ·  │                                └─► site/data/jobs.json ─► Pages
+               SmartRecruiters · Oracle Cloud          ┘
 ```
 
 - **Sources (phase 1):** the public `listings.json` feeds of
   [SimplifyJobs/Summer2027-Internships](https://github.com/SimplifyJobs/Summer2027-Internships) and
   [vanshb03/Summer2027-Internships](https://github.com/vanshb03/Summer2027-Internships).
   vanshb03 shortlinks are resolved to the real apply page once and cached.
-- **Company boards (phase 2):** every Greenhouse, Lever, Ashby and SmartRecruiters board those lists ever linked to
-  (about 1,200 companies that hire interns) is polled through its public job-board API, about every 3 hours,
+- **Company boards (phases 2–3):** every Greenhouse, Lever, Ashby, SmartRecruiters, Workday and Oracle Cloud board
+  those lists ever linked to (about 2,400 companies that hire interns) is polled through its public job-board API, about every 3 hours,
   a few requests at a time. Only co-op / intern titles are kept. This catches jobs before the lists add them,
   and co-ops the lists skip. A board that returns 404 three times in a row is dropped.
+  - **Workday:** the board's own filters do the work: its *Job Type* value for interns/co-ops (e.g. "Intern (Fixed Term)")
+    plus its *Country* value for the United States. Boards without those filters fall back to a text search for
+    "intern" / "co-op", and then the title and place must say intern/co-op and US. "Posted N Days Ago" is turned into a date.
+  - **Oracle Cloud:** keyword search sorted newest first; paging stops once results are older than 10 days.
 - **US only:** a job is kept if any of its places is in the US (state code or name, US city shorthand, or the
   country the ATS reports) or if no place says where it is (e.g. just "Remote"). Canada and other countries are dropped.
 - **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
@@ -45,7 +49,7 @@ Python 3.12, standard library only (pytest for tests).
 ## Roadmap
 1. ✅ Lists → merge → page
 2. ✅ Company job boards: Greenhouse, Lever, Ashby, SmartRecruiters
-3. Workday and Oracle Cloud boards
+3. ✅ Workday and Oracle Cloud boards
 4. Alerts
 5. Bigger company list
 
