@@ -1,0 +1,7 @@
+__pycache__/
+.pytest_cache/
+state/
+site/data/
+BUILD-LOG.md
+PLAN.md
+docs/

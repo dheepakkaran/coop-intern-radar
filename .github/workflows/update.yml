@@ -1,0 +1,64 @@
+name: update
+
+on:
+  schedule:
+    - cron: "7,37 * * * *"   # every 30 min (GitHub may start it a few minutes late)
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+permissions:
+  contents: write   # push the seen store to the `data` branch
+  pages: write
+  id-token: write
+
+concurrency:
+  group: update
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    environment:
+      name: github-pages
+      url: ${{ steps.deploy.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Tests
+        run: pip install -q pytest && python -m pytest -q
+
+      - name: Restore seen store from the data branch
+        run: |
+          mkdir -p state
+          if git fetch -q --depth 1 origin data; then
+            git show origin/data:seen.json.gz > state/seen.json.gz
+          else
+            echo "No data branch yet: first run, bootstrap mode."
+          fi
+
+      - name: Build
+        run: python -m radar.build --state state/seen.json.gz --out site/data
+
+      - name: Save seen store (one orphan commit, force-pushed so the repo does not grow)
+        run: |
+          mkdir -p "$RUNNER_TEMP/data"
+          cp state/seen.json.gz site/data/jobs.json "$RUNNER_TEMP/data/"
+          cd "$RUNNER_TEMP/data"
+          git init -q -b data
+          git add .
+          git -c user.name="github-actions[bot]" -c user.email="41898282+github-actions[bot]@users.noreply.github.com" \
+            commit -qm "data $(date -u +%Y-%m-%dT%H:%MZ)"
+          git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data
+
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: site
+      - id: deploy
+        uses: actions/deploy-pages@v4

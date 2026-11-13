@@ -1,0 +1,70 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Co-op Intern Radar</title>
+<meta name="description" content="Co-op and intern jobs first seen in the last 24 hours, refreshed every 30 minutes.">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<header class="top">
+  <div class="brand">
+    <h1>Co-op Intern Radar</h1>
+    <p class="sub" id="status">Loading…</p>
+  </div>
+  <nav class="quick" aria-label="Search these sites yourself">
+    <span class="quick-label">Check by hand</span>
+    <a href="https://www.linkedin.com/jobs/search/?keywords=co-op%20OR%20intern&location=United%20States&f_TPR=r86400&f_E=1&sortBy=DD" target="_blank" rel="noopener">LinkedIn 24h</a>
+    <a href="https://www.indeed.com/jobs?q=co-op+OR+intern&l=United+States&fromage=1&sort=date" target="_blank" rel="noopener">Indeed 24h</a>
+    <a href="https://app.joinhandshake.com/login?school=northeastern" target="_blank" rel="noopener">Handshake</a>
+    <a href="https://northeastern-csm.symplicity.com/students/" target="_blank" rel="noopener">NUworks</a>
+    <a href="https://jobright.ai/jobs" target="_blank" rel="noopener">Jobright</a>
+    <a href="https://simplify.jobs/jobs?experience=Internship" target="_blank" rel="noopener">Simplify</a>
+    <a href="https://wellfound.com/jobs" target="_blank" rel="noopener">Wellfound</a>
+    <a href="https://app.joinrunway.io/" target="_blank" rel="noopener">Runway</a>
+    <a href="https://hiring.cafe/" target="_blank" rel="noopener">hiring.cafe</a>
+    <a href="https://www.trueup.io/internships" target="_blank" rel="noopener">TrueUp</a>
+  </nav>
+</header>
+
+<section class="controls" aria-label="Filters">
+  <div class="row">
+    <div class="seg" role="group" aria-label="Time window" id="win">
+      <button data-v="1" class="on">24 h</button><button data-v="3">3 days</button><button data-v="7">7 days</button>
+    </div>
+    <div class="seg" role="group" aria-label="Type" id="kind">
+      <button data-v="all" class="on">All</button><button data-v="co-op">Co-op</button><button data-v="intern">Intern</button>
+    </div>
+    <input id="q" type="search" placeholder="Search company, title, place…" aria-label="Search">
+  </div>
+  <div class="row">
+    <div class="chips" id="fields" aria-label="Field"></div>
+    <span class="sep"></span>
+    <div class="chips" id="places" aria-label="Place">
+      <button data-v="Boston/MA">Boston/MA</button><button data-v="Remote">Remote</button>
+    </div>
+    <span class="sep"></span>
+    <select id="term" aria-label="Term"><option value="">Any term</option></select>
+    <label class="tick"><input type="checkbox" id="noCanada" checked> Hide Canada</label>
+    <label class="tick"><input type="checkbox" id="hideDone" checked> Hide applied/skipped</label>
+  </div>
+</section>
+
+<main>
+  <p class="count" id="count"></p>
+  <ol class="jobs" id="jobs"></ol>
+  <p class="empty" id="empty" hidden>No jobs match these filters in this window.</p>
+</main>
+
+<footer class="foot">
+  <p id="health"></p>
+  <p>Sources: <a href="https://github.com/SimplifyJobs/Summer2027-Internships">SimplifyJobs</a> and
+  <a href="https://github.com/vanshb03/Summer2027-Internships">vanshb03</a> lists, checked every 30 min.
+  "New" = the earlier of the list's posted date and the first time this radar saw the job.
+  Applied/skip marks stay in this browser only.
+  <a href="https://github.com/dheepakkaran/coop-intern-radar">Code</a></p>
+</footer>
+<script src="app.js"></script>
+</body>
+</html>

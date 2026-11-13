@@ -1,0 +1,70 @@
+:root {
+  --bg: #ffffff;
+  --fg: #111111;
+  --muted: #666666;
+  --line: #e4e4e4;
+  --soft: #f4f4f4;
+  --accent: #111111;
+  --on-accent: #ffffff;
+  --new: #0a7a3a;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0e0e0e; --fg: #ededed; --muted: #9a9a9a; --line: #262626; --soft: #181818;
+    --accent: #ededed; --on-accent: #0e0e0e; --new: #4cc07a; color-scheme: dark;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--fg);
+  font: 14px/1.45 system-ui, -apple-system, "Segoe UI", Inter, Roboto, sans-serif;
+}
+a { color: inherit; }
+.top, .controls, main, .foot { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+.top { padding-top: 22px; display: flex; flex-wrap: wrap; gap: 12px 24px; align-items: flex-end; justify-content: space-between; }
+h1 { font-size: 22px; margin: 0; letter-spacing: -0.01em; }
+.sub { margin: 2px 0 0; color: var(--muted); }
+.quick { display: flex; flex-wrap: wrap; gap: 6px; align-items: center; }
+.quick-label { color: var(--muted); font-size: 12px; margin-right: 2px; }
+.quick a { font-size: 12px; text-decoration: none; border: 1px solid var(--line); border-radius: 999px; padding: 3px 9px; }
+.quick a:hover { border-color: var(--fg); }
+
+.controls { margin-top: 18px; display: grid; gap: 10px; position: sticky; top: 0; background: var(--bg); padding-top: 10px; padding-bottom: 10px; border-bottom: 1px solid var(--line); z-index: 2; }
+.row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.seg { display: inline-flex; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; }
+.seg button { border: 0; background: transparent; color: var(--fg); padding: 6px 12px; font: inherit; cursor: pointer; }
+.seg button + button { border-left: 1px solid var(--line); }
+.seg button.on { background: var(--accent); color: var(--on-accent); }
+.chips { display: flex; flex-wrap: wrap; gap: 6px; }
+.chips button { border: 1px solid var(--line); background: transparent; color: var(--fg); border-radius: 999px; padding: 4px 10px; font: inherit; font-size: 13px; cursor: pointer; }
+.chips button.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.sep { width: 1px; height: 20px; background: var(--line); }
+#q { flex: 1 1 220px; min-width: 0; padding: 7px 10px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); font: inherit; }
+select { padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; background: var(--bg); color: var(--fg); font: inherit; }
+.tick { display: inline-flex; gap: 5px; align-items: center; color: var(--muted); font-size: 13px; }
+
+.count { color: var(--muted); margin: 14px 0 6px; }
+.jobs { list-style: none; margin: 0; padding: 0; }
+.job { display: grid; grid-template-columns: 1fr auto; gap: 4px 16px; padding: 12px 0; border-bottom: 1px solid var(--line); }
+.job.done { opacity: 0.45; }
+.job .t { font-weight: 600; text-decoration: none; }
+.job .t:hover { text-decoration: underline; }
+.job .c { font-weight: 500; }
+.job .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
+.tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--soft); border: 1px solid var(--line); }
+.tag.coop { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.age { font-variant-numeric: tabular-nums; }
+.age.fresh { color: var(--new); font-weight: 600; }
+.acts { display: flex; gap: 6px; align-items: start; }
+.acts button { border: 1px solid var(--line); background: transparent; color: var(--fg); border-radius: 6px; padding: 3px 8px; font: inherit; font-size: 12px; cursor: pointer; }
+.acts button.on { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
+.empty { color: var(--muted); padding: 30px 0; text-align: center; }
+.foot { color: var(--muted); font-size: 12px; padding-top: 24px; padding-bottom: 40px; }
+.foot p { margin: 4px 0; }
+
+@media (max-width: 640px) {
+  .job { grid-template-columns: 1fr; }
+  .controls { position: static; }
+  .sep { display: none; }
+}
