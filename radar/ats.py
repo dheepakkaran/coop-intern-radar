@@ -4,6 +4,7 @@ Boards are discovered from the apply URLs in the intern lists, so we only poll c
 Each fetcher returns jobs in the same shape as radar.sources, plus `countries` (ISO codes / names when the ATS gives them).
 Only co-op / intern titles in the US are kept.
 """
+import html
 import json
 import re
 import sys
@@ -14,7 +15,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-from . import classify
+from . import classify, tech
 from .sources import UA
 
 ATS_NAMES = {"gh": "Greenhouse", "lever": "Lever", "ashby": "Ashby", "sr": "SmartRecruiters",
@@ -100,7 +101,7 @@ def iso(s) -> int | None:
         return None
 
 
-def _job(ats, company, title, url, locations, countries, posted, extra_intern=False):
+def _job(ats, company, title, url, locations, countries, posted, extra_intern=False, jd=None, detail=None):
     title = (title or "").strip()
     if not title or not (classify.is_early_career(title, from_intern_feed=False) or extra_intern):
         return None
@@ -113,17 +114,56 @@ def _job(ats, company, title, url, locations, countries, posted, extra_intern=Fa
         "source": ATS_NAMES[ats], "company": company, "title": title, "url": url,
         "locations": locations, "countries": countries, "terms": classify.terms_from_title(title),
         "posted": posted, "field": None, "sponsorship": None,
+        "jd_terms": tech.jd_terms(jd), "_detail": detail,
     }
 
 
+# ---- Job descriptions for titles that don't say "tech" ---------------------------------------------------
+JD_DAYS = 3          # only jobs recent enough to show up need their JD
+JD_MAX_PER_BOARD = 40
+
+
+def enrich(jobs: list, now: int) -> list:
+    """For recent jobs whose title isn't a tech title and whose JD we don't have yet, fetch the JD.
+
+    Each job's `_detail` is a function returning (jd_text, exact_posted_or_None, country_or_None).
+    A job whose detail says a non-US country is dropped.
+    """
+    n = 0
+    for i, j in enumerate(jobs):
+        if not j:
+            continue
+        fn = j.pop("_detail", None)
+        if (fn is None or j.get("jd_terms") is not None or tech.title_field(j["title"])
+                or tech.TITLE_NOT.search(j["title"]) or n >= JD_MAX_PER_BOARD
+                or (j.get("posted") and j["posted"] < now - JD_DAYS * 86400)):
+            continue
+        n += 1
+        try:
+            text, exact, country = fn()
+        except Exception:
+            continue
+        if country and not classify.is_us([], [country]):
+            jobs[i] = None
+            continue
+        j["jd_terms"] = tech.jd_terms(text or "")
+        if exact:
+            j["posted"] = exact
+    for j in jobs:
+        if j:
+            j.pop("_detail", None)
+    return jobs
+
+
 def fetch_greenhouse(token, company):
-    d = get_json(f"https://boards-api.greenhouse.io/v1/boards/{urllib.parse.quote(token)}/jobs")
+    d = get_json(f"https://boards-api.greenhouse.io/v1/boards/{urllib.parse.quote(token)}/jobs?content=true")
     out = []
     for j in d.get("jobs", []):
         loc = (j.get("location") or {}).get("name") or ""
         out.append(_job("gh", j.get("company_name") or company, j.get("title"), j.get("absolute_url"),
                         [p.strip() for p in re.split(r";|\|", loc)], None,
-                        iso(j.get("first_published")) or iso(j.get("updated_at"))))
+                        iso(j.get("first_published")) or iso(j.get("updated_at")),
+                        jd=html.unescape(j.get("content") or "")))
     return out
 
 
@@ -135,9 +175,11 @@ def fetch_lever(token, company):
         locs = cat.get("allLocations") or [cat.get("location")]
         intern = bool(re.search(r"intern|co-?op", cat.get("commitment") or "", re.I))
         created = j.get("createdAt")
+        jd = " ".join([j.get("descriptionPlain") or "", j.get("additionalPlain") or ""] +
+                      [x.get("content") or "" for x in j.get("lists") or []])
         out.append(_job("lever", company, j.get("text"), j.get("hostedUrl"), locs,
                         [j["country"]] if j.get("country") else None,
-                        int(created / 1000) if created else None, intern))
+                        int(created / 1000) if created else None, intern, jd=jd))
     return out
 
 
@@ -153,11 +195,21 @@ def fetch_ashby(token, company):
                       for s in j.get("secondaryLocations") or []]
         intern = (j.get("employmentType") or "").lower() == "intern"
         out.append(_job("ashby", company, j.get("title"), j.get("jobUrl"), locs,
-                        [c for c in countries if c] or None, iso(j.get("publishedAt")), intern))
+                        [c for c in countries if c] or None, iso(j.get("publishedAt")), intern,
+                        jd=j.get("descriptionPlain") or j.get("descriptionHtml") or ""))
     return out
 
 
-def fetch_smartrecruiters(token, company):
+def _sr_detail(token, pid):
+    def fn():
+        d = get_json(f"https://api.smartrecruiters.com/v1/companies/{urllib.parse.quote(token)}/postings/{pid}")
+        secs = (d.get("jobAd") or {}).get("sections") or {}
+        return " ".join((v or {}).get("text") or "" for k, v in secs.items() if k != "companyDescription"), None, None
+    return fn
+
+
+def fetch_smartrecruiters(token, company, now=None):
+    now = now or int(time.time())
     out, seen = [], set()
     for q in ("intern", "co-op"):
         d = get_json(f"https://api.smartrecruiters.com/v1/companies/{urllib.parse.quote(token)}/postings"
@@ -171,8 +223,9 @@ def fetch_smartrecruiters(token, company):
             if loc.get("remote"):
                 place = (place + " (Remote)").strip()
             out.append(_job("sr", (j.get("company") or {}).get("name") or company, j.get("name"), f"https://jobs.smartrecruiters.com/{token}/{j.get('id')}",
-                            [place], [loc.get("country")] if loc.get("country") else None, iso(j.get("releasedDate"))))
-    return out
+                            [place], [loc.get("country")] if loc.get("country") else None, iso(j.get("releasedDate")),
+                            detail=_sr_detail(token, j.get("id"))))
+    return enrich(out, now)
 
 
 # ---- Workday --------------------------------------------------------------
@@ -248,6 +301,13 @@ def _wd_intern_facet(facets: list[dict]) -> tuple[str, list[str], bool] | None:
     return best
 
 
+def _wd_detail(api_base, path):
+    def fn():
+        info = get_json(api_base + path).get("jobPostingInfo") or {}
+        return info.get("jobDescription") or "", None, (info.get("country") or {}).get("descriptor")
+    return fn
+
+
 def fetch_workday(token, company, now=None):
     now = now or int(time.time())
     host, tenant, site = token.split("|")
@@ -277,16 +337,28 @@ def fetch_workday(token, company, now=None):
                 if not us and not any(classify.loc_country(l) == "US" for l in locs):
                     continue  # no US facet to lean on: the place itself must say US
                 out.append(_job("wd", company, p.get("title"), base + path, locs, ["US"] if us else None,
-                                workday_posted(p.get("postedOn"), now), extra_intern=trusted))
+                                workday_posted(p.get("postedOn"), now), extra_intern=trusted,
+                                detail=_wd_detail(api.rsplit("/jobs", 1)[0], path)))
             if len(posts) < WD_PAGE or (page + 1) * WD_PAGE >= (d.get("total") or 0):
                 break
-    return out
+    return enrich(out, now)
 
 
 # ---- Oracle Cloud HCM -----------------------------------------------------
 # GET {host}/hcmRestApi/resources/latest/recruitingCEJobRequisitions?onlyData=true&expand=...&finder=findReqs;
 #     siteNumber=..,keyword=..,limit=25,offset=N,sortBy=POSTING_DATES_DESC   (paging lives inside `finder`)
 ORACLE_PAGE, ORACLE_MAX_PAGES, ORACLE_DAYS = 25, 8, 10
+
+
+def _oracle_detail(host, site, rid):
+    def fn():
+        finder = urllib.parse.quote(f'ById;Id="{rid}",siteNumber={site}', safe=";,=")
+        it = (get_json(f"https://{host}/hcmRestApi/resources/latest/recruitingCEJobRequisitionDetails"
+                       f"?onlyData=true&expand=all&finder={finder}").get("items") or [{}])[0]
+        text = " ".join(it.get(k) or "" for k in ("ExternalDescriptionStr", "ExternalQualificationsStr",
+                                                   "ExternalResponsibilitiesStr", "ShortDescriptionStr"))
+        return text, iso(it.get("ExternalPostedStartDate")), None
+    return fn
 
 
 def fetch_oracle(token, company, now=None):
@@ -312,10 +384,11 @@ def fetch_oracle(token, company, now=None):
                 countries = [r.get("PrimaryLocationCountry")] + [x.get("CountryCode") for x in r.get("secondaryLocations") or []]
                 out.append(_job("oracle", company, r.get("Title"),
                                 f"https://{host}/hcmUI/CandidateExperience/en/sites/{site}/job/{r.get('Id')}",
-                                locs, [c for c in countries if c] or None, posted))
+                                locs, [c for c in countries if c] or None, posted,
+                                detail=_oracle_detail(host, site, r.get("Id"))))
             if len(reqs) < ORACLE_PAGE or oldest < now - ORACLE_DAYS * 86400:
                 break  # newest first: once we're past the window, stop paging
-    return out
+    return enrich(out, now)
 
 
 FETCHERS = {"gh": fetch_greenhouse, "lever": fetch_lever, "ashby": fetch_ashby, "sr": fetch_smartrecruiters,

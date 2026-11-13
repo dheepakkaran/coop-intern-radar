@@ -2,8 +2,8 @@
 
 **Live page: https://dheepakkaran.github.io/coop-intern-radar/**
 
-One page that shows every **US** co-op and intern job **first seen in the last 24 hours** (3 and 7 days too),
-refreshed by GitHub Actions and served by GitHub Pages. $0 to run.
+One page that shows every **US tech** (AI/ML, Data, Software) co-op and intern job **first seen in the last 24 hours**
+(or 2 days), refreshed by GitHub Actions and served by GitHub Pages. $0 to run.
 
 ## How it works
 
@@ -28,11 +28,18 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   - **Oracle Cloud:** keyword search sorted newest first; paging stops once results are older than 10 days.
 - **US only:** a job is kept if any of its places is in the US (state code or name, US city shorthand, or the
   country the ATS reports) or if no place says where it is (e.g. just "Remote"). Canada and other countries are dropped.
+- **Tech only:** a job is shown when its **title** has a tech role word (AI, ML, LLM, inference, post-training, evals,
+  forward deployed / FDE, agentic, computer vision, data, analytics, BI, software, SWE, developer, full stack, cloud,
+  DevOps, SRE … ~150 patterns in `radar/tech.py`, built from 12,720 real intern titles plus new LLM-era titles), or,
+  when the title has none, its **job description** has at least 3 strong tech terms including a core one
+  (machine learning, PyTorch, LLM, software development, data engineering …). JDs come free with Greenhouse, Lever
+  and Ashby; for Workday, SmartRecruiters and Oracle the radar fetches the JD only for recent non-tech titles.
+  Rows that pass only through the JD are tagged "JD" with the terms found.
 - **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).
 - **Seen store** = `seen.json.gz` on the `data` branch, kept as a single force-pushed commit so the repo does not grow.
-- **Page:** filters for window, co-op/intern, field, Boston/MA, remote, term, search; Save / Applied / Skip marks
+- **Page:** 24 h / 2 days, co-op/intern, field (AI/ML, Data, Software), Boston/MA, remote, term, search; Save / Applied / Skip marks
   stay in your browser (localStorage). A link bar opens LinkedIn and Indeed with the 24 h filter set, plus Handshake,
   NUworks, Jobright, Simplify, Wellfound, Runway, hiring.cafe and TrueUp. These sites are never scraped.
 

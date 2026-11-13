@@ -53,6 +53,7 @@ select { padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; ba
 .job .c { font-weight: 500; }
 .job .meta { color: var(--muted); font-size: 13px; display: flex; flex-wrap: wrap; gap: 4px 10px; }
 .tag { display: inline-block; font-size: 11px; padding: 1px 7px; border-radius: 999px; background: var(--soft); border: 1px solid var(--line); }
+.tag.jd { border-style: dashed; }
 .tag.coop { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .age { font-variant-numeric: tabular-nums; }
 .age.fresh { color: var(--new); font-weight: 600; }

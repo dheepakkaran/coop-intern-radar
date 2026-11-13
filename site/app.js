@@ -11,6 +11,8 @@
     { win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true },
     store.get("radar.filters", {})
   );
+  if (![1, 2].includes(st.win)) st.win = 1;
+  st.fields = (st.fields || []).filter((f) => ["AI/ML", "Data", "Software"].includes(f));
   let data = { meta: null, jobs: [] };
 
   const ago = (t) => {
@@ -61,6 +63,7 @@
     const tags = [
       `<span class="tag${j.kind === "co-op" ? " coop" : ""}">${j.kind}</span>`,
       `<span class="tag">${esc(j.field)}</span>`,
+      j.why === "JD" ? `<span class="tag jd" title="Title isn't a tech title; the job description has these terms">JD: ${esc(j.jd_terms.join(", "))}</span>` : "",
       ...j.terms.map((t) => `<span class="tag">${esc(t)}</span>`),
       j.sponsorship ? `<span class="tag">${esc(j.sponsorship)}</span>` : "",
     ].join(" ");
@@ -83,7 +86,7 @@
     $("jobs").innerHTML = list.map(row).join("");
     $("empty").hidden = list.length > 0;
     const co = list.filter((j) => j.kind === "co-op").length;
-    $("count").textContent = `${list.length} jobs (${co} co-op) · window ${st.win === 1 ? "24 hours" : st.win + " days"}`;
+    $("count").textContent = `${list.length} jobs (${co} co-op) · window ${st.win === 1 ? "24 hours" : "2 days"}`;
   }
 
   $("jobs").addEventListener("click", (e) => {

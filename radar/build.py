@@ -9,9 +9,9 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from . import ats, classify, sources, store
+from . import ats, classify, sources, store, tech
 
-WINDOW_DAYS = 7          # the page filters 24 h / 3 d / 7 d itself
+WINDOW_DAYS = 2          # the page shows 24 h or 2 days
 POLL_EVERY = 170 * 60    # 'auto' polls the boards about every 3 hours
 ATS_SOURCES = set(ats.ATS_NAMES.values())
 
@@ -52,6 +52,8 @@ def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
             if "go.vansh.nyc" in m["url"] and "go.vansh.nyc" not in j["url"]:
                 m["url"] = j["url"]
             m["field"] = m.get("field") or j.get("field")
+            if j.get("jd_terms") is not None:
+                m["jd_terms"] = sorted(set(m.get("jd_terms") or []) | set(j["jd_terms"]))
             if u:
                 by_url.setdefault(u, k)
     return merged
@@ -105,7 +107,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         got, ats_health = poll_fn(state["boards"])
         # Keep only jobs that can still be "new": undated ones (dated by first_seen) or dated inside the window.
         keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
-        last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries"} for j in keep], "health": ats_health}
+        last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries" and not k.startswith("_")} for j in keep], "health": ats_health}
         state["ats"] = last
         new_types = set(ats_health) - polled_before
         state["ats_polled"] = sorted(polled_before | set(ats_health))
@@ -117,25 +119,32 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     # 4. Merge, date, keep the last WINDOW_DAYS.
     merged = merge(by_source)
     picked = []
+    skipped_not_tech = 0
     for k, j in merged.items():
         from_new_type = bool(new_types) and set(j["sources"]) <= new_types
         rec = store.mark_seen(state, k, now, boot or from_new_type)
         t = posted_at(j, rec)
-        if t and t >= cut:
-            picked.append((j, t))
+        if not t or t < cut:
+            continue
+        tc = tech.classify(j["title"], j.get("field"), j.get("jd_terms"))
+        if not tc:
+            skipped_not_tech += 1
+            continue
+        picked.append((j, t, tc))
 
     rows = []
-    for j, t in picked:
-        url = j["url"]
+    for j, t, (fld, why) in picked:
         rows.append({
             "company": j["company"],
             "title": j["title"],
-            "url": url,
+            "url": j["url"],
             "locations": j["locations"][:6],
             "more_locations": max(0, len(j["locations"]) - 6),
             "terms": j["terms"],
             "kind": classify.kind(j["title"], j["terms"]),
-            "field": classify.field(j["title"], j.get("field")),
+            "field": fld,
+            "why": why,
+            "jd_terms": sorted(j.get("jd_terms") or [], key=lambda x: x not in tech.JD_CORE)[:6] if why == "JD" else [],
             "places": classify.places(j["locations"]),
             "sponsorship": j.get("sponsorship") if j.get("sponsorship") not in (None, "Other") else None,
             "sources": j["sources"],
@@ -156,6 +165,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "sources": health,
         "boards": {ats.ATS_NAMES[a]: sum(1 for b in live if b["ats"] == a) for a in ats.ATS_NAMES},
         "polled": last.get("at"),
+        "not_tech_skipped": skipped_not_tech,
         "bootstrap": boot,
     }
     os.makedirs(out_dir, exist_ok=True)

@@ -2,7 +2,7 @@ import re
 import json
 import os
 
-from radar import ats, build, classify, sources, store
+from radar import ats, build, classify, sources, store, tech
 
 HERE = os.path.dirname(__file__)
 
@@ -182,7 +182,7 @@ def test_poll_merges_with_lists_and_first_poll_is_quiet(tmp_path):
          "url": "https://boards.greenhouse.io/acme/jobs/1", "locations": ["Boston, MA"], "terms": [],
          "posted": now - 7200, "field": None, "sponsorship": None},
         # a co-op only the board has, with no date
-        {"source": "Greenhouse", "company": "Acme", "title": "Robotics Co-op",
+        {"source": "Greenhouse", "company": "Acme", "title": "Data Platform Co-op",
          "url": "https://boards.greenhouse.io/acme/jobs/2", "locations": ["Boston, MA"], "terms": [],
          "posted": None, "field": None, "sponsorship": None},
     ]
@@ -199,15 +199,15 @@ def test_poll_merges_with_lists_and_first_poll_is_quiet(tmp_path):
     data = json.load(open(tmp_path / "o" / "jobs.json"))
     acme = [j for j in data["jobs"] if j["url"].endswith("/1")]
     assert len(acme) == 1 and set(acme[0]["sources"]) == {"Simplify", "Greenhouse"} and acme[0]["posted"] == now - 7200
-    assert not any(j["title"] == "Robotics Co-op" for j in data["jobs"])  # undated + first poll -> not new
+    assert not any(j["title"] == "Data Platform Co-op" for j in data["jobs"])  # undated + first poll -> not new
 
     # A later poll finds a new undated board job -> new, dated by first_seen.
-    board_jobs.append({"source": "Greenhouse", "company": "Acme", "title": "Firmware Co-op",
+    board_jobs.append({"source": "Greenhouse", "company": "Acme", "title": "Firmware Software Co-op",
                        "url": "https://boards.greenhouse.io/acme/jobs/3", "locations": ["Boston, MA"], "terms": [],
                        "posted": None, "field": None, "sponsorship": None})
     meta = build.run(st, out, fetch=_fake_fetch(now, [listed], []), poll_fn=fake_poll, poll="yes", now=now + 7200)
     data = json.load(open(tmp_path / "o" / "jobs.json"))
-    fw = [j for j in data["jobs"] if j["title"] == "Firmware Co-op"][0]
+    fw = [j for j in data["jobs"] if j["title"] == "Firmware Software Co-op"][0]
     assert fw["posted"] == now + 7200 and fw["kind"] == "co-op"
     assert meta["boards"]["Greenhouse"] == 1 and meta["sources"]["Greenhouse"]["ok"]
 
@@ -215,7 +215,7 @@ def test_poll_merges_with_lists_and_first_poll_is_quiet(tmp_path):
     build.run(st, out, fetch=_fake_fetch(now, [listed], []), poll_fn=fake_poll, now=now + 7200 + 1800)
     assert len(calls) == 2
     data = json.load(open(tmp_path / "o" / "jobs.json"))
-    assert any(j["title"] == "Firmware Co-op" for j in data["jobs"])
+    assert any(j["title"] == "Firmware Software Co-op" for j in data["jobs"])
 
 
 def test_lists_drop_non_us(tmp_path):
@@ -228,9 +228,9 @@ def test_lists_drop_non_us(tmp_path):
 
 def test_vansh_shortlink_merges_with_board_by_url(tmp_path):
     now = 2_000_000_000
-    v = {"company_name": "SharkNinja", "title": "Digital & Website Technology Intern", "date_posted": now - 3600,
+    v = {"company_name": "SharkNinja", "title": "Digital Data Technology Intern", "date_posted": now - 3600,
          "url": "https://go.vansh.nyc/q1", "locations": ["Needham, MA"], "season": "Spring", "active": True, "is_visible": True}
-    board = [{"source": "Greenhouse", "company": "SharkNinja", "title": "Spring 2027: Digital & Website Technology Intern",
+    board = [{"source": "Greenhouse", "company": "SharkNinja", "title": "Spring 2027: Digital Data Technology Intern",
               "url": "https://boards.greenhouse.io/sharkninja/jobs/77", "locations": ["Needham, MA, United States"],
               "terms": ["Spring 2027"], "posted": now - 7200, "field": None, "sponsorship": None}]
     build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, [], [v]),
@@ -293,6 +293,9 @@ def test_workday_falls_back_to_text_search(monkeypatch):
     bodies = []
 
     def fake(url, body=None, **k):
+        if body is None:  # job detail (JD) request for a non-tech title
+            return {"jobPostingInfo": {"jobDescription": "<p>Python, SQL and machine learning models</p>",
+                                       "country": {"descriptor": "United States of America"}}}
         bodies.append(body)
         if body["limit"] == 1:
             return {"facets": [{"facetParameter": "timeType", "values": [{"descriptor": "Full time", "id": "f"}]}]}
@@ -303,6 +306,7 @@ def test_workday_falls_back_to_text_search(monkeypatch):
     jobs = [j for j in ats.fetch_workday("x.wd1.myworkdayjobs.com|x|S", "X") if j]
     assert [b["searchText"] for b in bodies[1:]] == ["intern", "co-op"]
     assert [j["title"] for j in jobs] == ["Risk Co-op"]  # fuzzy text hits need an intern/co-op title
+    assert jobs[0]["jd_terms"] == ["machine learning", "python", "sql"]  # non-tech title -> JD fetched
 
 
 def test_workday_board_without_us_is_skipped_and_no_facet_needs_us_place(monkeypatch):
@@ -364,3 +368,43 @@ def test_new_board_type_first_poll_is_quiet(tmp_path):
               poll_fn=lambda b: ([gh, gh2, wd], {"Greenhouse": {"ok": True}, "Workday": {"ok": True}}), now=now + 7200)
     titles = {(j["company"], j["title"]) for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
     assert ("A", "ML Intern") in titles and ("B", "Data Intern") not in titles
+
+
+def test_tech_titles():
+    yes = {"Inference Engineer Intern": "AI/ML", "Forward Deployed Engineer Intern": "AI/ML", "FDE Intern": "AI/ML",
+           "AI Engineer Co-op": "AI/ML", "Machine Learning Intern": "AI/ML", "LLM Post-Training Research Intern": "AI/ML",
+           "Model Evals Intern": "AI/ML", "Agentic AI Developer Intern": "AI/ML", "Applied Scientist Intern": "AI/ML",
+           "Computer Vision Co-op": "AI/ML", "MLOps Intern": "AI/ML",
+           "Data Engineer Intern": "Data", "Business Intelligence Co-op": "Data", "Analytics Engineer Intern": "Data",
+           "Software Engineer Intern": "Software", "SWE Intern": "Software", "Full Stack Developer Co-op": "Software",
+           "Site Reliability Engineering Intern": "Software", "Embedded Software Co-op": "Software"}
+    for t, f in yes.items():
+        assert tech.title_field(t) == f, (t, tech.title_field(t))
+    for t in ["Mechanical Engineering Intern", "Finance Intern", "Data Entry Intern", "Business Development Intern",
+              "Insurance Agent Intern", "Marketing Intern", "Supply Chain Co-op", "Teaching Assistant - Data Structures"]:
+        assert tech.title_field(t) is None, t
+
+
+def test_tech_jd_rule():
+    marketing = tech.jd_terms("<p>Use AI tools and Excel to support campaigns. Python a plus.</p>")
+    assert not tech.jd_is_tech(marketing)
+    ml = tech.jd_terms("Build machine learning pipelines in Python with PyTorch and SQL.")
+    ops = tech.jd_terms("Area manager: data analytics with Python, SQL, Tableau and Power BI.")
+    assert not tech.jd_is_tech(ops)  # BI tools alone don't make a tech role
+    assert tech.jd_is_tech(ml) and tech.jd_field(ml) == "AI/ML"
+    assert not tech.jd_is_tech(tech.jd_terms("python sql aws docker"))  # no core term
+    assert tech.classify("Research Intern", None, ml) == ("AI/ML", "JD")
+    assert tech.classify("Forestry Intern", "AI/ML/Data", None) is None  # list category ignored
+    assert tech.classify("Research Intern", None, None) is None
+    assert tech.jd_terms(None) is None
+
+
+def test_build_keeps_only_tech_and_two_days(tmp_path):
+    now = 2_000_000_000
+    rows = [_row("A", "Software Engineer Intern", now - 3600),
+            _row("B", "Finance Intern", now - 3600, url="https://x/b"),
+            _row("C", "Data Science Intern", now - 3 * 86400, url="https://x/c")]  # tech but 3 days old
+    meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, rows, []), poll="no", now=now)
+    jobs = json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]
+    assert [j["company"] for j in jobs] == ["A"] and jobs[0]["why"] == "title"
+    assert meta["not_tech_skipped"] == 1
