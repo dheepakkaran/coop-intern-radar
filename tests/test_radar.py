@@ -346,3 +346,21 @@ def test_foreign_codes_and_titles():
         assert classify.FOREIGN_TITLE.search(t), t
     assert not classify.FOREIGN_TITLE.search("Software Engineering Intern - Summer 2027")
     assert classify.kind("2027 Spring Co op Biologics Design", []) == "co-op"
+
+
+def test_new_board_type_first_poll_is_quiet(tmp_path):
+    now = 2_000_000_000
+    st, out = str(tmp_path / "s"), str(tmp_path / "o")
+    old = [_row("A", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/a/jobs/0")]  # gives a board
+    gh = {"source": "Greenhouse", "company": "A", "title": "Data Intern", "url": "https://g/1", "locations": ["Boston, MA"],
+          "terms": [], "posted": None, "field": None, "sponsorship": None}
+    wd = {**gh, "source": "Workday", "company": "B", "url": "https://w/1"}
+    build.run(st, out, fetch=_fake_fetch(now, old, []), poll="no", now=now)
+    build.run(st, out, fetch=_fake_fetch(now, old, []), poll="yes",
+              poll_fn=lambda b: ([gh], {"Greenhouse": {"ok": True}}), now=now + 60)
+    # Workday is added later: its undated jobs on its first poll are known, not new; Greenhouse's new one is new.
+    gh2 = {**gh, "title": "ML Intern", "url": "https://g/2"}
+    build.run(st, out, fetch=_fake_fetch(now, old, []), poll="yes",
+              poll_fn=lambda b: ([gh, gh2, wd], {"Greenhouse": {"ok": True}, "Workday": {"ok": True}}), now=now + 7200)
+    titles = {(j["company"], j["title"]) for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    assert ("A", "ML Intern") in titles and ("B", "Data Intern") not in titles

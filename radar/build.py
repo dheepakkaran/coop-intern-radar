@@ -96,7 +96,10 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     # 3. Poll the boards (every ~3 h); between polls reuse the last result.
     last = state.get("ats") or {}
-    first_poll = not last
+    # Which board types have been polled before? A type's first poll only learns what exists (undated jobs
+    # it finds are not "new"), the same way the very first run treats the lists.
+    polled_before = set(state.get("ats_polled") or (last.get("health") or {}).keys())
+    new_types: set[str] = set()
     do_poll = poll == "yes" or (poll == "auto" and now - last.get("at", 0) >= POLL_EVERY)
     if do_poll and state["boards"]:
         got, ats_health = poll_fn(state["boards"])
@@ -104,8 +107,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
         last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries"} for j in keep], "health": ats_health}
         state["ats"] = last
-    else:
-        first_poll = False
+        new_types = set(ats_health) - polled_before
+        state["ats_polled"] = sorted(polled_before | set(ats_health))
     for name, h in (last.get("health") or {}).items():
         health[name] = {**h, "polled": last["at"]}
     for j in last.get("jobs", []):
@@ -115,8 +118,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     merged = merge(by_source)
     picked = []
     for k, j in merged.items():
-        only_boards = set(j["sources"]) <= ATS_SOURCES
-        rec = store.mark_seen(state, k, now, boot or (first_poll and only_boards))
+        from_new_type = bool(new_types) and set(j["sources"]) <= new_types
+        rec = store.mark_seen(state, k, now, boot or from_new_type)
         t = posted_at(j, rec)
         if t and t >= cut:
             picked.append((j, t))
