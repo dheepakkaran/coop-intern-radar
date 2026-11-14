@@ -20,6 +20,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "https://amgen.wd1.myworkdayjobs.com/careers/job/United-States---Remote/Grad-Intern---Knowledge-Graph-Applications--Summer-2027-_R-260625": {
+  "company": "Amgen",
+  "confidence": 85,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in a Master's or PhD program in data science, computer science, artificial intelligence, biomedical informatics, biostatistics, epidemiology, computational biology, or a related quantitative discipline."
+  },
+  "read_at": 1794688831,
+  "tech": "AI/ML",
+  "title": "AI-Enabled Knowledge Graphs for Patient Journey Analytics Intern",
+  "us": true,
+  "was": "unverified: no job description"
+ },
  "https://apply.workable.com/bask-health-1/j/71AEBBCADE": {
   "company": "Bask Health",
   "confidence": 88,
@@ -82,6 +103,30 @@
   "title": "AI Intern",
   "us": true,
   "was": "unverified: no job description"
+ },
+ "https://eedu.fa.em3.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1003/job/202607277": {
+  "company": "WTW",
+  "confidence": 90,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "fails: cpt",
+  "quotes": {
+   "cpt": "Please note student visas, CPT, OPT, H-1B, TN, and other temporary work authorizations are considered restricted forms of employment eligibility.",
+   "degree": "Bachelors or Master's degree with a minimum overall GPA of 3.0",
+   "grad": "Accepting applications from candidates that graduate with a Bachelor's or Master's degree between December 2027 through June 2029",
+   "sponsorship": "Employment-based non-immigrant visa sponsorship and/or assistance is not offered for this specific job opportunity."
+  },
+  "read_at": 1794688831,
+  "tech": "Data",
+  "title": "Data Analyst Intern",
+  "us": true,
+  "was": "match"
  },
  "https://jobs.ashbyhq.com/ramp/b87e898f-8d8b-447d-b3d5-9073ccf7d109": {
   "company": "Ramp",
