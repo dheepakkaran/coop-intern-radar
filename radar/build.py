@@ -193,7 +193,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
     #    6a: US + tech, and the rules' reading.
-    cands, decisions = [], []
+    cands, decisions, others = [], [], []
     skipped_not_tech = skipped_inelig = skipped_non_us = skipped_unverified = skipped_review = 0
     for j, t in in_window:
         d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
@@ -206,7 +206,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         tc = tech.classify(j["title"], j.get("field"), j.get("jd_terms"))
         if not tc:
             skipped_not_tech += 1
-            d["result"] = "hidden: not tech"
+            d["result"] = "all roles only: not tech"
+            others.append((j, t))
             continue
         cands.append((j, t, tc, d))
 
@@ -267,31 +268,40 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
                      "ai": "pending" if ai_on else "off"}
         e = eligibility.with_list(rules, lst)
         d["elig"], d["field"] = e, tc
+        reason = None
         if eligibility.hidden(e):
             skipped_inelig += 1
-            d["result"] = "hidden: not eligible"
-            continue
-        # Dheepak (2026-11-14): show only jobs that pass every check. No job description read -> hidden;
-        # anything that needs a second look (no sponsorship, bachelor's preferred, readers disagree) -> hidden.
+            reason = "fails: " + ", ".join(k for k in ("citizenship", "cpt", "degree", "grad")
+                                            if (e.get("labels") or {}).get(k) in ("required", "rejected", "ug_only",
+                                                                                    "phd_only", "misses")) or "fails a check"
+        # Dheepak (2026-11-14): "My matches" lists only jobs that pass every check. No job description read ->
+        # not a match; anything that needs a second look (bachelor's preferred, readers disagree) -> not a match.
         # "Not stated" (the JD sets no degree / graduation rule) is not a restriction, so it passes.
-        if STRICT and not e.get("labels"):
+        elif STRICT and not e.get("labels"):
             skipped_unverified += 1
-            d["result"] = "hidden: unverified (no job description)"
-            continue
-        if STRICT and eligibility.needs_check(e):
+            reason = "unverified: no job description"
+        elif STRICT and eligibility.needs_check(e):
             skipped_review += 1
-            d["result"] = "hidden: needs review (" + ", ".join(
-                [k for k in ("auth", "degree") if e.get(k) == "check"] + (e.get("disagree") or [])) + ")"
-            continue
-        d["result"] = "shown"
-        picked.append((j, t, tc, e))
+            reason = "needs review: " + ", ".join(
+                [k for k in ("auth", "degree") if e.get(k) == "check"] + (e.get("disagree") or []))
+        d["result"] = "shown" if not reason else "all roles only: " + reason
+        picked.append((j, t, tc, e, reason))
     if audit:  # every decision with its reason, for checking the filters by hand (not published)
         with open(audit, "w") as f:
             json.dump(decisions, f, indent=1)
 
     rows = []
-    for j, t, (fld, why), e in picked:
+    for j, t in others:  # non-tech roles: "All roles" view only, rules' reading for information, no AI
+        e = j.get("elig") or eligibility.check(None)
+        if e.get("labels"):
+            e = {**e, **eligibility.from_labels(e["labels"], e.get("quotes") or {})}
+        f = classify.field(j["title"], None)
+        f = {"AI/ML/Data": "Other", "Software": "Other"}.get(f, f)  # tech fields belong to matched roles only
+        picked.append((j, t, (f, "title"), e, "not an AI/ML, Data or Software role"))
+    for j, t, (fld, why), e, reason in picked:
         rows.append({
+            "match": reason is None,
+            "why_not": reason,
             "company": j["company"],
             "title": j["title"],
             "url": j["url"],
@@ -321,8 +331,10 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     meta = {
         "generated": now,
         "window_days": WINDOW_DAYS,
-        "count_24h": sum(1 for r in rows if r["posted"] >= now - 86400),
-        "count": len(rows),
+        "count_24h": sum(1 for r in rows if r["match"] and r["posted"] >= now - 86400),
+        "count": sum(1 for r in rows if r["match"]),
+        "count_all_24h": sum(1 for r in rows if r["posted"] >= now - 86400),
+        "count_all": len(rows),
         "sources": health,
         "boards": {ats.ATS_NAMES[a]: sum(1 for b in live if b["ats"] == a) for a in ats.ATS_NAMES},
         "polled": last.get("at"),
@@ -333,7 +345,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "non_us_skipped": skipped_non_us,
         "jd": jd_stats,
         "ai": {**ai_stats, **budget.report(), "model": llm.MODEL, "on": ai_on},
-        "check_count": sum(1 for r in rows if eligibility.needs_check(r["elig"])),
+        "check_count": sum(1 for r in rows if r["match"] and eligibility.needs_check(r["elig"])),
         "bootstrap": boot,
     }
     os.makedirs(out_dir, exist_ok=True)

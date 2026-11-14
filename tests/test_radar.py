@@ -59,6 +59,11 @@ def test_parsers_on_real_samples():
     assert any("Spring 2027" in j["terms"] for j in s)
 
 
+def _matches(out_dir):
+    """Jobs in the "My matches" view (the page also carries every other US co-op/intern role for "All roles")."""
+    return [j for j in json.load(open(os.path.join(str(out_dir), "jobs.json")))["jobs"] if j.get("match", True)]
+
+
 def _fake_fetch(now, simplify_rows, vansh_rows):
     def fetch(url):
         return simplify_rows if "SimplifyJobs" in url else vansh_rows
@@ -425,7 +430,7 @@ def test_build_keeps_only_tech_and_two_days(tmp_path):
             _row("B", "Finance Intern", now - 3600, url="https://x/b"),
             _row("C", "Data Science Intern", now - 3 * 86400, url="https://x/c")]  # tech but 3 days old
     meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, rows, []), poll="no", now=now)
-    jobs = json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]
+    jobs = _matches(tmp_path / "o")
     assert [j["company"] for j in jobs] == ["A"] and jobs[0]["why"] == "title"
     assert meta["not_tech_skipped"] == 1
 
@@ -546,7 +551,7 @@ def test_build_hides_ineligible_and_tags_the_rest(tmp_path):
     old = [_row("Acme", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/acme/jobs/0")]
     meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
                      poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now)
-    jobs = {j["title"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    jobs = {j["title"]: j for j in _matches(tmp_path / "o")}
     assert set(jobs) == {"ML Engineer Co-op", "AI Engineer Intern"}
     assert jobs["ML Engineer Co-op"]["elig"]["auth"] == "cpt" and jobs["ML Engineer Co-op"]["elig"]["degree"] == "ok"
     assert jobs["AI Engineer Intern"]["elig"]["auth"] == "ok"   # "any employer / no sponsorship": CPT/OPT is enough
@@ -669,7 +674,7 @@ def test_every_list_only_job_goes_through_all_checks(tmp_path):
         return None
     st, out = str(tmp_path / "s"), str(tmp_path / "o")
     meta = build.run(st, out, fetch=_fake_fetch(now, rows, []), poll="no", jd_fetch=fake_jd, now=now)
-    jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    jobs = {j["company"]: j for j in _matches(tmp_path / "o")}
     assert set(jobs) == {"A", "D", "H"}, set(jobs)
     assert jobs["A"]["why"] == "JD" and jobs["A"]["field"] == "AI/ML"
     assert jobs["D"]["elig"]["auth"] == "unknown"
@@ -682,7 +687,7 @@ def test_every_list_only_job_goes_through_all_checks(tmp_path):
     calls.clear()
     build.run(st, out, fetch=_fake_fetch(now, rows, []), poll="no", jd_fetch=fake_jd, now=now + 1800)
     assert calls == []
-    assert set(j["company"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]) == {"A", "D", "H"}
+    assert set(j["company"] for j in _matches(tmp_path / "o")) == {"A", "D", "H"}
 
 
 def test_poll_jd_results_are_cached_in_state(tmp_path, monkeypatch):
@@ -770,7 +775,7 @@ def test_pipeline_ai_catches_what_rules_miss(tmp_path):
     st = str(tmp_path / "s")
     meta = build.run(st, str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
                      poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now, ai=fake_ai)
-    jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    jobs = {j["company"]: j for j in _matches(tmp_path / "o")}
     assert set(jobs) == {"B"} and jobs["B"]["elig"]["ai"] == "read"
     assert meta["ai"]["answered"] == 2 and meta["ai"]["unverified"] == 1
     # cached: the next run asks nobody
@@ -892,7 +897,7 @@ def test_strict_shows_only_jobs_that_pass_every_check(tmp_path, monkeypatch):
     old = [_row("Z", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/z/jobs/0")]
     meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
                      poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now)
-    shown = {j["company"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    shown = {j["company"] for j in _matches(tmp_path / "o")}
     assert shown == {"Clean", "Silent", "NoSponsor"}   # no sponsorship is fine with CPT/OPT (Dheepak, 2026-11-14)
     assert meta["ineligible_skipped"] == 1 and meta["review_skipped"] == 0 and meta["unverified_skipped"] == 1
 
@@ -908,3 +913,13 @@ def test_v1_profile_is_the_measured_setup_and_stops_at_daily_limit(monkeypatch):
     b = llm.Budget()
     assert llm.ask_batch([("x", "US citizenship is required.")], api_key="k", budget=b, post=daily) == {}
     assert b.daily_limit_hit and b.spent()
+
+
+def test_all_roles_view_keeps_every_us_role_with_a_reason(tmp_path):
+    now = 2_000_000_000
+    rows = [_row("A", "Software Engineer Intern", now - 3600),
+            _row("B", "Finance Intern", now - 3600, url="https://x/b")]
+    build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, rows, []), poll="no", now=now)
+    jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    assert set(jobs) == {"A", "B"}
+    assert jobs["B"]["match"] is False and "AI/ML, Data or Software" in jobs["B"]["why_not"]

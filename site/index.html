@@ -12,16 +12,20 @@
   <header class="head">
     <div class="brand">
       <p class="eyebrow">Co-op &amp; Intern Radar</p>
-      <h1>New US tech roles, checked for MS&nbsp;+&nbsp;CPT</h1>
+      <h1>New US co-ops &amp; internships, checked for MS&nbsp;+&nbsp;CPT</h1>
     </div>
     <dl class="stats" id="stats" aria-live="polite">
-      <div><dt>Last 24 h</dt><dd id="s24">–</dd></div>
-      <div><dt>Last 2 days</dt><dd id="s48">–</dd></div>
+      <div><dt>Matches · 24 h</dt><dd id="s24">–</dd></div>
+      <div><dt>Matches · 2 days</dt><dd id="s48">–</dd></div>
       <div><dt>Updated</dt><dd id="supd">–</dd></div>
     </dl>
   </header>
 
   <section class="bar" aria-label="Filters">
+    <div class="views" id="view" role="tablist" aria-label="View">
+      <button data-v="match" role="tab">My matches <span id="vmatch"></span></button>
+      <button data-v="all" role="tab">All co-op &amp; intern <span id="vall"></span></button>
+    </div>
     <div class="bar-top">
       <label class="search">
         <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
@@ -50,7 +54,7 @@
 
   <main>
     <div class="listhead"><p id="count"></p><p class="legend">
-      <span><i class="dot ok"></i>Passed</span><span><i class="dot unk"></i>Not stated in the posting (no restriction)</span>
+      <span><i class="dot ok"></i>Passed</span><span><i class="dot unk"></i>Not stated (no restriction)</span><span><i class="dot bad"></i>Fails</span>
     </p></div>
     <ol class="jobs" id="jobs"></ol>
     <p class="empty" id="empty" hidden>No jobs match these filters.</p>

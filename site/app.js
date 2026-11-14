@@ -8,11 +8,12 @@
 
   const marks = store.get("radar.marks", {}); // url -> "applied" | "skip" | "save"
   const st = Object.assign(
-    { win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true },
+    { view: "match", win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true },
     store.get("radar.filters", {})
   );
   if (![1, 2].includes(st.win)) st.win = 1;
-  st.fields = (st.fields || []).filter((f) => ["AI/ML", "Data", "Software"].includes(f));
+  if (!["match", "all"].includes(st.view)) st.view = "match";
+  st.fields = st.fields || [];
   let data = { meta: null, jobs: [] };
   const open = new Set();
 
@@ -41,14 +42,18 @@
     ]],
   ];
 
-  function status(e) {
+  function status(e, j) {
+    if (j && j.match === false) return ["no", "Not a match: " + (j.why_not || "")];
     if (!e || !e.labels) return ["unk", "Unverified"];
     if (e.auth === "check" || e.degree === "check" || (e.disagree || []).length) return ["warn", "Review"];
     return ["ok", "All checks passed"];
   }
 
+  const FAILS = { required: "Required: you can't apply", rejected: "CPT / OPT not accepted, or permanent authorization",
+                  ug_only: "Undergraduates only", phd_only: "PhD students only", misses: "Graduation window excludes May 2028" };
   function checkState(e, key, map) {
     const v = e.labels[key];
+    if (FAILS[v]) return { s: "bad", word: FAILS[v], quote: (e.quotes || {})[key] || "" };
     const [s, word] = map[v] || ["warn", v];
     const dis = (e.disagree || []).includes(key);
     return { s: dis ? "warn" : s, word: dis ? `${word} (readers disagree)` : word, quote: (e.quotes || {})[key] || "" };
@@ -90,6 +95,7 @@
 
   // ---- filters ----------------------------------------------------------------------------------------
   function visible(j, now) {
+    if (st.view === "match" && j.match === false) return false;
     if (j.posted < now - st.win * 86400) return false;
     if (st.kind !== "all" && j.kind !== st.kind) return false;
     if (st.fields.length && !st.fields.includes(j.field)) return false;
@@ -106,14 +112,14 @@
   function row(j) {
     const m = marks[j.url] || "";
     const fresh = Date.now() / 1000 - j.posted < 6 * 3600;
-    const [s, label] = status(j.elig);
+    const [s, label] = status(j.elig, j);
     const extra = Math.max(0, j.locations.length - 2) + (j.more_locations || 0);
     const loc = (j.locations.slice(0, 2).join(" · ") || "Location not listed") + (extra ? ` +${extra}` : "");
     const pills = [`<span class="pill${j.kind === "co-op" ? " coop" : ""}">${j.kind === "co-op" ? "Co-op" : "Intern"}</span>`,
       `<span class="pill">${esc(j.field)}</span>`, ...j.terms.slice(0, 2).map((t) => `<span class="pill">${esc(t)}</span>`)];
     return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${open.has(j.url) ? " open" : ""}" data-url="${esc(j.url)}">
       <div class="top"><div><span class="co">${esc(j.company)}</span><span class="age${fresh ? " fresh" : ""}">${ago(j.posted)}</span></div>
-        <span class="badge ${s}">${label}</span></div>
+        <span class="badge ${s}" title="${esc(label)}">${esc(label)}</span></div>
       <a class="title" href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.title)}</a>
       <div class="meta">${pills.join("")}<span>${esc(loc)}</span></div>
       ${checksStrip(j.elig)}
@@ -135,7 +141,8 @@
     $("jobs").innerHTML = list.map(row).join("");
     $("empty").hidden = list.length > 0;
     const co = list.filter((j) => j.kind === "co-op").length;
-    $("count").textContent = `${list.length} roles · ${co} co-op · all checks passed`;
+    $("count").textContent = st.view === "match" ? `${list.length} roles · ${co} co-op · all checks passed`
+      : `${list.length} roles · ${co} co-op · ${list.filter((j) => j.match !== false).length} match your checks`;
   }
 
   function seg(el, key, cast) {
@@ -177,8 +184,11 @@
     data = d;
     const m = d.meta;
     const now = Date.now() / 1000;
-    $("s24").textContent = d.jobs.filter((j) => j.posted >= now - 86400).length;
-    $("s48").textContent = d.jobs.length;
+    const matches = d.jobs.filter((j) => j.match !== false);
+    $("s24").textContent = matches.filter((j) => j.posted >= now - 86400).length;
+    $("s48").textContent = matches.length;
+    $("vmatch").textContent = matches.length;
+    $("vall").textContent = d.jobs.length;
     $("supd").textContent = ago(m.generated);
     $("supd").title = new Date(m.generated * 1000).toLocaleString();
     $("health").textContent = Object.entries(m.sources).map(([k, v]) => {
@@ -195,6 +205,7 @@
     $("term").innerHTML = `<option value="">Any</option>` + terms.map((t) => `<option>${esc(t)}</option>`).join("");
     $("term").value = terms.includes(st.term) ? st.term : "";
 
+    seg($("view"), "view", String);
     seg($("win"), "win", Number);
     seg($("kind"), "kind", String);
     chips($("fields"), "fields");
