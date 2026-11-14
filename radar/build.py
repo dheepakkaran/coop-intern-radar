@@ -14,6 +14,7 @@ from . import ats, classify, eligibility, jdfetch, llm, sources, store, tech
 
 WINDOW_DAYS = 2          # the page shows 24 h or 2 days
 POLL_EVERY = 170 * 60    # 'auto' polls the boards about every 3 hours
+STRICT = True           # show only jobs that pass every check (no unverified, no "needs review")
 MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest next run; results are cached)
 JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
 MAX_AI_PER_RUN = int(os.environ.get("RADAR_AI_REQUESTS", "20"))  # AI requests per run (each = up to llm.BATCH JDs)
@@ -193,7 +194,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
     #    6a: US + tech, and the rules' reading.
     cands, decisions = [], []
-    skipped_not_tech = skipped_inelig = skipped_non_us = 0
+    skipped_not_tech = skipped_inelig = skipped_non_us = skipped_unverified = skipped_review = 0
     for j, t in in_window:
         d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
              "sources": j["sources"], "jd_terms": (j.get("jd_terms") or [])[:8]}
@@ -268,6 +269,18 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             skipped_inelig += 1
             d["result"] = "hidden: not eligible"
             continue
+        # Dheepak (2026-11-14): show only jobs that pass every check. No job description read -> hidden;
+        # anything that needs a second look (no sponsorship, bachelor's preferred, readers disagree) -> hidden.
+        # "Not stated" (the JD sets no degree / graduation rule) is not a restriction, so it passes.
+        if STRICT and not e.get("labels"):
+            skipped_unverified += 1
+            d["result"] = "hidden: unverified (no job description)"
+            continue
+        if STRICT and eligibility.needs_check(e):
+            skipped_review += 1
+            d["result"] = "hidden: needs review (" + ", ".join(
+                [k for k in ("auth", "degree") if e.get(k) == "check"] + (e.get("disagree") or [])) + ")"
+            continue
         d["result"] = "shown"
         picked.append((j, t, tc, e))
     if audit:  # every decision with its reason, for checking the filters by hand (not published)
@@ -313,6 +326,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "polled": last.get("at"),
         "not_tech_skipped": skipped_not_tech,
         "ineligible_skipped": skipped_inelig,
+        "unverified_skipped": skipped_unverified,
+        "review_skipped": skipped_review,
         "non_us_skipped": skipped_non_us,
         "jd": jd_stats,
         "ai": {**ai_stats, **budget.report(), "model": llm.MODEL, "on": ai_on},

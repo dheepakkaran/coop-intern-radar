@@ -44,18 +44,13 @@
       <div class="group"><span class="glabel">Term</span>
         <select id="term" aria-label="Term"><option value="">Any</option></select>
       </div>
-      <div class="group"><span class="glabel">Eligibility</span>
-        <div class="seg sm" id="elig" role="group" aria-label="Eligibility">
-          <button data-v="all">All</button><button data-v="eligible">Eligible</button><button data-v="known">Hide unverified</button>
-        </div>
-      </div>
       <label class="toggle"><input type="checkbox" id="hideDone"><span></span>Hide applied &amp; skipped</label>
     </div>
   </section>
 
   <main>
     <div class="listhead"><p id="count"></p><p class="legend">
-      <span><i class="dot ok"></i>Clear</span><span><i class="dot warn"></i>Review</span><span><i class="dot unk"></i>Not stated</span>
+      <span><i class="dot ok"></i>Passed</span><span><i class="dot unk"></i>Not stated in the posting (no restriction)</span>
     </p></div>
     <ol class="jobs" id="jobs"></ol>
     <p class="empty" id="empty" hidden>No jobs match these filters.</p>
@@ -79,9 +74,9 @@
       <summary>How jobs are checked</summary>
       <div class="how">
         <div><h3>Scope</h3><p>US locations only. AI/ML, Data and Software roles: a tech word in the title, or strong tech terms in the job description. First seen in the last 24 hours or 2 days.</p></div>
-        <div><h3>Work authorization</h3><p><b>Citizenship</b> no US citizenship, green card, clearance or ITAR "U.S. person". <b>CPT / F-1</b> not rejected, no "permanent" authorization. <b>Sponsorship</b> "no sponsorship now or in the future" is flagged for review: often fine for CPT.</p></div>
+        <div><h3>Work authorization</h3><p><b>Citizenship</b> no US citizenship, green card, clearance or ITAR "U.S. person". <b>CPT / F-1</b> not rejected, no "permanent" authorization. <b>Sponsorship</b> no "no sponsorship now or in the future" line.</p></div>
         <div><h3>Education</h3><p><b>Degree</b> master's students can apply (not undergraduate-only or PhD-only). <b>Graduation</b> any stated window includes May 2028.</p></div>
-        <div><h3>Readers</h3><p>Rules read every description; an AI reader quotes the description and each quote is checked word for word. A failed citizenship, CPT, degree or graduation check hides the job. Open <b>Details</b> on a job to see the sentence behind each check.</p></div>
+        <div><h3>Only clean matches</h3><p>A job is listed only when every check passes. Hidden: any failed check, "no sponsorship now or in the future", "bachelor's preferred", readers that disagree, and postings whose description could not be read. Open <b>Details</b> on a job to see the sentence behind each check.</p></div>
       </div>
     </details>
     <details>

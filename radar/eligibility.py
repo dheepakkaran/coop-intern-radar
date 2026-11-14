@@ -17,7 +17,7 @@ A job is hidden when any check says 'no'. 'check' jobs are shown with a tag (the
 import re
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
-RULES_VERSION = 7  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+RULES_VERSION = 9  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 
 TAG = re.compile(r"<[^>]+>")
 WS = re.compile(r"\s+")
@@ -48,7 +48,8 @@ CITIZEN = re.compile(
     r"u\.?s\.? citizens? or (lawful )?permanent residents?|green card holders? (only|required)|"
     r"(active|current|interim|existing) (dod |government |security )?(secret|top secret|ts/sci|ts|public trust)[^.]{0,30}clearance|"
     r"(secret|top secret|ts/sci) (security )?clearance (is )?(required|needed)|"
-    r"(ability|able|eligib\w*) to (obtain|get)( and maintain)? (an? )?(dod |government |u\.?s\.? )?(security |secret |top secret )?clearance|"
+    r"(ability|able|eligib\w*|willing\w*) to (obtain|get|hold|acquire)[^.]{0,70}clearance|"
+    r"security clearance\s*[:\-]\s*(ability|must|required|active|secret|top secret|ts)|"
     r"(security|government|secret) clearance (is )?required|requires? (a|an) (active )?(security|secret) clearance|"
     r"itar[^.]{0,120}u\.?s\.? (person|citizen)|export control[^.]{0,80}u\.?s\.? person|"
     r"obtain and maintain (an? )?(\w+ ){0,3}clearance|"
@@ -96,7 +97,8 @@ UG_ONLY = re.compile(
     r"in pursuit of an? (bachelor|undergraduate)|(current )?enrollment in an? (four-year |4-year )?(undergraduate|bachelor)|"
     r"pursuing an? undergraduate'?s? degree|\ban undergraduate student\b|undergraduate students (currently )?enrolled|"
     r"\b(freshman|sophomore)s?( or (sophomore|junior))?( year)?\b|\bjuniors?,? (or |and )?seniors?\b|"
-    r"enrolled in an? bachelor of (science|arts|engineering)", re.I)
+    r"enrolled in an? bachelor of (science|arts|engineering)|"
+    r"\bundergraduate students? (pursuing|majoring|enrolled|studying|in)\b|bachelor'?s degree (in process|in progress)", re.I)
 # A requirement line ("must be pursuing a Bachelor's", "enrolled in a PhD program") beats a softer mention elsewhere
 # (an intro that says "undergraduate and graduate programs", a pay table that lists Masters).
 UG_MUST = re.compile(r"(must|should|required to) (be )?(currently )?(pursuing|enrolled in|working toward\w*) (a |an )?"

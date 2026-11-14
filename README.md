@@ -46,6 +46,9 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   API when there is one (`radar/jdfetch.py`), else the page's schema.org JobPosting (JSON-LD), else the page text.
   Results are cached per URL (and redone when the rules change), so each JD is fetched once. Then US → tech →
   eligibility, exactly like the board jobs. Pages that block robots (e.g. Meta) stay "Work auth: no JD".
+- **Only clean matches (2026-11-14):** a job is published only when every check passes. Failed checks, "no
+  sponsorship" / "bachelor's preferred" / readers that disagree ("needs review"), and postings whose description
+  can't be read ("unverified") are all left out; the counts are in the page footer.
 - **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).

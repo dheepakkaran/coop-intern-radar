@@ -10,6 +10,13 @@ HERE = os.path.dirname(__file__)
 
 
 @pytest.fixture(autouse=True)
+def lenient_by_default(monkeypatch):
+    """Most tests check merging, dates and sources with list-only jobs (no JD); the strict 'every check passes'
+    filter has its own test below."""
+    monkeypatch.setattr(build, "STRICT", False)
+
+
+@pytest.fixture(autouse=True)
 def no_network(monkeypatch):
     """Tests never touch the internet: any JD page fetch fails unless a test passes its own fake."""
     def offline(url, body=None, timeout=20):
@@ -438,6 +445,8 @@ def test_elig_auth():
           "Applicants requiring future sponsorship for continued work authorization (for example, following F-1 OPT/CPT, or J-1 status) are not eligible.",
           "Applicants must be legally authorized to work in the United States for any employer without requiring current or future visa sponsorship (for example, employment-based visas such as H-1B, F-1/OPT, or similar)",
           "Ability to obtain a security clearance",
+          # KBR Defense & Intel (Dheepak's strict list, 2026-11-14)
+          "Security Requirements: Security Clearance: Ability to obtain a U.S. Government Secret Security Clearance.",
           # Sanofi co-op (Dheepak caught this one, 2026-11-14)
           "Students currently on CPT, OPT, or STEM OPT usually require future sponsorship for long term employment "
           "and do not meet the Internal requirements for this program unless eligible for an alternative long-term status.",
@@ -468,14 +477,17 @@ def test_elig_degree():
           "All education levels (Bachelor's, Master's, or Ph.D.) welcome",
           "Completion of at least two years of an undergraduate or graduate degree program in a quantitative field",
           "Currently pursuing a BS or MS in Computer Engineering",
-          "Currently pursuing a B.S. or higher in Computer Science or a related technical field"]   # Ramp, live audit
+          "Currently pursuing a B.S. or higher in Computer Science or a related technical field",   # Ramp, live audit
+          "Open to college sophomore, junior, senior, recent grad, or 1st or 2nd master's student"]  # Envita
     for s in ok:
         assert _e(s)["degree"] == "ok", s
     no = ["Currently pursuing a Bachelor's degree in Computer Science, Software Engineering, or a closely related field.",
           "Rising junior or senior standing.",
           "Currently enrolled in an Undergraduate degree program majoring in Engineering",
           "Currently enrolled in a Bachelor's program in Mechanical Engineering",
-          "Must be enrolled in a PhD program"]
+          "Must be enrolled in a PhD program",
+          "Job Qualifications Undergraduate student pursuing a STEM major, with a 3.5 GPA or above",   # Encore, 2026-11-14
+          "Job Qualifications Bachelor's degree in process Experience programming with C#"]
     for s in no:
         assert _e(s)["degree"] == "no", s
     assert _e("Proficient in MS Excel and PowerPoint.")["degree"] == "unknown"  # MS Office is not a degree
@@ -860,3 +872,24 @@ def test_pipeline_dedupes_skips_and_defers(tmp_path, monkeypatch):
     assert meta2["ai"]["pending"] == 1
     j9 = json.load(open(tmp_path / "o2" / "jobs.json"))["jobs"][0]
     assert j9["elig"]["ai"] == "pending"
+
+
+def test_strict_shows_only_jobs_that_pass_every_check(tmp_path, monkeypatch):
+    monkeypatch.setattr(build, "STRICT", True)
+    now = 2_000_000_000
+    def bj(company, jd, url):
+        return {"source": "Greenhouse", "company": company, "title": "Software Engineer Intern", "url": url,
+                "locations": ["Boston, MA"], "terms": [], "posted": now - 3600, "field": None, "sponsorship": None,
+                "jd_terms": tech.jd_terms(jd) if jd else None, "elig": elig.check(jd) if jd else None,
+                "excerpt": elig.excerpt(jd) if jd else None}
+    board = [bj("Clean", "Pursuing a BS or MS in CS. Python.", "https://g/1"),
+             bj("NoSponsor", "Pursuing a BS or MS. We are unable to sponsor visas.", "https://g/2"),
+             bj("Citizen", "US citizenship is required.", "https://g/3"),
+             bj("NoJD", None, "https://g/4"),
+             bj("Silent", "Python, SQL and a love of building things.", "https://g/5")]  # nothing stated -> passes
+    old = [_row("Z", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/z/jobs/0")]
+    meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
+                     poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now)
+    shown = {j["company"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    assert shown == {"Clean", "Silent"}
+    assert meta["ineligible_skipped"] == 1 and meta["review_skipped"] == 1 and meta["unverified_skipped"] == 1

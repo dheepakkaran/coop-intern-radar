@@ -8,11 +8,10 @@
 
   const marks = store.get("radar.marks", {}); // url -> "applied" | "skip" | "save"
   const st = Object.assign(
-    { win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true, elig: "all" },
+    { win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true },
     store.get("radar.filters", {})
   );
   if (![1, 2].includes(st.win)) st.win = 1;
-  if (!["all", "eligible", "known"].includes(st.elig)) st.elig = "all";
   st.fields = (st.fields || []).filter((f) => ["AI/ML", "Data", "Software"].includes(f));
   let data = { meta: null, jobs: [] };
   const open = new Set();
@@ -45,7 +44,7 @@
   function status(e) {
     if (!e || !e.labels) return ["unk", "Unverified"];
     if (e.auth === "check" || e.degree === "check" || (e.disagree || []).length) return ["warn", "Review"];
-    return ["ok", "Eligible"];
+    return ["ok", "All checks passed"];
   }
 
   function checkState(e, key, map) {
@@ -97,9 +96,6 @@
     if (st.places.length && !st.places.some((p) => j.places.includes(p))) return false;
     if (st.term && !j.terms.includes(st.term)) return false;
     if (st.hideDone && (marks[j.url] === "applied" || marks[j.url] === "skip")) return false;
-    const [s] = status(j.elig);
-    if (st.elig === "eligible" && s !== "ok") return false;
-    if (st.elig === "known" && s === "unk") return false;
     if (st.q) {
       const hay = `${j.company} ${j.title} ${j.locations.join(" ")}`.toLowerCase();
       if (!st.q.toLowerCase().split(/\s+/).every((w) => hay.includes(w))) return false;
@@ -139,8 +135,7 @@
     $("jobs").innerHTML = list.map(row).join("");
     $("empty").hidden = list.length > 0;
     const co = list.filter((j) => j.kind === "co-op").length;
-    const ok = list.filter((j) => status(j.elig)[0] === "ok").length;
-    $("count").textContent = `${list.length} roles · ${co} co-op · ${ok} eligible`;
+    $("count").textContent = `${list.length} roles · ${co} co-op · all checks passed`;
   }
 
   function seg(el, key, cast) {
@@ -191,7 +186,8 @@
       if (v.boards !== undefined) return `${k}: ${v.boards - v.failed}/${v.boards} boards`;
       return `${k}: ${v.rows} rows`;
     }).join(" · ") + (m.polled ? ` · boards checked ${ago(m.polled)}` : "") +
-      (m.ineligible_skipped !== undefined ? ` · hidden ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} not eligible` : "");
+      (m.ineligible_skipped !== undefined ? ` · hidden: ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} failed a check` +
+        (m.review_skipped !== undefined ? `, ${m.review_skipped} need review, ${m.unverified_skipped} unverified` : "") : "");
 
     const fields = [...new Set(d.jobs.map((j) => j.field))].sort();
     $("fields").innerHTML = fields.map((f) => `<button data-v="${esc(f)}">${esc(f)}</button>`).join("");
@@ -201,7 +197,6 @@
 
     seg($("win"), "win", Number);
     seg($("kind"), "kind", String);
-    seg($("elig"), "elig", String);
     chips($("fields"), "fields");
     chips($("places"), "places");
     $("q").value = st.q;
