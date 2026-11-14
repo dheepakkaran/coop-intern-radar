@@ -15,7 +15,7 @@ import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
 
-from . import classify, tech
+from . import classify, eligibility, tech
 from .sources import UA
 
 ATS_NAMES = {"gh": "Greenhouse", "lever": "Lever", "ashby": "Ashby", "sr": "SmartRecruiters",
@@ -114,17 +114,19 @@ def _job(ats, company, title, url, locations, countries, posted, extra_intern=Fa
         "source": ATS_NAMES[ats], "company": company, "title": title, "url": url,
         "locations": locations, "countries": countries, "terms": classify.terms_from_title(title),
         "posted": posted, "field": None, "sponsorship": None,
-        "jd_terms": tech.jd_terms(jd), "_detail": detail,
+        "jd_terms": tech.jd_terms(jd), "elig": eligibility.check(jd) if jd is not None else None,
+        "_detail": detail,
     }
 
 
 # ---- Job descriptions for titles that don't say "tech" ---------------------------------------------------
 JD_DAYS = 3          # only jobs recent enough to show up need their JD
-JD_MAX_PER_BOARD = 40
+JD_MAX_PER_BOARD = 25    # new JD fetches per board per poll; the rest come next poll (JDs are cached)
+KNOWN: dict = {}         # url -> {"elig", "jd_terms"} from earlier polls, set by poll()
 
 
 def enrich(jobs: list, now: int) -> list:
-    """For recent jobs whose title isn't a tech title and whose JD we don't have yet, fetch the JD.
+    """For recent jobs whose JD we don't have yet, fetch it (tech terms + eligibility need it).
 
     Each job's `_detail` is a function returning (jd_text, exact_posted_or_None, country_or_None).
     A job whose detail says a non-US country is dropped.
@@ -134,8 +136,11 @@ def enrich(jobs: list, now: int) -> list:
         if not j:
             continue
         fn = j.pop("_detail", None)
-        if (fn is None or j.get("jd_terms") is not None or tech.title_field(j["title"])
-                or tech.TITLE_NOT.search(j["title"]) or n >= JD_MAX_PER_BOARD
+        cached = KNOWN.get(j["url"])
+        if cached and j.get("elig") is None:
+            j["elig"], j["jd_terms"] = cached.get("elig"), cached.get("jd_terms")
+            continue
+        if (fn is None or j.get("elig") is not None or tech.TITLE_NOT.search(j["title"]) or n >= JD_MAX_PER_BOARD
                 or (j.get("posted") and j["posted"] < now - JD_DAYS * 86400)):
             continue
         n += 1
@@ -147,6 +152,7 @@ def enrich(jobs: list, now: int) -> list:
             jobs[i] = None
             continue
         j["jd_terms"] = tech.jd_terms(text or "")
+        j["elig"] = eligibility.check(text or "")
         if exact:
             j["posted"] = exact
     for j in jobs:
@@ -395,12 +401,16 @@ FETCHERS = {"gh": fetch_greenhouse, "lever": fetch_lever, "ashby": fetch_ashby, 
             "wd": fetch_workday, "oracle": fetch_oracle}
 
 
-def poll(boards: dict[str, dict], max_fails: int = 3) -> tuple[list[dict], dict]:
-    """Poll every live board. Updates each board's `fails` counter in place. Returns (jobs, health)."""
+def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None) -> tuple[list[dict], dict]:
+    """Poll every live board. Updates each board's `fails` counter in place. Returns (jobs, health).
+
+    `known` = JD results from earlier polls (url -> elig/jd_terms), so each JD is fetched once."""
+    global KNOWN
+    KNOWN = known or {}
     jobs, health = [], {}
     for ats, fetch in FETCHERS.items():
         todo = [(bid, b) for bid, b in boards.items() if b["ats"] == ats and b.get("fails", 0) < max_fails]
-        h = {"ok": True, "boards": len(todo), "failed": 0, "rows": 0}
+        h = {"ok": True, "boards": len(todo), "failed": 0, "rows": 0, "errors": {}}
         t0 = time.time()
 
         def one(item):
@@ -409,6 +419,8 @@ def poll(boards: dict[str, dict], max_fails: int = 3) -> tuple[list[dict], dict]
                 return bid, [j for j in fetch(b["token"], b["company"]) if j], None
             except Gone:
                 return bid, [], "gone"
+            except urllib.error.HTTPError as e:  # e.g. 429, 5xx, 521 (Workday data center down): retry next poll
+                return bid, [], f"HTTP {e.code}"
             except Exception as e:  # network trouble: try again next poll, don't count as gone
                 return bid, [], f"{type(e).__name__}"
 
@@ -418,6 +430,7 @@ def poll(boards: dict[str, dict], max_fails: int = 3) -> tuple[list[dict], dict]
                     boards[bid]["fails"] = boards[bid].get("fails", 0) + 1
                 if err:
                     h["failed"] += 1
+                    h["errors"][err] = h["errors"].get(err, 0) + 1
                 else:
                     boards[bid]["fails"] = 0
                 jobs.extend(got)

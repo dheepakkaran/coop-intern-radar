@@ -408,3 +408,125 @@ def test_build_keeps_only_tech_and_two_days(tmp_path):
     jobs = json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]
     assert [j["company"] for j in jobs] == ["A"] and jobs[0]["why"] == "title"
     assert meta["not_tech_skipped"] == 1
+
+
+# ---- eligibility (sentences are real, from intern JDs collected 2026-11-13) ---------------------------------
+from radar import eligibility as elig
+
+
+def _e(s):
+    return elig.check(s)
+
+
+def test_elig_auth():
+    no = ["Due to the nature of our work US Citizenship is required.",
+          "Eligible and able to obtain and maintain a government clearance",
+          "To conform to export regulations, applicant must be a U.S. citizen, lawful permanent resident, protected individual as defined by 8 U.S.C.",
+          "Applicants requiring future sponsorship for continued work authorization (for example, following F-1 OPT/CPT, or J-1 status) are not eligible.",
+          "Applicants must be legally authorized to work in the United States for any employer without requiring current or future visa sponsorship (for example, employment-based visas such as H-1B, F-1/OPT, or similar)",
+          "Ability to obtain a security clearance"]
+    for s in no:
+        assert _e(s)["auth"] == "no", s
+    cpt = ["Work authorization is required on the first day of employment including F-1 students using CPT, OPT or STEM OPT.",
+           "F-1 students are eligible if they are using Curricular Practical Training (CPT)."]
+    for s in cpt:
+        assert _e(s)["auth"] == "cpt", s
+    check = ["Applicants must be authorized to work for any employer in the U.S.",
+             "We are unable to sponsor or take over sponsorship of an employment Visa at this time.",
+             "Applicants must be currently authorized to work in the United States without the need for employer sponsorship now or in the future.",
+             "This position is not eligible for sponsorship."]
+    for s in check:
+        assert _e(s)["auth"] == "check", s
+    assert _e("Comply with U.S. export laws without sponsorship for an export license.")["auth"] == "ok"
+    assert _e("We consider applicants regardless of race, citizenship, or veteran status.")["auth"] == "ok"
+    assert _e("Interns will not be eligible for company-sponsored benefits such as the 401(k).")["auth"] == "ok"
+
+
+def test_elig_degree():
+    ok = ["Currently pursuing a BS, MS, or PhD in Robotics, Computer Science, AI/ML",
+          "Currently pursuing a Bachelor's or Master's degree in Mechanical Engineering",
+          "Rising junior, senior, or graduate-level student preferred.",
+          "All education levels (Bachelor's, Master's, or Ph.D.) welcome",
+          "Completion of at least two years of an undergraduate or graduate degree program in a quantitative field",
+          "Currently pursuing a BS or MS in Computer Engineering"]
+    for s in ok:
+        assert _e(s)["degree"] == "ok", s
+    no = ["Currently pursuing a Bachelor's degree in Computer Science, Software Engineering, or a closely related field.",
+          "Rising junior or senior standing.",
+          "Currently enrolled in an Undergraduate degree program majoring in Engineering",
+          "Currently enrolled in a Bachelor's program in Mechanical Engineering",
+          "Must be enrolled in a PhD program"]
+    for s in no:
+        assert _e(s)["degree"] == "no", s
+    assert _e("Proficient in MS Excel and PowerPoint.")["degree"] == "unknown"  # MS Office is not a degree
+    assert _e("Bachelor's degree preferred, any major considered.")["degree"] == "check"
+
+
+def test_elig_grad_window():
+    assert elig.GRAD == (2028, 5)
+    ok = ["Undergraduate or master's students graduating between December 2027 and June 2028",
+          "Expected to graduate by Summer 2028", "graduating in Fall 2027 or later",
+          "Graduating in Summer/Fall/Winter 2027 or Spring/Summer 2028."]
+    for s in ok:
+        assert _e(s)["grad"] == "ok", s
+    no = ["Graduating class of 2029 pursuing a Masters or Doctorate degree",
+          "on track to graduate in December 2028 or Spring 2029.",
+          "Recent college or university graduates from Spring/Summer/Fall/Winter 2026 with a relevant degree.",
+          "Expected Date of Graduation – May 2026"]
+    for s in no:
+        assert _e(s)["grad"] == "no", s
+    assert _e("Opportunity to transition into a full-time role upon graduation in 2027.")["grad"] is None
+
+
+def test_elig_list_and_combine():
+    assert elig.from_list("U.S. Citizenship is Required", ["Bachelor's"])["auth"] == "no"
+    assert elig.from_list("Other", ["Bachelor's", "Master's"])["degree"] == "ok"
+    assert elig.from_list("Other", ["Bachelor's"])["degree"] == "check"   # list degrees are only a hint
+    jd = elig.check("Currently pursuing a Bachelor's or Master's degree. F-1 students using CPT are welcome.")
+    lst = elig.from_list("Other", ["Bachelor's"])
+    both = elig.with_list(jd, lst)
+    assert both["auth"] == "cpt" and both["degree"] == "ok"           # the JD beats the list's hint
+    assert elig.with_list(elig.check(None), lst)["degree"] == "check"  # no JD -> list hint
+    assert elig.with_list(jd, elig.from_list("U.S. Citizenship is Required", None))["auth"] == "no"
+    assert elig.hidden(elig.combine(jd, elig.check("US Citizenship is required.")))
+    assert elig.check(None)["auth"] == "unknown"
+
+
+def test_build_hides_ineligible_and_tags_the_rest(tmp_path):
+    now = 2_000_000_000
+    def bj(title, jd, url):
+        return {"source": "Greenhouse", "company": "Acme", "title": title, "url": url, "locations": ["Boston, MA"],
+                "terms": [], "posted": now - 3600, "field": None, "sponsorship": None,
+                "jd_terms": tech.jd_terms(jd), "elig": elig.check(jd)}
+    board = [bj("Software Engineer Intern", "US Citizenship is required.", "https://g/1"),
+             bj("Data Science Intern", "Currently pursuing a Bachelor's degree in Statistics.", "https://g/2"),
+             bj("ML Engineer Co-op", "Pursuing a BS or MS. F-1 students using CPT are welcome.", "https://g/3"),
+             bj("AI Engineer Intern", "Must be authorized to work for any employer in the U.S.", "https://g/4")]
+    old = [_row("Acme", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/acme/jobs/0")]
+    meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
+                     poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now)
+    jobs = {j["title"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    assert set(jobs) == {"ML Engineer Co-op", "AI Engineer Intern"}
+    assert jobs["ML Engineer Co-op"]["elig"]["auth"] == "cpt" and jobs["ML Engineer Co-op"]["elig"]["degree"] == "ok"
+    assert jobs["AI Engineer Intern"]["elig"]["auth"] == "check"
+    assert meta["ineligible_skipped"] == 2 and meta["check_count"] == 1
+
+
+def test_jd_cache_skips_second_fetch(monkeypatch):
+    calls = []
+
+    def fake(url, body=None, **k):
+        if body is None:
+            calls.append(url)
+            return {"jobPostingInfo": {"jobDescription": "Pursuing a BS or MS. Python, SQL, machine learning, PyTorch."}}
+        if body["limit"] == 1:
+            return {"facets": []}
+        return {"jobPostings": [{"title": "Data Intern", "externalPath": "/a", "locationsText": "Austin, TX",
+                                 "postedOn": "Posted Today"}], "total": 1}
+    monkeypatch.setattr(ats, "get_json", fake)
+    j1 = [j for j in ats.fetch_workday("t.wd1.myworkdayjobs.com|t|S", "T") if j][0]
+    assert len(calls) == 1 and j1["elig"]["degree"] == "ok"
+    ats.KNOWN = {j1["url"]: {"elig": j1["elig"], "jd_terms": j1["jd_terms"]}}
+    j2 = [j for j in ats.fetch_workday("t.wd1.myworkdayjobs.com|t|S", "T") if j][0]
+    assert len(calls) == 1 and j2["elig"] == j1["elig"]   # served from the cache
+    ats.KNOWN = {}

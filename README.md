@@ -35,6 +35,12 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   (machine learning, PyTorch, LLM, software development, data engineering …). JDs come free with Greenhouse, Lever
   and Ashby; for Workday, SmartRecruiters and Oracle the radar fetches the JD only for recent non-tech titles.
   Rows that pass only through the JD are tagged "JD" with the terms found.
+- **Eligibility (master's student on CPT, graduating May 2028):** from each job description, hide jobs that need
+  US citizenship / a green card / a security clearance / ITAR "U.S. person", that say F-1/CPT/OPT students are not
+  eligible, that are undergraduate-only or PhD-only, or whose graduation window leaves out May 2028. Jobs that say
+  "authorized for any employer" or "no sponsorship now or in the future" stay, tagged **No sponsorship: check**
+  (a page toggle hides them); "CPT ok", "MS ok" and "Grad date ok" tags show what the JD says. Rules in
+  `radar/eligibility.py`, written from ~1,300 real JD sentences and tested on them.
 - **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).

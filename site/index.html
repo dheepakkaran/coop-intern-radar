@@ -46,6 +46,7 @@
     </div>
     <span class="sep"></span>
     <select id="term" aria-label="Term"><option value="">Any term</option></select>
+    <label class="tick" title="Hide jobs that say 'no sponsorship / authorized for any employer' or only hint at the degree"><input type="checkbox" id="hideCheck"> Hide "check" jobs</label>
     <label class="tick"><input type="checkbox" id="hideDone" checked> Hide applied/skipped</label>
   </div>
 </section>
@@ -62,6 +63,12 @@
   (AI, ML, LLM, inference, forward deployed, data, analytics, software, developer, full stack, cloud …), or, when the
   title doesn't, its job description has at least 3 strong tech terms incl. one core term (e.g. machine learning,
   PyTorch, software development); those rows are tagged "JD".</p>
+  <p>Eligibility (for a master's student on CPT, graduating May 2028), read from the job description:
+  hidden when it needs US citizenship, a green card, a security clearance or ITAR "U.S. person", says F-1/CPT/OPT
+  students are not eligible, is undergraduate-only or PhD-only, or its graduation window leaves out May 2028.
+  Tags: <b>CPT ok</b> (JD welcomes CPT/F-1), <b>No sponsorship: check</b> ("authorized for any employer" /
+  "no sponsorship now or in the future": often fine for CPT, read the JD), <b>MS ok</b>, <b>Grad date ok</b>,
+  <b>Work auth: no JD</b> (only the list knows this job). Hover a tag to see the JD words.</p>
   <p>Sources: the <a href="https://github.com/SimplifyJobs/Summer2027-Internships">SimplifyJobs</a> and
   <a href="https://github.com/vanshb03/Summer2027-Internships">vanshb03</a> lists (every 30 min), plus the public
   Greenhouse, Lever, Ashby, SmartRecruiters, Workday and Oracle Cloud job boards of every company those lists link to (about every 3 hours).

@@ -37,6 +37,7 @@ def parse_simplify(rows: list[dict]) -> list[dict]:
             "posted": x.get("date_posted"),
             "field": x.get("category"),
             "sponsorship": x.get("sponsorship"),
+            "degrees": x.get("degrees") or [],
         })
     return out
 

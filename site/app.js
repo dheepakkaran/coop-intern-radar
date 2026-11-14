@@ -8,7 +8,7 @@
 
   const marks = store.get("radar.marks", {}); // url -> "applied" | "skip" | "save"
   const st = Object.assign(
-    { win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true },
+    { win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true, hideCheck: false },
     store.get("radar.filters", {})
   );
   if (![1, 2].includes(st.win)) st.win = 1;
@@ -49,11 +49,26 @@
     if (st.places.length && !st.places.some((p) => j.places.includes(p))) return false;
     if (st.term && !j.terms.includes(st.term)) return false;
     if (st.hideDone && (marks[j.url] === "applied" || marks[j.url] === "skip")) return false;
+    if (st.hideCheck && j.elig && (j.elig.auth === "check" || j.elig.degree === "check")) return false;
     if (st.q) {
       const hay = `${j.company} ${j.title} ${j.locations.join(" ")}`.toLowerCase();
       if (!st.q.toLowerCase().split(/\s+/).every((w) => hay.includes(w))) return false;
     }
     return true;
+  }
+
+  function eligTags(e) {
+    if (!e) return [];
+    const why = esc((e.notes || []).join(" · "));
+    const t = (cls, text) => `<span class="tag ${cls}" title="${why}">${text}</span>`;
+    const out = [];
+    if (e.auth === "cpt") out.push(t("good", "CPT ok"));
+    else if (e.auth === "check") out.push(t("warn", "No sponsorship: check"));
+    else if (e.auth === "unknown") out.push(t("unk", "Work auth: no JD"));
+    if (e.degree === "ok") out.push(t("good", "MS ok"));
+    else if (e.degree === "check") out.push(t("warn", "Degree: check"));
+    if (e.grad === "ok") out.push(t("good", "Grad date ok"));
+    return out;
   }
 
   function row(j) {
@@ -65,7 +80,7 @@
       `<span class="tag">${esc(j.field)}</span>`,
       j.why === "JD" ? `<span class="tag jd" title="Title isn't a tech title; the job description has these terms">JD: ${esc(j.jd_terms.join(", "))}</span>` : "",
       ...j.terms.map((t) => `<span class="tag">${esc(t)}</span>`),
-      j.sponsorship ? `<span class="tag">${esc(j.sponsorship)}</span>` : "",
+      ...eligTags(j.elig),
     ].join(" ");
     return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}" data-url="${esc(j.url)}">
       <div>
@@ -109,7 +124,8 @@
         if (!v.ok) return `${k} FAILED`;
         if (v.boards !== undefined) return `${k} ${v.boards - v.failed}/${v.boards} boards, ${v.rows} US intern/co-op jobs`;
         return `${k} ok, ${v.rows} live US rows`;
-      }).join(" · ") + (m.polled ? ` · boards polled ${ago(m.polled)}` : "");
+      }).join(" · ") + (m.polled ? ` · boards polled ${ago(m.polled)}` : "") +
+      (m.ineligible_skipped !== undefined ? ` · hidden: ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} not eligible (citizenship/clearance, undergrad/PhD only, grad date)` : "");
 
     const fields = [...new Set(d.jobs.map((j) => j.field))].sort();
     $("fields").innerHTML = fields.map((f) => `<button data-v="${esc(f)}">${esc(f)}</button>`).join("");
@@ -124,6 +140,8 @@
     $("q").value = st.q;
     $("q").oninput = (e) => { st.q = e.target.value.trim(); save(); render(); };
     $("term").onchange = (e) => { st.term = e.target.value; save(); render(); };
+    $("hideCheck").checked = st.hideCheck;
+    $("hideCheck").onchange = (e) => { st.hideCheck = e.target.checked; save(); render(); };
     $("hideDone").checked = st.hideDone;
     $("hideDone").onchange = (e) => { st.hideDone = e.target.checked; save(); render(); };
     render();
