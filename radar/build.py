@@ -213,7 +213,9 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     #        excerpts without eligibility words, batches of llm.BATCH, newest / co-op / Boston first, and a
     #        per-run token + request budget (the rest waits for the next run).
     ai_cache = state.setdefault("ai_cache", {})
-    ai_on = ai is not llm.ask or bool(os.environ.get("GROQ_API_KEY"))  # tests pass a fake reader
+    # The AI reader runs only when switched on (RADAR_AI=on) and a key is set. Off by default: the token-light
+    # cascade is not validated yet and the free daily quota is small (see docs/eligibility.md).
+    ai_on = ai is not llm.ask or (os.environ.get("RADAR_AI") == "on" and bool(os.environ.get("GROQ_API_KEY")))
     budget = llm.Budget(run_tokens=int(os.environ.get("RADAR_AI_RUN_TOKENS", "60000")), run_requests=MAX_AI_PER_RUN)
     ai_stats = {"answered": 0, "from_cache": 0, "no_signal": 0, "unverified": 0, "pending": 0}
     todo = {}
