@@ -797,7 +797,8 @@ def test_gold_dev_set_no_regressions():
 
 
 # ---- token management --------------------------------------------------------------------------------------------
-def test_trim_keeps_important_sentences_first():
+def test_trim_keeps_important_sentences_first(monkeypatch):
+    monkeypatch.setattr(llm, "PROFILE", "v2")
     ex = ("We love teamwork and great snacks. " * 30 + "US citizenship is required. Pursuing a BS or MS in CS. "
           "Graduating between Dec 2027 and Jun 2028.")
     t = llm.trim(ex, limit=200)
@@ -805,7 +806,8 @@ def test_trim_keeps_important_sentences_first():
     assert llm.key(ex) == llm.key(ex + " ")  and llm.key(ex) != llm.key("Pursuing a BS only.")
 
 
-def test_ask_batch_one_request_for_many_and_budget():
+def test_ask_batch_one_request_for_many_and_budget(monkeypatch):
+    monkeypatch.setattr(llm, "PROFILE", "v2")
     calls = []
     def post(body, key):
         calls.append(body)
@@ -893,3 +895,16 @@ def test_strict_shows_only_jobs_that_pass_every_check(tmp_path, monkeypatch):
     shown = {j["company"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
     assert shown == {"Clean", "Silent", "NoSponsor"}   # no sponsorship is fine with CPT/OPT (Dheepak, 2026-11-14)
     assert meta["ineligible_skipped"] == 1 and meta["review_skipped"] == 0 and meta["unverified_skipped"] == 1
+
+
+def test_v1_profile_is_the_measured_setup_and_stops_at_daily_limit(monkeypatch):
+    monkeypatch.setattr(llm, "PROFILE", "v1")
+    body = llm._body([("x", "Pursuing a BS or MS. " * 200)], "openai/gpt-oss-120b")
+    assert body["messages"][0]["content"] == llm.SYSTEM_V1 and "max_tokens" not in body and "reasoning_effort" not in body
+    assert body["messages"][1]["content"].endswith("Pursuing a BS or MS. ")  # full excerpt, not trimmed
+    import io
+    def daily(body, key):
+        raise llm.urllib.error.HTTPError("u", 429, "limit", {}, io.BytesIO(b'{"error":{"message":"... tokens per day (TPD) ..."}}'))
+    b = llm.Budget()
+    assert llm.ask_batch([("x", "US citizenship is required.")], api_key="k", budget=b, post=daily) == {}
+    assert b.daily_limit_hit and b.spent()

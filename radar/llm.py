@@ -30,7 +30,11 @@ from .eligibility import LABELS, NEUTRAL
 API = "https://api.groq.com/openai/v1/chat/completions"
 MODEL = os.environ.get("RADAR_LLM_MODEL") or "openai/gpt-oss-120b"  # empty env var (unset GitHub var) -> default
 LLM_VERSION = 2       # bump when the prompt, model settings or excerpt trimming change: cached answers are redone
-BATCH = int(os.environ.get("RADAR_LLM_BATCH") or 5)        # excerpts per request
+# PROFILE "v1" = the exact setup measured on the held-out test set (one excerpt per call, full excerpt, the v1
+# prompt, the model's default reasoning): gpt-oss-120b 95.4% verdict accuracy, 0 / 35 not-eligible shown.
+# PROFILE "v2" = batched + trimmed + low reasoning: fewer tokens but 85% on dev, so not used live.
+PROFILE = os.environ.get("RADAR_LLM_PROFILE") or "v1"
+BATCH = 1 if PROFILE == "v1" else int(os.environ.get("RADAR_LLM_BATCH") or 5)  # excerpts per request
 EFFORT = os.environ.get("RADAR_LLM_EFFORT") or "low"        # gpt-oss reasoning effort: low / medium / high
 MAX_EXCERPT = 1200    # chars per excerpt sent to the model
 OUT_PER_ITEM = 140    # output tokens reserved per excerpt (answers + quotes; gpt-oss adds a little reasoning)
@@ -50,6 +54,32 @@ grad: "fits" = stated graduation window includes May 2028 (±3 months). "misses"
 Only answer from the excerpt. For each non-default answer (default: not_required, silent, silent, unclear, not_stated) copy the supporting sentence EXACTLY into q.
 Reply JSON only: {"r":[{"id":<id>,"citizenship":..,"cpt":..,"sponsorship":..,"degree":..,"grad":..,"q":{"<question>":"<exact sentence>"}}]}"""
 
+SYSTEM_V1 = """You check whether one applicant may apply to a US internship/co-op, using only the job-description \
+excerpt you are given. The applicant: a master's student (MS, Electrical & Computer Engineering) on an F-1 student \
+visa who needs CPT (Curricular Practical Training) to work; expected graduation May 2028; not a US citizen, no \
+green card, no security clearance.
+
+Answer five questions with exactly these values:
+- citizenship: "required" if the excerpt requires US citizenship, a green card / permanent residency, "U.S. person" \
+status (ITAR/EAR), or an active or obtainable security clearance; else "not_required".
+- cpt: "rejected" if it says F-1 / CPT / OPT / student-visa holders are not eligible or do not meet requirements, \
+or it requires PERMANENT work authorization; "welcome" if it explicitly says CPT / F-1 students can apply; else "silent".
+- sponsorship: "no_sponsorship" if it will not sponsor, or candidates must not need sponsorship now or in the future, \
+or must be authorized to work for any employer; "sponsors" if it says it will sponsor; else "silent".
+- degree: "ms_ok" if master's students can apply (master's, graduate students, BS/MS, "BS or higher", all levels); \
+"ug_only" if only undergraduate / bachelor's students (e.g. "pursuing a Bachelor's", "rising junior/senior", \
+"enrolled in an undergraduate program") with no graduate students; "phd_only" if only PhD students; \
+"ug_preferred" if a bachelor's / undergrad is only preferred; else "unclear".
+- grad: "fits" if a stated graduation window or date includes May 2028 (±3 months); "misses" if a stated \
+graduation window or date excludes May 2028 (e.g. "graduating Dec 2028 or later", "class of 2029", "graduated in 2026"); \
+else "not_stated". Ignore dates that are not about the applicant's graduation.
+
+For every answer that is not the neutral value (not_required / silent / unclear / not_stated), give the EXACT \
+sentence copied from the excerpt that supports it. Copy it character for character; do not paraphrase.
+
+Reply with JSON only: {"citizenship": ..., "cpt": ..., "sponsorship": ..., "degree": ..., "grad": ..., \
+"quotes": {"<question>": "<exact sentence>", ...}}"""
+
 # ---- excerpt: trimmed, most important sentences first --------------------------------------------------------
 PRIORITY = [re.compile(p, re.I) for p in (
     r"citizen|clearance|itar|export|u\.s\. person|green card|permanent",
@@ -62,6 +92,8 @@ SIGNAL = re.compile("|".join(p.pattern for p in PRIORITY), re.I)
 
 def trim(excerpt: str, limit: int = MAX_EXCERPT) -> str:
     """Keep whole sentences, most important groups first, in their original order, up to `limit` chars."""
+    if PROFILE == "v1":
+        return excerpt or ""
     sents = [s.strip() for s in re.split(r"(?<=[.!?])\s+", excerpt or "") if s.strip()]
     rank = {i: next((k for k, rx in enumerate(PRIORITY) if rx.search(s)), len(PRIORITY)) for i, s in enumerate(sents)}
     keep, used = set(), 0
@@ -74,7 +106,7 @@ def trim(excerpt: str, limit: int = MAX_EXCERPT) -> str:
 
 
 def key(excerpt: str) -> str:
-    return hashlib.sha1(f"{MODEL}|{LLM_VERSION}|{EFFORT}|{trim(excerpt)}".encode()).hexdigest()[:20]
+    return hashlib.sha1(f"{MODEL}|{LLM_VERSION}|{PROFILE}|{EFFORT}|{trim(excerpt)}".encode()).hexdigest()[:20]
 
 
 def _norm(s: str) -> str:
@@ -108,8 +140,11 @@ class Budget:
         self.prompt = self.completion = self.requests = self.waited = 0
         self.remaining_tokens, self.reset_tokens = None, 0.0
 
+    daily_limit_hit = False
+
     def spent(self) -> bool:
-        return self.prompt + self.completion >= self.run_tokens or self.requests >= self.run_requests
+        return (self.daily_limit_hit or self.prompt + self.completion >= self.run_tokens
+                or self.requests >= self.run_requests)
 
     def before(self, need: int) -> None:
         """Wait for the per-minute window if the last response said we're too close to the limit."""
@@ -130,7 +165,7 @@ class Budget:
 
     def report(self) -> dict:
         return {"requests": self.requests, "prompt_tokens": self.prompt, "completion_tokens": self.completion,
-                "waited_s": round(self.waited, 1)}
+                "waited_s": round(self.waited, 1), "daily_limit_hit": self.daily_limit_hit, "profile": PROFILE}
 
 
 def _seconds(s: str) -> float:
@@ -149,6 +184,10 @@ def _post(body: dict, api_key: str) -> tuple[dict, dict]:
 
 
 def _body(items: list[tuple[str, str]], model: str) -> dict:
+    if PROFILE == "v1":
+        return {"model": model, "temperature": 0, "response_format": {"type": "json_object"},
+                "messages": [{"role": "system", "content": SYSTEM_V1},
+                             {"role": "user", "content": "Excerpt:\n" + items[0][1]}]}
     user = "\n\n".join(f"[id {i}]\n{trim(ex)}" for i, ex in items)
     body = {"model": model, "temperature": 0, "response_format": {"type": "json_object"},
             "max_tokens": OUT_BASE + OUT_PER_ITEM * len(items),
@@ -172,7 +211,7 @@ def ask_batch(items: list[tuple[str, str]], api_key: str | None = None, model: s
     budget = budget or Budget()
     post = post or _post
     body = _body(items, model)
-    need = body["max_tokens"] + len(json.dumps(body["messages"])) // 3
+    need = body.get("max_tokens", 1200) + len(json.dumps(body["messages"])) // 3
     for attempt in range(tries):
         budget.before(need)
         try:
@@ -180,6 +219,8 @@ def ask_batch(items: list[tuple[str, str]], api_key: str | None = None, model: s
             budget.after(raw.get("usage") or {}, headers)
             text = re.sub(r"(?s)<think>.*?</think>", "", raw["choices"][0]["message"]["content"] or "").strip()
             data = json.loads(text[text.find("{"):text.rfind("}") + 1])
+            if PROFILE == "v1" and isinstance(data, dict) and "r" not in data:
+                data = {"r": [{**data, "id": items[0][0]}]}
             rows = data.get("r") if isinstance(data, dict) else data
             out = {}
             excerpts = {str(i): trim(ex) for i, ex in items}
@@ -197,6 +238,14 @@ def ask_batch(items: list[tuple[str, str]], api_key: str | None = None, model: s
                     out[rid] = {"labels": lab, "quotes": quo, "unverified": unv, "model": model}
             return out
         except urllib.error.HTTPError as e:
+            msg = ""
+            try:
+                msg = (e.read() or b"").decode("utf-8", "ignore")
+            except Exception:
+                pass
+            if e.code == 429 and "per day" in msg:
+                budget.daily_limit_hit = True  # free daily quota used up: stop, the rest waits for later runs
+                return {}
             if e.code == 429 or e.code >= 500:
                 wait = _seconds((e.headers or {}).get("retry-after", "") + "s") if e.headers else 0
                 time.sleep(min(65, max(wait, 5 * (attempt + 1))))
