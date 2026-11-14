@@ -29,7 +29,8 @@ TITLE_GROUPS = [
     ("Data", [
         r"\bdata\b", r"analytics", r"business intelligence", r"\bbi\b", r"data scien", r"statistic",
         r"\bsql\b", r"database", r"big data", r"decision scien", r"quantitative (analyst|researcher|research)",
-        r"\bgis\b", r"geospatial", r"bioinformatic", r"computational", r"\betl\b", r"data warehouse",
+        r"\bgis\b", r"geospatial", r"bioinformatic", r"computational (biology|science|data|statistics|linguistics)",
+        r"\betl\b", r"data warehouse",
     ]),
     ("Software", [
         r"software", r"\bswe\b", r"\bsde\b", r"\bsdet\b", r"developer", r"programmer", r"programming",
@@ -72,10 +73,16 @@ JD_MIN_TERMS = 4
 TAG = re.compile(r"<[^>]+>")
 
 
+# Phrases that contain a tech word but name a different job ("Data Center Growth & Development" = real estate).
+NOT_TECH_PHRASE = re.compile(r"data cent(er|re)s? (growth|development|construction|facilit\w*|real estate|"
+                             r"operations technician|technician|site selection|energy|power|mechanical|electrical)", re.I)
+
+
 def title_field(title: str) -> str | None:
     """'AI/ML' | 'Data' | 'Software' if the title is a tech role, else None."""
     if not title or TITLE_NOT.search(title):
         return None
+    title = NOT_TECH_PHRASE.sub(" ", title)
     for field, rx in TITLE_RX:
         if rx.search(title):
             return field

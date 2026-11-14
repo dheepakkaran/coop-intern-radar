@@ -387,11 +387,14 @@ def test_tech_titles():
            "Computer Vision Co-op": "AI/ML", "MLOps Intern": "AI/ML",
            "Data Engineer Intern": "Data", "Business Intelligence Co-op": "Data", "Analytics Engineer Intern": "Data",
            "Software Engineer Intern": "Software", "SWE Intern": "Software", "Full Stack Developer Co-op": "Software",
-           "Site Reliability Engineering Intern": "Software", "Embedded Software Co-op": "Software"}
+           "Site Reliability Engineering Intern": "Software", "Embedded Software Co-op": "Software",
+           "Computational Biology Intern": "Data"}
     for t, f in yes.items():
         assert tech.title_field(t) == f, (t, tech.title_field(t))
+    assert tech.title_field("Data Center Software Engineer Intern")  # still a tech job
     for t in ["Mechanical Engineering Intern", "Finance Intern", "Data Entry Intern", "Business Development Intern",
-              "Insurance Agent Intern", "Marketing Intern", "Supply Chain Co-op", "Teaching Assistant - Data Structures"]:
+              "Insurance Agent Intern", "Marketing Intern", "Supply Chain Co-op", "Teaching Assistant - Data Structures",
+              "2027 Data Center Growth & Development Intern - NYC", "Grad Intern - Computational Chemistry"]:  # live audit
         assert tech.title_field(t) is None, t
 
 
@@ -458,7 +461,8 @@ def test_elig_degree():
           "Rising junior, senior, or graduate-level student preferred.",
           "All education levels (Bachelor's, Master's, or Ph.D.) welcome",
           "Completion of at least two years of an undergraduate or graduate degree program in a quantitative field",
-          "Currently pursuing a BS or MS in Computer Engineering"]
+          "Currently pursuing a BS or MS in Computer Engineering",
+          "Currently pursuing a B.S. or higher in Computer Science or a related technical field"]   # Ramp, live audit
     for s in ok:
         assert _e(s)["degree"] == "ok", s
     no = ["Currently pursuing a Bachelor's degree in Computer Science, Software Engineering, or a closely related field.",
@@ -491,6 +495,10 @@ def test_elig_grad_window():
             "Home Search Jobs Life at Koch Early Careers Recruiting Events Candidate Portal Join our Talent Community "
             "Employee Login Benefits Our Culture Students and recent graduates explore roles")
     assert _e(menu)["grad"] is None
+    # ServiceNow (live audit): the same line twice, once with "or later" -> fits
+    sn = ("Pursuing a Masters degree in Computer Science and graduating December 2027, or later. "
+          "Requirements: Master's degree in Computer Science and graduating in December 2027.")
+    assert _e(sn)["grad"] == "ok"
 
 
 def test_elig_list_and_combine():

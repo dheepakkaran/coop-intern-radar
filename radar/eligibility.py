@@ -17,7 +17,7 @@ A job is hidden when any check says 'no'. 'check' jobs are shown with a tag (the
 import re
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
-RULES_VERSION = 2  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+RULES_VERSION = 4  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 
 TAG = re.compile(r"<[^>]+>")
 WS = re.compile(r"\s+")
@@ -74,12 +74,13 @@ MS_OK = re.compile(
     r"\bmaster'?s\b|\bm\.?s\.? (student|degree|candidate|program|in)\b|\bmsc\b|\bmeng\b|\bm\.s\.|"
     r"(?<!under)\bgraduate[- ](level |degree |school )?(student|degree|program|candidate)s?|graduate[- ]level|"
     r"\bms\b(?=\s*(,|/|\)|or\b|and\b|degree|in\b|program|student|candidate))|\b(bs|b\.s\.)\s*(,|/|or)\s*(ms|m\.s\.)|"
+    r"(bachelor'?s?|b\.?s\.?|undergraduate)( degree)?,? or (higher|above)|at least (a|an) (bachelor|undergraduate)|"
     r"(undergraduate|bachelor'?s?)( degree)?,? (or|and/or|/) (graduate|master)|\bbs/ms\b|b\.?s\.?/m\.?s\.?|"
     r"all (education|degree) levels|undergrad(uate)? (or|and) grad|advanced degree|any degree level", re.I)
 UG_ONLY = re.compile(
     r"(enrolled|enrollment) in (a|an)( accredited)? (4-year |four-year )?(undergraduate|bachelor'?s?) (degree )?program|"
     r"(pursuing|working toward[s]?|completing|enrolled in) (a|an|your) (undergraduate|bachelor'?s?|b\.?s\.?|ba/bs|4-year) (degree|program)|"
-    r"(pursuing|working toward[s]?) (a |an )?(bachelor'?s?|b\.?s\.?|b\.?a\.?)\b(?! or)(?!/)|"
+    r"(pursuing|working toward[s]?) (a |an )?(bachelor'?s?|b\.?s\.?|b\.?a\.?)(?![\w.]*\s*(or|/|and)\b)(?!/)|"
     r"\brising (sophomore|junior|senior)s?|\b(sophomore|junior|senior)s? (or|and) (junior|senior)s?\b|"
     r"(entering|completed) (your )?(sophomore|junior|senior) year|junior (or|and) senior (standing|year)|"
     r"undergraduate students? only|only (open to )?undergraduate", re.I)
@@ -127,9 +128,12 @@ def _months(d):
 
 
 def grad_check(text: str) -> tuple[str | None, str | None]:
-    """('ok'|'no'|None, phrase). Looks at sentences that mention graduating and a year."""
+    """('ok'|'no'|None, phrase) from the words around each 'graduat…' that come with a year.
+
+    JDs often repeat the line (once with "or later", once without), so one snippet that fits is enough;
+    the job is 'no' only when every dated snippet leaves the owner's graduation out."""
     g = _months(GRAD)
-    verdict, why = None, None
+    oks, nos = [], []
     for s in _grad_snippets(text):
         if re.search(r"after graduation|upon graduation|post[- ]graduation|full[- ]time", s, re.I):
             continue
@@ -146,11 +150,12 @@ def grad_check(text: str) -> tuple[str | None, str | None]:
             ok = g <= max(ms) + 3
         else:  # a list of dates, e.g. "December 2028 or Spring 2029"
             ok = any(abs(g - m) <= 3 for m in ms)
-        phrase = s.strip()[:110]
-        if not ok:
-            return "no", phrase
-        verdict, why = "ok", phrase
-    return verdict, why
+        (oks if ok else nos).append(s.strip()[:110])
+    if oks:
+        return "ok", oks[0]
+    if nos:
+        return "no", nos[0]
+    return None, None
 
 
 def check(jd: str | None) -> dict:

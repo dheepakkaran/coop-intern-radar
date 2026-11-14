@@ -74,7 +74,7 @@ def apply_jd(j: dict, c: dict) -> None:
 
 
 def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources.resolve_shortlink,
-        poll: str = "auto", poll_fn=ats.poll, now: int | None = None, jd_fetch=None) -> dict:
+        poll: str = "auto", poll_fn=ats.poll, now: int | None = None, jd_fetch=None, audit: str | None = None) -> dict:
     jd_fetch = jd_fetch or jdfetch.fetch
     now = now or int(time.time())
     state = store.load(state_path)
@@ -186,22 +186,33 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     state["jd_cache"] = {u: v for u, v in jd_cache.items() if v["t"] >= now - 10 * 86400}
 
     # 6. The same checks for every job: US, tech role, eligibility.
-    picked = []
+    picked, decisions = [], []
     skipped_not_tech = skipped_inelig = skipped_non_us = 0
     for j, t in in_window:
+        d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
+             "sources": j["sources"], "jd_terms": (j.get("jd_terms") or [])[:8]}
+        decisions.append(d)
         if j.get("non_us"):
             skipped_non_us += 1
+            d["result"] = "hidden: not US (JD country)"
             continue
         tc = tech.classify(j["title"], j.get("field"), j.get("jd_terms"))
         if not tc:
             skipped_not_tech += 1
+            d["result"] = "hidden: not tech"
             continue
         lst = eligibility.from_list(j.get("sponsorship"), j.get("degrees")) if "Simplify" in j["sources"] else None
         e = eligibility.with_list(j.get("elig"), lst)
+        d["elig"], d["field"] = e, tc
         if eligibility.hidden(e):
             skipped_inelig += 1
+            d["result"] = "hidden: not eligible"
             continue
+        d["result"] = "shown"
         picked.append((j, t, tc, e))
+    if audit:  # every decision with its reason, for checking the filters by hand (not published)
+        with open(audit, "w") as f:
+            json.dump(decisions, f, indent=1)
 
     rows = []
     for j, t, (fld, why), e in picked:
@@ -256,8 +267,9 @@ def main() -> None:
     ap.add_argument("--state", default="state/seen.json.gz")
     ap.add_argument("--out", default="site/data")
     ap.add_argument("--poll", choices=["auto", "yes", "no"], default="auto")
+    ap.add_argument("--audit", help="write every job's decision + reason to this JSON file")
     a = ap.parse_args()
-    meta = run(a.state, a.out, poll=a.poll)
+    meta = run(a.state, a.out, poll=a.poll, audit=a.audit)
     print(json.dumps(meta, indent=1))
     if not any(s["ok"] for s in meta["sources"].values()):
         sys.exit(1)
