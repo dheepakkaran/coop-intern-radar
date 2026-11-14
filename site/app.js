@@ -83,12 +83,12 @@
       }
     }
     const role = [
-      ["Field", j.field + (j.why === "JD" ? ` (from the description: ${j.jd_terms.join(", ")})` : "")],
+      ["Field", j.field + (j.why === "agent" ? " (review agent)" : j.why === "JD" ? ` (from the description: ${j.jd_terms.join(", ")})` : "")],
       ["Type", j.kind + (j.terms.length ? ` · ${j.terms.join(", ")}` : "")],
       ["Location", (j.locations.join(" · ") || "Not listed") + (j.more_locations ? ` +${j.more_locations} more` : "")],
     ];
     secs.push(`<div class="dsec"><h4>Role</h4>${role.map(([k, v]) => `<div class="drow"><b>${k}</b><span class="v">${esc(v)}</span></div>`).join("")}</div>`);
-    const reader = !e || !e.labels ? "no description" : e.ai === "read" ? "rules + AI reader (quotes verified)" : "rules";
+    const reader = !e || !e.labels ? "no description" : e.ai === "agent" ? "review agent read the full description (quotes verified)" : e.ai === "read" ? "rules + AI reader (quotes verified)" : "rules";
     secs.push(`<p class="dfoot">Read by ${reader} · found via ${esc(j.sources.join(", "))} · first seen ${ago(j.posted)}</p>`);
     return `<div class="detail">${secs.join("")}</div>`;
   }

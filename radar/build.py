@@ -19,6 +19,17 @@ MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest ne
 JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
 MAX_AI_PER_RUN = int(os.environ.get("RADAR_AI_REQUESTS", "20"))  # AI requests per run (each = up to llm.BATCH JDs)
 ATS_SOURCES = set(ats.ATS_NAMES.values())
+# Corrections from the local review agent (scripts/agent_audit.py, run on Dheepak's laptop with Claude Code): it reads
+# each live job's full description and, where its reading differs from ours, its answer is the final word.
+OVERRIDES = os.path.join(os.path.dirname(__file__), "..", "agent", "overrides.json")
+
+
+def load_overrides(path: str | None = OVERRIDES) -> dict:
+    try:
+        with open(path) as f:
+            return json.load(f)
+    except (OSError, ValueError, TypeError):
+        return {}
 
 
 def posted_at(job: dict, rec: dict) -> int | None:
@@ -77,7 +88,8 @@ def apply_jd(j: dict, c: dict) -> None:
 
 def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources.resolve_shortlink,
         poll: str = "auto", poll_fn=ats.poll, now: int | None = None, jd_fetch=None, audit: str | None = None,
-        ai=None) -> dict:
+        ai=None, overrides: dict | None = None) -> dict:
+    overrides = load_overrides() if overrides is None else overrides
     jd_fetch = jd_fetch or jdfetch.fetch
     ai = ai or llm.ask
     now = now or int(time.time())
@@ -199,11 +211,16 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
              "sources": j["sources"], "jd_terms": (j.get("jd_terms") or [])[:8]}
         decisions.append(d)
-        if j.get("non_us"):
+        ov = overrides.get(store.norm_url(j["url"]))
+        if ov:
+            j["_agent"] = ov
+        if j.get("non_us") or (ov and ov.get("us") is False):
             skipped_non_us += 1
             d["result"] = "hidden: not US (JD country)"
             continue
         tc = tech.classify(j["title"], j.get("field"), j.get("jd_terms"))
+        if ov and "tech" in ov:
+            tc = (ov["tech"], "agent") if ov["tech"] else None
         if not tc:
             skipped_not_tech += 1
             d["result"] = "all roles only: not tech"
@@ -259,14 +276,20 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         lst = eligibility.from_list(j.get("sponsorship"), j.get("degrees")) if "Simplify" in j["sources"] else None
         rules = j.get("elig")
         c = ai_cache.get(j.get("_ai_key")) if j.get("_ai_key") else None
-        if rules and rules.get("labels") and c:
+        ov = j.get("_agent")
+        if ov and ov.get("labels"):
+            # the review agent read the whole description: its reading is final (no list hint on top)
+            rules = {**eligibility.from_labels(ov["labels"], ov.get("quotes") or {}, source="agent"),
+                     "disagree": [], "ai": "agent"}
+            lst = None
+        elif rules and rules.get("labels") and c:
             lab, quo, dis = llm.merge(rules, c)
             rules = {**eligibility.from_labels(lab, quo, source="ai+rules"), "disagree": dis, "ai": "read"}
         elif rules and rules.get("labels"):
             # re-derive the verdict from the five answers with today's policy (cached verdicts may be older)
             rules = {**rules, **eligibility.from_labels(rules["labels"], rules.get("quotes") or {}),
                      "ai": "pending" if ai_on else "off"}
-        e = eligibility.with_list(rules, lst)
+        e = rules if lst is None and rules and rules.get("ai") == "agent" else eligibility.with_list(rules, lst)
         d["elig"], d["field"] = e, tc
         reason = None
         if eligibility.hidden(e):

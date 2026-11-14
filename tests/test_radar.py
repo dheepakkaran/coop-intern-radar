@@ -923,3 +923,46 @@ def test_all_roles_view_keeps_every_us_role_with_a_reason(tmp_path):
     jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
     assert set(jobs) == {"A", "B"}
     assert jobs["B"]["match"] is False and "AI/ML, Data or Software" in jobs["B"]["why_not"]
+
+
+@pytest.fixture(autouse=True)
+def no_agent_overrides(monkeypatch):
+    monkeypatch.setattr(build, "OVERRIDES", "/nonexistent/overrides.json")
+
+
+def test_review_agent_overrides_are_final(tmp_path, monkeypatch):
+    monkeypatch.setattr(build, "STRICT", True)
+    now = 2_000_000_000
+    def bj(company, jd, url, title="Software Engineer Intern"):
+        return {"source": "Greenhouse", "company": company, "title": title, "url": url,
+                "locations": ["Boston, MA"], "terms": [], "posted": now - 3600, "field": None, "sponsorship": None,
+                "jd_terms": tech.jd_terms(jd), "elig": elig.check(jd), "excerpt": elig.excerpt(jd)}
+    neutral = dict(elig.NEUTRAL)
+    board = [bj("Missed", "Pursuing a BS or MS in CS. Python.", "https://g/1"),       # rules: match
+             bj("Hidden", "US citizenship is required.", "https://g/2"),               # rules: fails
+             bj("NotTech", "Pursuing a BS or MS. Python.", "https://g/3", title="Marketing Intern"),
+             bj("Untouched", "Pursuing a BS or MS in CS.", "https://g/4")]
+    ov = {"https://g/1": {"us": True, "tech": "Software", "labels": {**neutral, "citizenship": "required"},
+                          "quotes": {"citizenship": "Must hold an active Secret clearance."}},
+          "https://g/2": {"us": True, "tech": "Software", "labels": neutral, "quotes": {}},
+          "https://g/3": {"us": True, "tech": "AI/ML", "labels": {**neutral, "degree": "ms_ok"}, "quotes": {}}}
+    old = [_row("Z", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/z/jobs/0")]
+    build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
+              poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now, overrides=ov)
+    jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    assert jobs["Missed"]["match"] is False and "citizenship" in jobs["Missed"]["why_not"]
+    assert jobs["Hidden"]["match"] is True and jobs["Hidden"]["elig"]["ai"] == "agent"
+    assert jobs["NotTech"]["match"] is True and jobs["NotTech"]["field"] == "AI/ML" and jobs["NotTech"]["why"] == "agent"
+    assert jobs["Untouched"]["match"] is True and jobs["Untouched"]["elig"]["ai"] != "agent"
+
+
+def test_agent_audit_checks_quotes_word_for_word():
+    from scripts import agent_audit as A
+    text = "We hire interns.  Applicants must be U.S. citizens. Python required."
+    a = {"us": True, "tech": "Software", "citizenship": "required", "cpt": "silent", "sponsorship": "silent",
+         "degree": "unclear", "grad": "not_stated", "confidence": 97,
+         "quotes": {"citizenship": "Applicants must be U.S. citizens."}}
+    ok = A.check_answer(a, text)
+    assert ok["confidence"] == 97 and A.agent_verdict(ok) == (False, "fails: citizenship")
+    made_up = A.check_answer({**a, "quotes": {"citizenship": "Only US citizens may apply."}}, text)
+    assert made_up["confidence"] < A.MIN_CONF and made_up["unverified"] == ["citizenship"]
