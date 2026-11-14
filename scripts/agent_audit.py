@@ -198,6 +198,17 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
     live = live_data()
     rows = {store.norm_url(r["url"]): r for r in live["jobs"]}
     live_at = live["meta"].get("updated") or live["meta"].get("generated") or 0
+    # 1b. a run that died mid-way (laptop off) saved its reviews but not its corrections: rebuild them
+    recovered = 0
+    for k, rv in reviews.items():
+        if rv.get("status") == "corrected" and k not in overrides and k in rows:
+            a = rv["answer"]
+            overrides[k] = {"us": a["us"], "tech": a["tech"], "labels": {x: a[x] for x in E.LABELS},
+                            "quotes": a["quotes"], "confidence": a["confidence"], "company": rv["company"],
+                            "title": rv["title"], "was": rv.get("live_reason") or ("match" if rv.get("live_match") else "not a match"),
+                            "now": "match" if rv["agent_match"] else rv["agent_reason"], "pushed_at": now,
+                            "live": "waiting for the next build"}
+            recovered += 1
 
     # 2. verify earlier corrections
     for k, ov in overrides.items():
@@ -224,7 +235,7 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
                           "live_match": r["match"], "agent_match": r["match"]}
             continue
         ready.append((k, r, text))
-    stats = {"reviewed": 0, "agree": 0, "new_corrections": 0, "unsure": 0, "no_jd": len(todo) - len(ready),
+    stats = {"reviewed": 0, "agree": 0, "new_corrections": recovered, "recovered": recovered, "unsure": 0, "no_jd": len(todo) - len(ready),
              "tokens": 0, "errors": []}
     for i in range(0, len(ready), batch):
         part = ready[i:i + batch]
@@ -265,6 +276,7 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
                 rec["status"] = "unsure (for Dheepak)"
                 stats["unsure"] += 1
             reviews[k] = rec
+        _save(OVERRIDES, overrides)  # save both each batch, so a crash never loses a correction
         _save(REVIEWS, reviews)
     # drop corrections for jobs that left the window a while ago (keeps the file small)
     overrides = {k: v for k, v in overrides.items() if k in rows or now - v.get("pushed_at", now) < 3 * 86400}
