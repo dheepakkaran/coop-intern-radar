@@ -251,12 +251,12 @@ def labels(jd: str) -> tuple[dict, dict]:
 
 def from_labels(lab: dict, quo: dict, source: str = "rules") -> dict:
     """Turn the five answers into the verdict the page and the filter use."""
+    # Dheepak (2026-11-14): only citizenship-type rules and an explicit CPT/OPT rejection block him. "No sponsorship"
+    # is about future visas (H-1B); for an internship, work authorization through CPT/OPT is enough -> passes.
     if lab["citizenship"] == "required" or lab["cpt"] == "rejected":
         auth = "no"
     elif lab["cpt"] == "welcome":
         auth = "cpt"
-    elif lab["sponsorship"] == "no_sponsorship":
-        auth = "check"
     else:
         auth = "ok"
     degree = {"ms_ok": "ok", "ug_only": "no", "phd_only": "no", "ug_preferred": "check"}.get(lab["degree"], "unknown")

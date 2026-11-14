@@ -31,8 +31,8 @@
     ["Work authorization", [
       ["citizenship", "Citizenship", { not_required: ["ok", "Not required"] }],
       ["cpt", "CPT / F-1", { welcome: ["ok", "CPT welcome"], silent: ["ok", "Not rejected"] }],
-      ["sponsorship", "Sponsorship", { sponsors: ["ok", "Sponsors"], silent: ["ok", "Not mentioned"],
-        no_sponsorship: ["warn", "No sponsorship: often fine for CPT"] }],
+      ["sponsorship", "Work authorization", { sponsors: ["ok", "Sponsors visas"], silent: ["ok", "Not mentioned"],
+        no_sponsorship: ["ok", "Work authorization needed, no sponsorship (CPT / OPT is enough)"] }],
     ]],
     ["Education", [
       ["degree", "Degree", { ms_ok: ["ok", "Master's students OK"], unclear: ["unk", "Not stated"],

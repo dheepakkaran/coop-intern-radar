@@ -262,7 +262,9 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             lab, quo, dis = llm.merge(rules, c)
             rules = {**eligibility.from_labels(lab, quo, source="ai+rules"), "disagree": dis, "ai": "read"}
         elif rules and rules.get("labels"):
-            rules = {**rules, "ai": "pending" if ai_on else "off"}
+            # re-derive the verdict from the five answers with today's policy (cached verdicts may be older)
+            rules = {**rules, **eligibility.from_labels(rules["labels"], rules.get("quotes") or {}),
+                     "ai": "pending" if ai_on else "off"}
         e = eligibility.with_list(rules, lst)
         d["elig"], d["field"] = e, tc
         if eligibility.hidden(e):

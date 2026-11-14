@@ -463,8 +463,8 @@ def test_elig_auth():
              "Applicants must be currently authorized to work in the United States without the need for employer sponsorship now or in the future.",
              "This position is not eligible for sponsorship.",
              "Candidates must not require sponsorship of an employment visa at the time of application or in the future."]
-    for s in check:
-        assert _e(s)["auth"] == "check", s
+    for s in check:  # recognised as "no sponsorship", but that passes: CPT/OPT is work authorization
+        assert _e(s)["labels"]["sponsorship"] == "no_sponsorship" and _e(s)["auth"] == "ok", s
     assert _e("Comply with U.S. export laws without sponsorship for an export license.")["auth"] == "ok"
     assert _e("We consider applicants regardless of race, citizenship, or veteran status.")["auth"] == "ok"
     assert _e("Interns will not be eligible for company-sponsored benefits such as the 401(k).")["auth"] == "ok"
@@ -549,8 +549,8 @@ def test_build_hides_ineligible_and_tags_the_rest(tmp_path):
     jobs = {j["title"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
     assert set(jobs) == {"ML Engineer Co-op", "AI Engineer Intern"}
     assert jobs["ML Engineer Co-op"]["elig"]["auth"] == "cpt" and jobs["ML Engineer Co-op"]["elig"]["degree"] == "ok"
-    assert jobs["AI Engineer Intern"]["elig"]["auth"] == "check"
-    assert meta["ineligible_skipped"] == 2 and meta["check_count"] == 1
+    assert jobs["AI Engineer Intern"]["elig"]["auth"] == "ok"   # "any employer / no sponsorship": CPT/OPT is enough
+    assert meta["ineligible_skipped"] == 2 and meta["check_count"] == 0
 
 
 def test_jd_cache_skips_second_fetch(monkeypatch):
@@ -891,5 +891,5 @@ def test_strict_shows_only_jobs_that_pass_every_check(tmp_path, monkeypatch):
     meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
                      poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now)
     shown = {j["company"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
-    assert shown == {"Clean", "Silent"}
-    assert meta["ineligible_skipped"] == 1 and meta["review_skipped"] == 1 and meta["unverified_skipped"] == 1
+    assert shown == {"Clean", "Silent", "NoSponsor"}   # no sponsorship is fine with CPT/OPT (Dheepak, 2026-11-14)
+    assert meta["ineligible_skipped"] == 1 and meta["review_skipped"] == 0 and meta["unverified_skipped"] == 1
