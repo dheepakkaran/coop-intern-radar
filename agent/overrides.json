@@ -20,27 +20,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "https://amgen.wd1.myworkdayjobs.com/careers/job/United-States---Remote/Grad-Intern---Knowledge-Graph-Applications--Summer-2027-_R-260625": {
-  "company": "Amgen",
-  "confidence": 85,
-  "jd_hash": null,
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a Master's or PhD program in data science, computer science, artificial intelligence, biomedical informatics, biostatistics, epidemiology, computational biology, or a related quantitative discipline."
-  },
-  "read_at": 1794688831,
-  "tech": "AI/ML",
-  "title": "AI-Enabled Knowledge Graphs for Patient Journey Analytics Intern",
-  "us": true,
-  "was": "unverified: no job description"
- },
  "https://apply.workable.com/bask-health-1/j/71AEBBCADE": {
   "company": "Bask Health",
   "confidence": 88,
@@ -86,7 +65,7 @@
  "https://ats.rippling.com/fieldpulse/jobs/bfade8ef-2509-4042-b400-019fe3a84a7d": {
   "company": "FieldPulse",
   "confidence": 92,
-  "jd_hash": null,
+  "jd_hash": "a79630b46685c793",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -98,11 +77,34 @@
   "quotes": {
    "degree": "Current student pursuing a degree in Computer Science, Information Systems, Business, or a related field."
   },
-  "read_at": 1794676647,
+  "read_at": 1794690324,
   "tech": "AI/ML",
   "title": "AI Intern",
   "us": true,
-  "was": "unverified: no job description"
+  "was": "needs review: degree"
+ },
+ "https://cboe.wd1.myworkdayjobs.com/external_career_cboe/job/Overland-Park-OPX/Trade-Desk-Intern_R-4659": {
+  "company": "Cboe Global Markets",
+  "confidence": 88,
+  "jd_hash": "337874bc0005acfd",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "To be eligible for this internship, applicants must be enrolled in a university or college program and should not be scheduled to graduate before December of the internship year.",
+   "grad": "To be eligible for this internship, applicants must be enrolled in a university or college program and should not be scheduled to graduate before December of the internship year.",
+   "sponsorship": "This position is not eligible for visa sponsorship."
+  },
+  "read_at": 1794690324,
+  "tech": "Software",
+  "title": "DevOps Intern",
+  "us": true,
+  "was": "needs review: cpt"
  },
  "https://eedu.fa.em3.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1003/job/202607277": {
   "company": "WTW",
