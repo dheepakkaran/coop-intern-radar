@@ -32,6 +32,7 @@
     check: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="m2.5 6.5 2.2 2.2 4.8-5.2"/></svg>',
     dash: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6"/></svg>',
     edit: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 9.5h2l5-5-2-2-5 5z"/></svg>',
+    warn: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M6 3v3.5M6 8.8v.2"/></svg>',
     chev: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>',
   };
 
@@ -97,7 +98,15 @@
       { key: "cc", cls: "cc", on: j.by === "agent" || j.checked, text: j.by === "agent" ? "Claude Code corrected" : "Claude Code",
         tip: j.by === "agent" ? "Claude Code read the full posting and corrected this verdict" : j.checked ? "Claude Code read the full posting and agrees" : "Claude Code has not read this one yet" },
     ];
-    const tags = steps.map((x) => `<span class="vt ${x.cls || ""}${x.on ? " on" : ""}" title="${esc(x.tip)}">${x.on ? (x.text.endsWith("corrected") ? ICON.edit : ICON.check) : ICON.dash}${x.text}</span>`);
+    const t = j.cc_tried;
+    if (t && !steps[2].on) {
+      const blocked = /blocked/.test(t.why);
+      Object.assign(steps[2], { tried: true, text: blocked ? "Claude Code: site blocked" : "Claude Code: couldn't read",
+        tip: `Claude Code tried ${ago(t.t)} (${t.tries} ${t.tries === 1 ? "try" : "tries"}, plain fetch and a real browser): ${
+          blocked ? "the company site blocks automated reading" : t.why}. Open the posting and check it yourself.` });
+    }
+    const tags = steps.map((x) => `<span class="vt ${x.cls || ""}${x.on ? " on" : ""}${x.tried ? " tried" : ""}" title="${esc(x.tip)}">${
+      x.on ? (x.text.endsWith("corrected") ? ICON.edit : ICON.check) : x.tried ? ICON.warn : ICON.dash}${x.text}</span>`);
     if (j.by === "you") tags.push(`<span class="vt you" title="Your decision overrides every reader">${ICON.check}You decided</span>`);
     return { html: `<div class="trail" aria-label="Verification">${tags.join('<i class="vsep"></i>')}</div>`, steps };
   }
@@ -112,7 +121,7 @@
     const secs = cats.map((c) => `<div class="dsec"><h4><i class="dot ${c.s}"></i>${c.name}</h4>${c.rows.map((x) =>
       `<div class="drow"><b><i class="dot ${x.s}"></i>${esc(x.label)}</b><span><span class="v">${esc(x.word)}</span>${
         x.quote ? `<q>${esc(x.quote)}</q>` : ""}</span></div>`).join("")}</div>`).join("");
-    const readers = steps.map((x) => `<div class="reader"><b><i class="dot ${x.on ? "ok" : "none"}"></i>${esc(x.text)}</b>${esc(x.tip)}</div>`).join("");
+    const readers = steps.map((x) => `<div class="reader"><b><i class="dot ${x.on ? "ok" : x.tried ? "warn" : "none"}"></i>${esc(x.text)}</b>${esc(x.tip)}</div>`).join("");
     return `<div class="detail"><div class="dgrid">${secs}</div><div class="readers">${readers}</div>
       <p class="dfoot">Found via ${esc(j.sources.join(", "))} · first seen ${ago(j.posted)}</p></div>`;
   }

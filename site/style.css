@@ -160,6 +160,7 @@ select { height: 28px; padding: 0 8px; border: 1px solid var(--line); border-rad
 .vt svg { width: 12px; height: 12px; fill: none; stroke: currentColor; stroke-width: 2.4; stroke-linecap: round; stroke-linejoin: round; }
 .vt.on { color: var(--ok); border: 1px solid transparent; background: var(--ok-bg); }
 .vt.cc.on { color: var(--cc); background: var(--cc-bg); }
+.vt.tried { color: var(--warn); background: var(--warn-bg); border: 1px solid transparent; }
 .vt.you { color: var(--on-ink); background: var(--ink); border: 1px solid transparent; }
 .vsep { width: 12px; height: 1px; background: var(--line2); }
 .acts { display: flex; gap: 2px; align-items: center; }

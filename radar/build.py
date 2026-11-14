@@ -351,6 +351,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         reason = "not US (review agent)" if j.get("_row_hidden") else NOT_TECH
         picked.append((j, t, (f, "title"), e, reason))
     reviewed = agent_status.get("reviewed") or {}
+    tried = agent_status.get("tried") or {}
     for j, t, (fld, why), e, reason in picked:
         e_base, base_reason = j["_base"]
         by = "agent" if j.get("_agent") else None
@@ -371,6 +372,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "base": {"match": base_reason is None, "why_not": base_reason},
             "by": by,
             "checked": j["_key"] in reviewed and reviewed[j["_key"]] == j["_h"],
+            "cc_tried": tried.get(j["_key"]) if j["_key"] not in reviewed else None,   # tried, couldn't read it
             "review": {"p": p, "why": pwhy},
             # who has read this job: the rules, the AI reader (Groq), the review agent (Claude Code, see "checked"/"by")
             "readers": {"rules": bool((j.get("elig") or {}).get("labels")), "ai": bool(j.get("_ai_read"))},

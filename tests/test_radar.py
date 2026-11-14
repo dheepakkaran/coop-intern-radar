@@ -1076,3 +1076,22 @@ def test_agent_live_state():
     queue = [{**_q("a", False), "by": "agent", "match": True}, _q("b", False), _q("c", False)]
     st = A.live_state(ov, queue, {"b": NOW - 3600, "c": NOW}, NOW)
     assert st == {"a": "reflected", "b": "NOT live", "c": "waiting for the next build"}
+
+
+def test_agent_retries_unreadable_postings_with_backoff_then_stops():
+    from scripts import agent_audit as A
+    q = _q("a", False)
+    h = A.NO_JD_RETRY
+    assert A.needs_read(q, {"t": NOW - h + 1, "jd": False, "tries": 1}, NOW) is False
+    assert A.needs_read(q, {"t": NOW - h, "jd": False, "tries": 1}, NOW) is True
+    assert A.needs_read(q, {"t": NOW - h, "jd": False, "tries": 2}, NOW) is False      # waits 2x longer
+    assert A.needs_read(q, {"t": NOW - 99 * h, "jd": False, "tries": A.NO_JD_MAX_TRIES}, NOW) is False
+
+
+def test_page_says_when_claude_code_tried_but_could_not_read(tmp_path):
+    board = [_bj("Blocked", "Pursuing a BS or MS in CS.", "https://g/1"), _bj("Read", "Pursuing a BS or MS in CS.", "https://g/2")]
+    h = review.jd_hash(elig.excerpt("Pursuing a BS or MS in CS."))
+    status = {"t": NOW, "reviewed": {"https://g/2": h}, "tried": {"https://g/1": {"t": NOW, "why": "blocked", "tries": 1}}}
+    jobs, _ = _run_board(tmp_path, board, overrides={}, decisions={}, agent_status=status)
+    assert jobs["Blocked"]["cc_tried"]["why"] == "blocked" and jobs["Blocked"]["checked"] is False
+    assert jobs["Read"]["cc_tried"] is None and jobs["Read"]["checked"] is True

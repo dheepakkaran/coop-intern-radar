@@ -42,7 +42,12 @@ UNSURE = os.path.join(DIR, "unsure.json")        # numbered unsure list (scripts
 PUSHED = os.path.join(DIR, "pushed.json")        # when each correction was first pushed (for "NOT live")
 WT = os.path.join(DIR, "wt")                     # private worktree of origin/main, used only to push
 STATUS_BRANCH = "agent-status"
-NO_JD_RETRY = 6 * 3600   # a job whose description could not be fetched is tried again after this
+NO_JD_RETRY = 6 * 3600   # a job whose description could not be read is tried again after this x tries so far
+NO_JD_MAX_TRIES = 4      # then it stays "blocked" (shown on the page as such) until the job leaves the window
+PW_PY = os.path.expanduser("~/workspace/.tools/pw-venv/bin/python")   # Playwright venv (headless Chromium)
+PW_BROWSERS = os.path.expanduser("~/workspace/.tools/ms-playwright")
+BROWSER_MAX = 30         # pages read in the browser per run (each ~5 s)
+BROWSER_TEXT_LIMIT = 12000
 MIN_CONF = 85          # below this the agent's answer is listed for Dheepak, never pushed
 TEXT_LIMIT = 9000      # characters of description per job
 MODEL = os.environ.get("RADAR_AGENT_MODEL", "opus")
@@ -182,8 +187,29 @@ def check_answer(a: dict, text: str) -> dict:
 
 
 def fetch_text(url: str) -> str | None:
-    r = jdfetch.fetch(url)
+    try:
+        r = jdfetch.fetch(url)
+    except Exception:  # noqa: BLE001
+        return None
     return E._clean(r["text"])[:TEXT_LIMIT] if r and r.get("text") else None
+
+
+def browser_texts(urls: list[str]) -> dict:
+    """{url: (text | None, why)} from a real headless browser, for pages a plain fetch can't read."""
+    if not urls or not os.path.exists(PW_PY):
+        return {u: (None, "no browser") for u in urls}
+    try:
+        p = subprocess.run([PW_PY, os.path.join(ROOT, "scripts", "browser_text.py")], input=json.dumps(urls),
+                           capture_output=True, text=True, timeout=60 + 15 * len(urls),
+                           env={**os.environ, "PLAYWRIGHT_BROWSERS_PATH": PW_BROWSERS})
+        got = json.loads(p.stdout)
+    except Exception as e:  # noqa: BLE001
+        return {u: (None, "browser error: " + str(e)[:60]) for u in urls}
+    out = {}
+    for u in urls:
+        r = got.get(u) or {}
+        out[u] = ((E._clean(r["text"])[:BROWSER_TEXT_LIMIT], None) if r.get("text") else (None, r.get("why") or "unknown"))
+    return out
 
 
 def _git(*a, cwd=ROOT, stdin=None):
@@ -245,7 +271,8 @@ def needs_read(q: dict, rv: dict | None, now: int) -> bool:
     if not rv:
         return True
     if not rv.get("jd"):
-        return now - rv.get("t", 0) >= NO_JD_RETRY
+        tries = rv.get("tries", 1)
+        return tries < NO_JD_MAX_TRIES and now - rv.get("t", 0) >= NO_JD_RETRY * tries
     return rv.get("jd_hash") != q["jd_hash"]
 
 
@@ -312,14 +339,26 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
     todo = [q for q in queue if needs_read(q, reviews.get(q["key"]), now)][:max_jobs]
     with ThreadPoolExecutor(max_workers=8) as pool:
         texts = list(pool.map(lambda q: fetch_text(q["url"]), todo))
-    ready = []
+    # pages a plain fetch can't read (JavaScript-only career sites): a real headless browser on this laptop
+    missed = [q["url"] for q, text in zip(todo, texts) if not text][:BROWSER_MAX]
+    via_browser = browser_texts(missed)
+    ready, no_jd = [], 0
     for q, text in zip(todo, texts):
+        why = None
+        if not text:
+            text, why = via_browser.get(q["url"], (None, "not tried (browser limit per run)"))
         if text:
             ready.append((q, text))
+        elif why and why.startswith("not tried"):
+            continue   # over this run's browser limit: not a real try, next run picks it up
         else:
-            reviews[q["key"]] = {"t": now, "company": q["company"], "title": q["title"], "jd": False,
-                                 "jd_hash": q["jd_hash"]}
-    stats = {"read": 0, "no_jd": len(todo) - len(ready), "tokens": 0, "errors": []}
+            no_jd += 1
+            old = reviews.get(q["key"]) or {}
+            reviews[q["key"]] = {"t": now, "company": q["company"], "title": q["title"], "url": q["url"], "jd": False,
+                                 "jd_hash": q["jd_hash"], "why": why,
+                                 "tries": (old.get("tries", 1) + 1) if old and not old.get("jd") else 1}
+    stats = {"read": 0, "no_jd": no_jd, "browser": sum(1 for t, _ in via_browser.values() if t), "tokens": 0,
+             "errors": []}
     for i in range(0, len(ready), batch):
         part = ready[i:i + batch]
         items = [{"id": str(n), "company": q["company"], "title": q["title"], "locations": q["locations"],
@@ -376,7 +415,10 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
     say = (f"read {stats['read']} jobs, {len(overrides)} corrections live-bound, {len(unsure)} unsure"
            f"{', ' + str(stats['not_live']) + ' NOT live' if stats['not_live'] else ''}, {stats['left']} left")
     status = {"t": now, "say": say, "stats": {k: v for k, v in stats.items() if k != "errors"},
-              "reviewed": {k: v["jd_hash"] for k, v in reviews.items() if v.get("jd") and k in live_keys}}
+              "reviewed": {k: v["jd_hash"] for k, v in reviews.items() if v.get("jd") and k in live_keys},
+              # jobs the agent tried but could not read (the page says so instead of "not read yet")
+              "tried": {k: {"t": v["t"], "why": v.get("why") or "could not read the posting", "tries": v.get("tries", 1)}
+                        for k, v in reviews.items() if not v.get("jd") and k in live_keys}}
     stats["heartbeat"] = push_status(status, dry)
     write_report(overrides, unsure, live, queue, reviews, stats, now)
     res = {"status": "error" if stats["errors"] and not stats["read"] else "ok", "say": say, "t": now,
