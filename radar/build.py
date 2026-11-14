@@ -317,7 +317,9 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     #    6c: final decision per job: the base verdict (rules + list + AI reader), then the agent's correction.
     picked = []
     for j, t, tc, d in cands:
-        e_base = _elig_base(j, ai_cache.get(j.get("_ai_key")) if j.get("_ai_key") else None, ai_on)
+        c = ai_cache.get(j.get("_ai_key")) if j.get("_ai_key") else None
+        j["_ai_read"] = bool(c)
+        e_base = _elig_base(j, c, ai_on)
         j["_base"] = (e_base, _reason(e_base) if j["_tc_base"] else NOT_TECH)
         ov = j.get("_agent")
         if ov and ov.get("labels"):
@@ -370,6 +372,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "by": by,
             "checked": j["_key"] in reviewed and reviewed[j["_key"]] == j["_h"],
             "review": {"p": p, "why": pwhy},
+            # who has read this job: the rules, the AI reader (Groq), the review agent (Claude Code, see "checked"/"by")
+            "readers": {"rules": bool((j.get("elig") or {}).get("labels")), "ai": bool(j.get("_ai_read"))},
             "hide_row": bool(j.get("_row_hidden")),
             "match": reason is None,
             "why_not": reason,

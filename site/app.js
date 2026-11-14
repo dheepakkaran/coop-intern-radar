@@ -8,100 +8,157 @@
 
   const marks = store.get("radar.marks", {}); // url -> "applied" | "skip" | "save"
   const st = Object.assign(
-    { view: "match", win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true },
+    { view: "match", win: 1, kind: "all", fields: [], places: [], term: "", q: "", hideDone: true, cc: false },
     store.get("radar.filters", {})
   );
   if (![1, 2].includes(st.win)) st.win = 1;
   if (!["match", "all"].includes(st.view)) st.view = "match";
   st.fields = st.fields || [];
+  st.places = st.places || [];
   let data = { meta: null, jobs: [] };
   const open = new Set();
+  const NOT_TECH = "not an AI/ML, Data or Software role";
+  const TECH = ["AI/ML", "Data", "Software"];
 
+  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
+  const save = () => store.set("radar.filters", st);
   const ago = (t) => {
     const s = Date.now() / 1000 - t;
     if (s < 3600) return `${Math.max(1, Math.round(s / 60))}m ago`;
     if (s < 86400) return `${Math.round(s / 3600)}h ago`;
     return `${Math.round(s / 86400)}d ago`;
   };
-  const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
-  const save = () => store.set("radar.filters", st);
+  const ICON = {
+    check: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="m2.5 6.5 2.2 2.2 4.8-5.2"/></svg>',
+    dash: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M3 6h6"/></svg>',
+    edit: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="M2.5 9.5h2l5-5-2-2-5 5z"/></svg>',
+    chev: '<svg viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg>',
+  };
 
-  // ---- the checks, grouped ----------------------------------------------------------------------------
-  // state: ok (clear), warn (review), unk (not stated). A failed check never reaches the page: the job is hidden.
-  const GROUPS = [
-    ["Work authorization", [
-      ["citizenship", "Citizenship", { not_required: ["ok", "Not required"] }],
-      ["cpt", "CPT / F-1", { welcome: ["ok", "CPT welcome"], silent: ["ok", "Not rejected"] }],
-      ["sponsorship", "Work authorization", { sponsors: ["ok", "Sponsors visas"], silent: ["ok", "Not mentioned"],
-        no_sponsorship: ["ok", "Work authorization needed, no sponsorship (CPT / OPT is enough)"] }],
-    ]],
-    ["Education", [
-      ["degree", "Degree", { ms_ok: ["ok", "Master's students OK"], unclear: ["unk", "Not stated"],
-        ug_preferred: ["warn", "Bachelor's preferred"] }],
-      ["grad", "Graduation", { fits: ["ok", "Window includes May 2028"], not_stated: ["unk", "Not stated"] }],
-    ]],
-  ];
-
-  function status(e, j) {
-    if (j && j.by === "you") return j.match === false ? ["no", j.why_not || "Hidden by you"] : ["ok", "Shown by you"];
-    if (j && j.match === false) return ["no", "Not a match: " + (j.why_not || "")];
-    if (!e || !e.labels) return ["unk", "Unverified"];
-    if (e.auth === "check" || e.degree === "check" || (e.disagree || []).length) return ["warn", "Review"];
-    return ["ok", "All checks passed"];
-  }
-
+  // ---- the four checks ------------------------------------------------------------------------------
+  // each sub-check -> {s: ok | warn | bad | none, word, quote}; a category takes its worst sub-check
   const FAILS = { required: "Required: you can't apply", rejected: "CPT / OPT not accepted, or permanent authorization",
-                  ug_only: "Undergraduates only", phd_only: "PhD students only", misses: "Graduation window excludes May 2028" };
-  function checkState(e, key, map) {
-    const v = e.labels[key];
-    if (FAILS[v]) return { s: "bad", word: FAILS[v], quote: (e.quotes || {})[key] || "" };
+                  ug_only: "Undergraduates only", phd_only: "PhD students only", misses: "Window excludes May 2028" };
+  const LABELS = {
+    citizenship: ["Citizenship", { not_required: ["ok", "Not required"] }],
+    cpt: ["CPT / F-1", { welcome: ["ok", "CPT welcome"], silent: ["ok", "Not rejected"] }],
+    sponsorship: ["Sponsorship", { sponsors: ["ok", "Sponsors visas"], silent: ["ok", "Not mentioned"],
+      no_sponsorship: ["ok", "No sponsorship: fine, CPT is the authorization"] }],
+    degree: ["Degree", { ms_ok: ["ok", "Master's students OK"], unclear: ["ok", "Not stated (no limit)"], ug_preferred: ["warn", "Bachelor's preferred"] }],
+    grad: ["Graduation", { fits: ["ok", "Includes May 2028"], not_stated: ["ok", "Not stated (no limit)"] }],
+  };
+  const RANK = { bad: 3, warn: 2, none: 1, ok: 0 };
+  const worst = (xs) => xs.reduce((a, x) => (RANK[x.s] > RANK[a] ? x.s : a), "ok");
+
+  function sub(e, k) {
+    const [label, map] = LABELS[k];
+    if (!e || !e.labels) return { label, s: "none", word: "No description read", quote: "" };
+    const v = e.labels[k];
+    const quote = (e.quotes || {})[k] || "";
+    if (FAILS[v]) return { label, s: "bad", word: FAILS[v], quote };
     const [s, word] = map[v] || ["warn", v];
-    const dis = (e.disagree || []).includes(key);
-    return { s: dis ? "warn" : s, word: dis ? `${word} (readers disagree)` : word, quote: (e.quotes || {})[key] || "" };
+    const dis = (e.disagree || []).includes(k);
+    return { label, s: dis ? "warn" : s, word: dis ? `${word} (readers disagree)` : word, quote };
   }
 
-  function checksStrip(e) {
-    if (!e || !e.labels) {
-      return `<div class="checks"><div class="cg"><span class="ck"><i class="dot unk"></i>No job description could be read: check the posting yourself</span></div></div>`;
-    }
-    return `<div class="checks">${GROUPS.map(([name, items]) => `<div class="cg"><span class="cg-name">${name}</span>${
-      items.map(([k, label, map]) => {
-        const c = checkState(e, k, map);
-        return `<span class="ck" title="${esc(`${label}: ${c.word}${c.quote ? " — " + c.quote : ""}`)}"><i class="dot ${c.s}"></i>${label}</span>`;
-      }).join("")}</div>`).join("")}</div>`;
-  }
-
-  function detail(j) {
+  function categories(j) {
     const e = j.elig;
-    const secs = [];
-    if (e && e.labels) {
-      for (const [name, items] of GROUPS) {
-        secs.push(`<div class="dsec"><h4>${name}</h4>${items.map(([k, label, map]) => {
-          const c = checkState(e, k, map);
-          return `<div class="drow"><b><i class="dot ${c.s}"></i>${label}</b><span><span class="v">${esc(c.word)}</span>${
-            c.quote ? `<span class="why"><q>${esc(c.quote)}</q></span>` : ""}</span></div>`;
-        }).join("")}</div>`);
-      }
-    }
-    const role = [
-      ["Field", j.field + (j.why === "agent" ? " (review agent)" : j.why === "JD" ? ` (from the description: ${j.jd_terms.join(", ")})` : "")],
-      ["Type", j.kind + (j.terms.length ? ` · ${j.terms.join(", ")}` : "")],
-      ["Location", (j.locations.join(" · ") || "Not listed") + (j.more_locations ? ` +${j.more_locations} more` : "")],
+    const tech = TECH.includes(j.field) && j.why_not !== NOT_TECH;
+    const how = j.why === "agent" ? "decided by Claude Code" : j.why === "JD" ? `from the description: ${(j.jd_terms || []).join(", ")}` : "from the title";
+    const remote = (j.places || []).includes("Remote");
+    const loc = { label: "Country", s: "ok", word: "United States" + (remote ? " · remote" : ""), quote: "" };
+    const where = { label: "Places", s: "ok", word: (j.locations.join(" · ") || "Not listed") + (j.more_locations ? ` +${j.more_locations} more` : ""), quote: "" };
+    const role = { label: "Field", s: tech ? "ok" : "bad", word: tech ? `${j.field} (${how})` : `${j.field}: not an AI/ML, Data or Software role`, quote: "" };
+    const kind = { label: "Type", s: "ok", word: (j.kind === "co-op" ? "Co-op" : "Internship") + (j.terms.length ? ` · ${j.terms.join(", ")}` : ""), quote: "" };
+    const auth = ["citizenship", "cpt", "sponsorship"].map((k) => sub(e, k));
+    const edu = ["degree", "grad"].map((k) => sub(e, k));
+    if (e && e.labels && e.auth === "check" && !auth.some((x) => x.s === "bad")) auth[1].s = auth[1].s === "ok" ? "warn" : auth[1].s;
+    const short = (xs, okWord) => {
+      const w = worst(xs);
+      if (w === "ok") return okWord;
+      if (w === "none") return "Not read";
+      return (xs.find((x) => x.s === w) || {}).word || "";
+    };
+    return [
+      { name: "Location", s: "ok", short: remote ? "US · remote" : "US", rows: [loc, where] },
+      { name: "Role", s: role.s, short: tech ? j.field : "Not tech", rows: [role, kind] },
+      { name: "Work authorization", s: worst(auth), short: short(auth, "Clear"), rows: auth },
+      { name: "Education", s: worst(edu), short: short(edu, "MS OK"), rows: edu },
     ];
-    secs.push(`<div class="dsec"><h4>Role</h4>${role.map(([k, v]) => `<div class="drow"><b>${k}</b><span class="v">${esc(v)}</span></div>`).join("")}</div>`);
-    const reader = j.by === "you" ? "you (your decision is final)" : !e || !e.labels ? "no description" : e.ai === "agent" ? "review agent read the full description (quotes verified)" : e.ai === "read" ? "rules + AI reader (quotes verified)" : "rules";
-    secs.push(`<p class="dfoot">Read by ${reader} · found via ${esc(j.sources.join(", "))} · first seen ${ago(j.posted)}</p>`);
-    return `<div class="detail">${secs.join("")}</div>`;
+  }
+
+  // ---- who verified it: Checks -> Agent -> Claude Code (+ you) ----------------------------------------
+  function trail(j) {
+    const e = j.elig || {};
+    const r = j.readers || { rules: !!e.labels, ai: e.ai === "read" };
+    const steps = [
+      { key: "checks", on: r.rules, text: "Checks", tip: r.rules ? "Rules read the description and quoted the sentence behind each check" : "No description was available for the rules" },
+      { key: "agent", on: r.ai, text: "Agent", tip: r.ai ? "AI reader (gpt-oss-120b) read the eligibility sentences; quotes verified word for word" : "The AI reader has not read this one yet" },
+      { key: "cc", cls: "cc", on: j.by === "agent" || j.checked, text: j.by === "agent" ? "Claude Code corrected" : "Claude Code",
+        tip: j.by === "agent" ? "Claude Code read the full posting and corrected this verdict" : j.checked ? "Claude Code read the full posting and agrees" : "Claude Code has not read this one yet" },
+    ];
+    const tags = steps.map((x) => `<span class="vt ${x.cls || ""}${x.on ? " on" : ""}" title="${esc(x.tip)}">${x.on ? (x.text.endsWith("corrected") ? ICON.edit : ICON.check) : ICON.dash}${x.text}</span>`);
+    if (j.by === "you") tags.push(`<span class="vt you" title="Your decision overrides every reader">${ICON.check}You decided</span>`);
+    return { html: `<div class="trail" aria-label="Verification">${tags.join('<i class="vsep"></i>')}</div>`, steps };
+  }
+
+  function status(j) {
+    if (j.by === "you") return j.match === false ? ["no", j.why_not || "Hidden by you"] : ["ok", "Shown by you"];
+    if (j.match === false) return ["no", "Not a match · " + (j.why_not || "")];
+    return ["ok", "Eligible"];
+  }
+
+  function detail(j, cats, steps) {
+    const secs = cats.map((c) => `<div class="dsec"><h4><i class="dot ${c.s}"></i>${c.name}</h4>${c.rows.map((x) =>
+      `<div class="drow"><b><i class="dot ${x.s}"></i>${esc(x.label)}</b><span><span class="v">${esc(x.word)}</span>${
+        x.quote ? `<q>${esc(x.quote)}</q>` : ""}</span></div>`).join("")}</div>`).join("");
+    const readers = steps.map((x) => `<div class="reader"><b><i class="dot ${x.on ? "ok" : "none"}"></i>${esc(x.text)}</b>${esc(x.tip)}</div>`).join("");
+    return `<div class="detail"><div class="dgrid">${secs}</div><div class="readers">${readers}</div>
+      <p class="dfoot">Found via ${esc(j.sources.join(", "))} · first seen ${ago(j.posted)}</p></div>`;
+  }
+
+  function row(j) {
+    const m = marks[j.url] || "";
+    const fresh = Date.now() / 1000 - j.posted < 6 * 3600;
+    const [s, label] = status(j);
+    const cats = categories(j);
+    const tr = trail(j);
+    const extra = Math.max(0, j.locations.length - 2) + (j.more_locations || 0);
+    const loc = (j.locations.slice(0, 2).join(" · ") || "Location not listed") + (extra ? ` +${extra}` : "");
+    const meta = [loc, j.field, ...j.terms.slice(0, 2)].map((x) => `<span>${esc(x)}</span>`).join("");
+    const isOpen = open.has(j.url);
+    return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${isOpen ? " open" : ""}" data-url="${esc(j.url)}">
+      <div class="jh"><div>
+          <div class="co"><b>${esc(j.company)}</b><span class="age${fresh ? " fresh" : ""}">${ago(j.posted)}</span>${
+            j.kind === "co-op" ? '<span class="kind coop">Co-op</span>' : '<span class="kind">Intern</span>'}</div>
+          <a class="title" href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.title)}</a>
+          <div class="jmeta">${meta}</div>
+        </div>
+        <span class="status ${s}" title="${esc(label)}">${esc(label)}</span></div>
+      <div class="cats">${cats.map((c) => `<div class="cat" title="${esc(c.name + ": " + c.short)}"><i class="dot ${c.s}"></i><b>${c.name}</b><em>${esc(c.short)}</em></div>`).join("")}</div>
+      <div class="jf">${tr.html}
+        <div class="acts">
+          <button data-m="save" class="${m === "save" ? "on" : ""}">Save</button>
+          <button data-m="applied" class="${m === "applied" ? "on" : ""}">Applied</button>
+          <button data-m="skip" class="${m === "skip" ? "on" : ""}">Skip</button>
+          <i class="sep"></i>
+          <button class="more" data-open aria-expanded="${isOpen}">Details${ICON.chev}</button>
+        </div>
+      </div>
+      ${detail(j, cats, tr.steps)}
+    </li>`;
   }
 
   // ---- filters ----------------------------------------------------------------------------------------
+  const ccDone = (j) => j.by === "agent" || j.checked;
   function visible(j, now) {
     if (st.view === "match" && j.match === false) return false;
     if (j.posted < now - st.win * 86400) return false;
     if (st.kind !== "all" && j.kind !== st.kind) return false;
     if (st.fields.length && !st.fields.includes(j.field)) return false;
-    if (st.places.length && !st.places.some((p) => j.places.includes(p))) return false;
+    if (st.places.length && !st.places.some((p) => (j.places || []).includes(p))) return false;
     if (st.term && !j.terms.includes(st.term)) return false;
+    if (st.cc && !ccDone(j)) return false;
     if (st.hideDone && (marks[j.url] === "applied" || marks[j.url] === "skip")) return false;
     if (st.q) {
       const hay = `${j.company} ${j.title} ${j.locations.join(" ")}`.toLowerCase();
@@ -110,42 +167,27 @@
     return true;
   }
 
-  function row(j) {
-    const m = marks[j.url] || "";
-    const fresh = Date.now() / 1000 - j.posted < 6 * 3600;
-    const [s, label] = status(j.elig, j);
-    const extra = Math.max(0, j.locations.length - 2) + (j.more_locations || 0);
-    const loc = (j.locations.slice(0, 2).join(" · ") || "Location not listed") + (extra ? ` +${extra}` : "");
-    const pills = [`<span class="pill${j.kind === "co-op" ? " coop" : ""}">${j.kind === "co-op" ? "Co-op" : "Intern"}</span>`,
-      `<span class="pill">${esc(j.field)}</span>`, ...j.terms.slice(0, 2).map((t) => `<span class="pill">${esc(t)}</span>`),
-      ...(j.by === "agent" ? [`<span class="pill agent" title="The review agent read the full description and corrected this verdict">Corrected by agent</span>`]
-        : j.checked ? [`<span class="pill agent" title="The review agent read the full description and agrees">Agent checked</span>`] : [])];
-    return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${open.has(j.url) ? " open" : ""}" data-url="${esc(j.url)}">
-      <div class="top"><div><span class="co">${esc(j.company)}</span><span class="age${fresh ? " fresh" : ""}">${ago(j.posted)}</span></div>
-        <span class="badge ${s}" title="${esc(label)}">${esc(label)}</span></div>
-      <a class="title" href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.title)}</a>
-      <div class="meta">${pills.join("")}<span>${esc(loc)}</span></div>
-      ${checksStrip(j.elig)}
-      <div class="bottom">
-        <button class="more" data-open aria-expanded="${open.has(j.url)}">Details<svg viewBox="0 0 12 12" aria-hidden="true"><path d="m2 4 4 4 4-4"/></svg></button>
-        <div class="acts">
-          <button data-m="save" class="${m === "save" ? "on" : ""}">Save</button>
-          <button data-m="applied" class="${m === "applied" ? "on" : ""}">Applied</button>
-          <button data-m="skip" class="${m === "skip" ? "on" : ""}">Skip</button>
-        </div>
-      </div>
-      ${detail(j)}
-    </li>`;
+  let fieldsFor = null;
+  function buildFields() {  // field chips for the jobs of the current view only
+    if (fieldsFor === st.view) return;
+    fieldsFor = st.view;
+    const pool = st.view === "match" ? data.jobs.filter((j) => j.match !== false) : data.jobs;
+    const fields = [...new Set(pool.map((j) => j.field))]
+      .sort((x, y) => (TECH.indexOf(x) + 1 || 9) - (TECH.indexOf(y) + 1 || 9) || x.localeCompare(y));
+    st.fields = st.fields.filter((f) => fields.includes(f));
+    $("fields").innerHTML = fields.map((f) => `<button data-v="${esc(f)}">${esc(f)}</button>`).join("");
+    chips($("fields"), "fields");
   }
 
   function render() {
+    buildFields();
     const now = Date.now() / 1000;
     const list = data.jobs.filter((j) => visible(j, now));
     $("jobs").innerHTML = list.map(row).join("");
     $("empty").hidden = list.length > 0;
     const co = list.filter((j) => j.kind === "co-op").length;
-    $("count").textContent = st.view === "match" ? `${list.length} roles · ${co} co-op · all checks passed`
-      : `${list.length} roles · ${co} co-op · ${list.filter((j) => j.match !== false).length} match your checks`;
+    const cc = list.filter(ccDone).length;
+    $("count").textContent = `${list.length} roles · ${co} co-op · ${cc} verified by Claude Code`;
   }
 
   function seg(el, key, cast) {
@@ -164,15 +206,20 @@
       };
     });
   }
+  function toggle(id, key) {
+    $(id).checked = !!st[key];
+    $(id).onchange = (e) => { st[key] = e.target.checked; save(); render(); };
+  }
 
   $("jobs").addEventListener("click", (ev) => {
     const li = ev.target.closest(".job");
     if (!li) return;
     const url = li.dataset.url;
-    if (ev.target.closest("[data-open]")) {
+    const more = ev.target.closest("[data-open]");
+    if (more) {
       if (open.has(url)) open.delete(url); else open.add(url);
       li.classList.toggle("open");
-      ev.target.closest("[data-open]").setAttribute("aria-expanded", li.classList.contains("open"));
+      more.setAttribute("aria-expanded", li.classList.contains("open"));
       return;
     }
     const b = ev.target.closest("button[data-m]");
@@ -188,39 +235,46 @@
     const m = d.meta;
     const now = Date.now() / 1000;
     const matches = d.jobs.filter((j) => j.match !== false);
-    $("s24").textContent = matches.filter((j) => j.posted >= now - 86400).length;
-    $("s48").textContent = matches.length;
+    const verified = matches.filter(ccDone).length;
+    $("k24").textContent = matches.filter((j) => j.posted >= now - 86400).length;
+    $("k48").textContent = matches.length;
+    $("kcc").innerHTML = matches.length ? `${verified}<small>of ${matches.length}</small>` : "–";
+    $("kall").textContent = d.jobs.length;
     $("vmatch").textContent = matches.length;
     $("vall").textContent = d.jobs.length;
-    $("supd").textContent = ago(m.generated);
-    $("supd").title = new Date(m.generated * 1000).toLocaleString();
+
+    const tech = d.jobs.filter((j) => j.why_not !== NOT_TECH).length;
+    $("funnel").innerHTML = [[d.jobs.length, "US co-ops & internships"], [tech, "tech roles"],
+      [matches.length, "pass all four checks"], [verified, "verified by Claude Code"]]
+      .map(([n, t]) => `<li><b>${n}</b>${t}</li>`).join("");
+
+    const a = m.agent || {};
+    const stale = a.hours_since == null || a.hours_since > 6;
+    $("supd").innerHTML = `Updated ${ago(m.generated)}` + (a.last_run ? `<span class="cc-ago"> · Claude Code ${ago(a.last_run)}</span>` : "");
+    $("supd").parentElement.classList.toggle("stale", stale);
+    $("supd").parentElement.title = stale ? "The Claude Code review agent runs when my laptop is on; it has not run for a while"
+      : new Date(m.generated * 1000).toLocaleString();
     $("health").textContent = Object.entries(m.sources).map(([k, v]) => {
       if (!v.ok) return `${k}: failed`;
       if (v.boards !== undefined) return `${k}: ${v.boards - v.failed}/${v.boards} boards`;
       return `${k}: ${v.rows} rows`;
     }).join(" · ") + (m.polled ? ` · boards checked ${ago(m.polled)}` : "") +
-      (m.ineligible_skipped !== undefined ? ` · hidden: ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} failed a check` +
-        (m.review_skipped !== undefined ? `, ${m.review_skipped} need review, ${m.unverified_skipped} unverified` : "") : "") +
-      (m.agent ? (m.agent.last_run
-        ? ` · review agent: ran ${ago(m.agent.last_run)}${m.agent.hours_since > 6 ? " (laptop off?)" : ""}, checked ${m.agent.checked}/${m.agent.total}, ${m.agent.applied} corrections live`
-        : " · review agent: not seen yet") : "");
+      (m.ineligible_skipped !== undefined ? ` · not matches: ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} failed a check, ${m.review_skipped} need review, ${m.unverified_skipped} unverified` : "") +
+      (a.last_run ? ` · review agent: ran ${ago(a.last_run)}, read ${a.checked}/${a.total}, ${a.applied} corrections live` : " · review agent: not seen yet");
 
-    const fields = [...new Set(d.jobs.map((j) => j.field))].sort();
-    $("fields").innerHTML = fields.map((f) => `<button data-v="${esc(f)}">${esc(f)}</button>`).join("");
     const terms = [...new Set(d.jobs.flatMap((j) => j.terms))].sort();
-    $("term").innerHTML = `<option value="">Any</option>` + terms.map((t) => `<option>${esc(t)}</option>`).join("");
+    $("term").innerHTML = `<option value="">Any term</option>` + terms.map((t) => `<option>${esc(t)}</option>`).join("");
     $("term").value = terms.includes(st.term) ? st.term : "";
 
     seg($("view"), "view", String);
     seg($("win"), "win", Number);
     seg($("kind"), "kind", String);
-    chips($("fields"), "fields");
     chips($("places"), "places");
+    toggle("ccOnly", "cc");
+    toggle("hideDone", "hideDone");
     $("q").value = st.q;
     $("q").oninput = (e) => { st.q = e.target.value.trim(); save(); render(); };
     $("term").onchange = (e) => { st.term = e.target.value; save(); render(); };
-    $("hideDone").checked = st.hideDone;
-    $("hideDone").onchange = (e) => { st.hideDone = e.target.checked; save(); render(); };
     render();
   }
 
