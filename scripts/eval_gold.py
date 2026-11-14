@@ -39,7 +39,7 @@ def score(name: str, items: list, get_labels) -> dict:
         per["n"] += 1
         for k in E.LABELS:
             per[k] += lab[k] == it["gold"][k]
-        v, g = verdict(lab), it["verdict"]
+        v, g = verdict(lab), verdict(it["gold"])  # gold verdict under today's policy (no sponsorship passes)
         per["verdict"] += v == g
         if g == "not_eligible" and v != "not_eligible":
             fs.append(it)
