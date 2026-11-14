@@ -22,6 +22,14 @@
 
   const esc = (s) => String(s ?? "").replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" }[c]));
   const save = () => store.set("radar.filters", st);
+  // only real web links become clickable (outside feeds could carry javascript: or data: URLs)
+  const safeUrl = (u) => (/^https?:\/\//i.test(String(u || "")) ? u : "#");
+  // Save / Applied / Skip follow the job (its key survives URL changes); older marks were kept by URL
+  const mk = (j) => j.key || j.url;
+  const markOf = (j) => {
+    if (j.key && marks[j.url] && !marks[j.key]) { marks[j.key] = marks[j.url]; delete marks[j.url]; store.set("radar.marks", marks); }
+    return marks[mk(j)] || "";
+  };
   const ago = (t) => {
     const s = Date.now() / 1000 - t;
     if (s < 3600) return `${Math.max(1, Math.round(s / 60))}m ago`;
@@ -98,15 +106,20 @@
       { key: "cc", cls: "cc", on: j.by === "agent" || j.checked, text: j.by === "agent" ? "Claude Code corrected" : "Claude Code",
         tip: j.by === "agent" ? "Claude Code read the full posting and corrected this verdict" : j.checked ? "Claude Code read the full posting and agrees" : "Claude Code has not read this one yet" },
     ];
+    const ccs = (j.cc || {}).state;
+    if (ccs === "pending") Object.assign(steps[2], { warn: true, text: "Claude Code: correction pending",
+      tip: "Claude Code read the full posting, disagrees and has pushed a correction; it shows after the next build" });
+    if (ccs === "unsure") Object.assign(steps[2], { warn: true, text: "Claude Code: unsure",
+      tip: "Claude Code read the full posting and reads it differently, but is not sure enough to change it. Open the posting and decide." });
     const t = j.cc_tried;
-    if (t && !steps[2].on) {
+    if (t && !steps[2].on && !steps[2].warn) {
       const blocked = /blocked/.test(t.why);
       Object.assign(steps[2], { tried: true, text: blocked ? "Claude Code: site blocked" : "Claude Code: couldn't read",
         tip: `Claude Code tried ${ago(t.t)} (${t.tries} ${t.tries === 1 ? "try" : "tries"}, plain fetch and a real browser): ${
           blocked ? "the company site blocks automated reading" : t.why}. Open the posting and check it yourself.` });
     }
-    const tags = steps.map((x) => `<span class="vt ${x.cls || ""}${x.on ? " on" : ""}${x.tried ? " tried" : ""}" title="${esc(x.tip)}">${
-      x.on ? (x.text.endsWith("corrected") ? ICON.edit : ICON.check) : x.tried ? ICON.warn : ICON.dash}${x.text}</span>`);
+    const tags = steps.map((x) => `<span class="vt ${x.cls || ""}${x.on ? " on" : ""}${x.tried || x.warn ? " tried" : ""}" title="${esc(x.tip)}">${
+      x.on ? (x.text.endsWith("corrected") ? ICON.edit : ICON.check) : x.tried || x.warn ? ICON.warn : ICON.dash}${x.text}</span>`);
     if (j.by === "you") tags.push(`<span class="vt you" title="Your decision overrides every reader">${ICON.check}You decided</span>`);
     return { html: `<div class="trail" aria-label="Verification">${tags.join('<i class="vsep"></i>')}</div>`, steps };
   }
@@ -121,13 +134,13 @@
     const secs = cats.map((c) => `<div class="dsec"><h4><i class="dot ${c.s}"></i>${c.name}</h4>${c.rows.map((x) =>
       `<div class="drow"><b><i class="dot ${x.s}"></i>${esc(x.label)}</b><span><span class="v">${esc(x.word)}</span>${
         x.quote ? `<q>${esc(x.quote)}</q>` : ""}</span></div>`).join("")}</div>`).join("");
-    const readers = steps.map((x) => `<div class="reader"><b><i class="dot ${x.on ? "ok" : x.tried ? "warn" : "none"}"></i>${esc(x.text)}</b>${esc(x.tip)}</div>`).join("");
+    const readers = steps.map((x) => `<div class="reader"><b><i class="dot ${x.on ? "ok" : x.tried || x.warn ? "warn" : "none"}"></i>${esc(x.text)}</b>${esc(x.tip)}</div>`).join("");
     return `<div class="detail"><div class="dgrid">${secs}</div><div class="readers">${readers}</div>
       <p class="dfoot">Found via ${esc(j.sources.join(", "))} · first seen ${ago(j.posted)}</p></div>`;
   }
 
   function row(j) {
-    const m = marks[j.url] || "";
+    const m = markOf(j);
     const fresh = Date.now() / 1000 - j.posted < 6 * 3600;
     const [s, label] = status(j);
     const cats = categories(j);
@@ -136,11 +149,11 @@
     const loc = (j.locations.slice(0, 2).join(" · ") || "Location not listed") + (extra ? ` +${extra}` : "");
     const meta = [loc, j.field, ...j.terms.slice(0, 2)].map((x) => `<span>${esc(x)}</span>`).join("");
     const isOpen = open.has(j.url);
-    return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${isOpen ? " open" : ""}" data-url="${esc(j.url)}">
+    return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${isOpen ? " open" : ""}" data-url="${esc(j.url)}" data-key="${esc(mk(j))}">
       <div class="jh"><div>
           <div class="co"><b>${esc(j.company)}</b><span class="age${fresh ? " fresh" : ""}">${ago(j.posted)}</span>${
             j.kind === "co-op" ? '<span class="kind coop">Co-op</span>' : '<span class="kind">Intern</span>'}</div>
-          <a class="title" href="${esc(j.url)}" target="_blank" rel="noopener">${esc(j.title)}</a>
+          <a class="title" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener noreferrer">${esc(j.title)}</a>
           <div class="jmeta">${meta}</div>
         </div>
         <span class="status ${s}" title="${esc(label)}">${esc(label)}</span></div>
@@ -159,7 +172,7 @@
   }
 
   // ---- filters ----------------------------------------------------------------------------------------
-  const ccDone = (j) => j.by === "agent" || j.checked;
+  const ccDone = (j) => j.by === "agent" || j.checked === true;
   function visible(j, now) {
     if (st.view === "match" && j.match === false) return false;
     if (j.posted < now - st.win * 86400) return false;
@@ -168,7 +181,7 @@
     if (st.places.length && !st.places.some((p) => (j.places || []).includes(p))) return false;
     if (st.term && !j.terms.includes(st.term)) return false;
     if (st.cc && !ccDone(j)) return false;
-    if (st.hideDone && (marks[j.url] === "applied" || marks[j.url] === "skip")) return false;
+    if (st.hideDone && ["applied", "skip"].includes(markOf(j))) return false;
     if (st.q) {
       const hay = `${j.company} ${j.title} ${j.locations.join(" ")}`.toLowerCase();
       if (!st.q.toLowerCase().split(/\s+/).every((w) => hay.includes(w))) return false;
@@ -224,6 +237,7 @@
     const li = ev.target.closest(".job");
     if (!li) return;
     const url = li.dataset.url;
+    const key = li.dataset.key;
     const more = ev.target.closest("[data-open]");
     if (more) {
       if (open.has(url)) open.delete(url); else open.add(url);
@@ -233,8 +247,8 @@
     }
     const b = ev.target.closest("button[data-m]");
     if (!b) return;
-    marks[url] = marks[url] === b.dataset.m ? undefined : b.dataset.m;
-    if (!marks[url]) delete marks[url];
+    marks[key] = marks[key] === b.dataset.m ? undefined : b.dataset.m;
+    if (!marks[key]) delete marks[key];
     store.set("radar.marks", marks);
     render();
   });
@@ -258,10 +272,11 @@
       .map(([n, t]) => `<li><b>${n}</b>${t}</li>`).join("");
 
     const a = m.agent || {};
-    const stale = a.hours_since == null || a.hours_since > 6;
+    const stale = a.hours_since == null || a.hours_since > 6 || a.ok === false;
     $("supd").innerHTML = `Updated ${ago(m.generated)}` + (a.last_run ? `<span class="cc-ago"> · Claude Code ${ago(a.last_run)}</span>` : "");
     $("supd").parentElement.classList.toggle("stale", stale);
-    $("supd").parentElement.title = stale ? "The Claude Code review agent runs when my laptop is on; it has not run for a while"
+    $("supd").parentElement.title = a.ok === false ? "The last Claude Code review run had errors (see Sources & status)"
+      : stale ? "The Claude Code review agent runs when my laptop is on; it has not run for a while"
       : new Date(m.generated * 1000).toLocaleString();
     $("health").textContent = Object.entries(m.sources).map(([k, v]) => {
       if (!v.ok) return `${k}: failed`;
@@ -269,11 +284,13 @@
       return `${k}: ${v.rows} rows`;
     }).join(" · ") + (m.polled ? ` · boards checked ${ago(m.polled)}` : "") +
       (m.ineligible_skipped !== undefined ? ` · not matches: ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} failed a check, ${m.review_skipped} need review, ${m.unverified_skipped} unverified` : "") +
-      (a.last_run ? ` · review agent: ran ${ago(a.last_run)}, read ${a.checked}/${a.total}, ${a.applied} corrections live` : " · review agent: not seen yet");
+      (a.last_run ? ` · review agent: ran ${ago(a.last_run)}, agrees on ${a.checked}/${a.total}, ${a.applied} corrections live` +
+        (a.ok === false ? ` · last agent run had errors: ${(a.errors || []).join("; ")}` : "") : " · review agent: not seen yet");
 
     const terms = [...new Set(d.jobs.flatMap((j) => j.terms))].sort();
     $("term").innerHTML = `<option value="">Any term</option>` + terms.map((t) => `<option>${esc(t)}</option>`).join("");
-    $("term").value = terms.includes(st.term) ? st.term : "";
+    if (!terms.includes(st.term)) { st.term = ""; save(); }   // a saved term no job has today would empty the list
+    $("term").value = st.term;
 
     seg($("view"), "view", String);
     seg($("win"), "win", Number);

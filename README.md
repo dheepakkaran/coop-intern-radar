@@ -37,10 +37,11 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   Rows that pass only through the JD are tagged "JD" with the terms found.
 - **Eligibility (master's student on CPT, graduating May 2028):** from each job description, hide jobs that need
   US citizenship / a green card / a security clearance / ITAR "U.S. person", that say F-1/CPT/OPT students are not
-  eligible, that are undergraduate-only or PhD-only, or whose graduation window leaves out May 2028. Jobs that say
-  "authorized for any employer" or "no sponsorship now or in the future" stay, tagged **No sponsorship: check**
-  (a page toggle hides them); "CPT ok", "MS ok" and "Grad date ok" tags show what the JD says. Rules in
-  `radar/eligibility.py`, written from ~1,300 real JD sentences and tested on them.
+  eligible, that are undergraduate-only or PhD-only, or whose graduation window leaves out May 2028. "No sponsorship
+  now or in the future" is fine: an internship is authorized through CPT, so only an explicit F-1/CPT/OPT rejection
+  blocks a job. The page groups the results into four checks (Location, Role, Work authorization, Education), each
+  with the posting's own sentence behind it. Rules in `radar/eligibility.py`, written from ~1,300 real JD sentences
+  and tested on them.
 - **Every job gets the same checks, whatever its source.** Jobs that only the lists know (company sites, iCIMS,
   UltiPro, Workable, BambooHR, Eightfold, Paylocity …) get their job description from the apply page: a known ATS
   API when there is one (`radar/jdfetch.py`), else the page's schema.org JobPosting (JSON-LD), else the page text.

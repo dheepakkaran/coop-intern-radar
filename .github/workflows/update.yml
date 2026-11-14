@@ -26,11 +26,11 @@ jobs:
     timeout-minutes: 30
     environment:
       name: github-pages
-      url: ${{ steps.deploy.outputs.page_url }}
+      url: ${{ steps.deploy.outputs.page_url || steps.deploy_retry.outputs.page_url }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
-      - uses: actions/setup-python@v5
+      - uses: actions/setup-python@v7
         with:
           python-version: "3.12"
 
@@ -40,9 +40,16 @@ jobs:
       - name: Restore seen store from the data branch
         run: |
           mkdir -p state
-          if git fetch -q --depth 1 origin data; then
-            git show origin/data:seen.json.gz > state/seen.json.gz
+          # A failed fetch must never look like a first run: that would force-push an empty store over the real one.
+          if git ls-remote --exit-code --heads origin data >/dev/null; then
+            for i in 1 2 3; do
+              git fetch -q --depth 1 origin data && break
+              echo "fetch of the data branch failed (try $i)"; sleep 10
+            done
+            git show origin/data:seen.json.gz > state/seen.json.gz || { echo "::error::could not read the seen store"; exit 1; }
           else
+            code=$?
+            if [ "$code" -ne 2 ]; then echo "::error::git ls-remote failed ($code)"; exit 1; fi
             echo "No data branch yet: first run, bootstrap mode."
           fi
 
@@ -74,9 +81,16 @@ jobs:
             commit -qm "data $(date -u +%Y-%m-%dT%H:%MZ)"
           git push -qf "https://x-access-token:${{ github.token }}@github.com/${{ github.repository }}.git" data
 
-      - uses: actions/configure-pages@v5
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/configure-pages@v6
+      - uses: actions/upload-pages-artifact@v5
         with:
           path: site
       - id: deploy
-        uses: actions/deploy-pages@v4
+        continue-on-error: true   # Pages deploys fail now and then on GitHub's side: retry once below
+        uses: actions/deploy-pages@v5
+      - name: Wait before retrying the Pages deploy
+        if: steps.deploy.outcome == 'failure'
+        run: sleep 45
+      - id: deploy_retry
+        if: steps.deploy.outcome == 'failure'
+        uses: actions/deploy-pages@v5

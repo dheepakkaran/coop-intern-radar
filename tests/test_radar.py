@@ -1066,26 +1066,31 @@ def test_agent_corrections_are_a_pure_function_of_queue_and_reviews():
     assert A.needs_read(queue[0], reviews["a"], NOW) is False
     assert A.needs_read(queue[3], reviews["d"], NOW) is True        # description changed: read again
     assert A.needs_read(queue[4], None, NOW) is True
-    assert A.needs_read(queue[4], {"t": NOW - 100, "jd": False}, NOW) is False   # no JD: retry later
-    assert A.needs_read(queue[4], {"t": NOW - 7 * 3600, "jd": False}, NOW) is True
+    assert A.needs_read(queue[4], {"t": NOW - 100, "jd": False, "jd_hash": "h1"}, NOW) is False   # no JD: retry later
+    assert A.needs_read(queue[4], {"t": NOW - 7 * 3600, "jd": False, "jd_hash": "h1"}, NOW) is True
+    assert A.needs_read(queue[4], {"t": NOW, "jd": False, "jd_hash": None}, NOW) is True   # build found a JD
 
 
-def test_agent_live_state():
+def test_agent_live_state_only_alarms_when_the_build_had_this_file():
     from scripts import agent_audit as A
-    ov = {"a": {"now": "match"}, "b": {"now": "match"}, "c": {"now": "match"}}
-    queue = [{**_q("a", False), "by": "agent", "match": True}, _q("b", False), _q("c", False)]
-    st = A.live_state(ov, queue, {"b": NOW - 3600, "c": NOW}, NOW)
-    assert st == {"a": "reflected", "b": "NOT live", "c": "waiting for the next build"}
+    ov = {"a": {"now": "match"}, "b": {"now": "match"}}
+    queue = [{**_q("a", False), "by": "agent", "match": True}, _q("b", False)]
+    assert A.live_state(ov, queue, review.overrides_sha(ov)) == {"a": "reflected", "b": "NOT live"}
+    # the build that made this queue started before the push: not an alarm
+    assert A.live_state(ov, queue, "older")["b"] == "waiting for the next build"
 
 
 def test_agent_retries_unreadable_postings_with_backoff_then_stops():
     from scripts import agent_audit as A
     q = _q("a", False)
     h = A.NO_JD_RETRY
-    assert A.needs_read(q, {"t": NOW - h + 1, "jd": False, "tries": 1}, NOW) is False
-    assert A.needs_read(q, {"t": NOW - h, "jd": False, "tries": 1}, NOW) is True
-    assert A.needs_read(q, {"t": NOW - h, "jd": False, "tries": 2}, NOW) is False      # waits 2x longer
-    assert A.needs_read(q, {"t": NOW - 99 * h, "jd": False, "tries": A.NO_JD_MAX_TRIES}, NOW) is False
+    rv = {"jd": False, "jd_hash": "h1"}
+    assert A.needs_read(q, {**rv, "t": NOW - h + 1, "tries": 1}, NOW) is False
+    assert A.needs_read(q, {**rv, "t": NOW - h, "tries": 1}, NOW) is True
+    assert A.needs_read(q, {**rv, "t": NOW - h, "tries": 2}, NOW) is False      # waits 2x longer
+    assert A.needs_read(q, {**rv, "t": NOW - 99 * h, "tries": A.NO_JD_MAX_TRIES}, NOW) is False
+    # blocked for good, until the description changes: then it is read again
+    assert A.needs_read({**q, "jd_hash": "h2"}, {**rv, "t": NOW, "tries": A.NO_JD_MAX_TRIES}, NOW) is True
 
 
 def test_page_says_when_claude_code_tried_but_could_not_read(tmp_path):
@@ -1095,3 +1100,106 @@ def test_page_says_when_claude_code_tried_but_could_not_read(tmp_path):
     jobs, _ = _run_board(tmp_path, board, overrides={}, decisions={}, agent_status=status)
     assert jobs["Blocked"]["cc_tried"]["why"] == "blocked" and jobs["Blocked"]["checked"] is False
     assert jobs["Read"]["cc_tried"] is None and jobs["Read"]["checked"] is True
+
+
+def test_agent_survives_malformed_confidence():
+    from scripts import agent_audit as A
+    text = "Applicants must be U.S. citizens."
+    base = {"us": True, "tech": "Software", "citizenship": "required", "cpt": "silent", "sponsorship": "silent",
+            "degree": "unclear", "grad": "not_stated", "quotes": {"citizenship": text}}
+    assert A.check_answer(base, text)["confidence"] == 0                       # missing
+    assert A.check_answer({**base, "confidence": None}, text)["confidence"] == 0
+    assert A.check_answer({**base, "confidence": "90", "degree": "bogus"}, text)["confidence"] == 50
+    assert A.check_answer({**base, "confidence": 140, "quotes": "x"}, text)["confidence"] <= 100
+    # a stored null confidence never crashes the corrections
+    rv = _rv(True, None)
+    assert A.corrections([_q("a", False)], {"a": rv})[1][0]["confidence"] == 0
+
+
+def test_agent_verdicts_feed_the_page_honestly():
+    from scripts import agent_audit as A
+    assert A.verdict(_q("a", False), _rv(False, 40)) == "agree"
+    assert A.verdict(_q("a", False), _rv(True, 95)) == "correction"
+    assert A.verdict(_q("a", False), _rv(True, 60)) == "unsure"
+    assert A.verdict(_q("a", False, h="new"), _rv(True, 95)) is None              # read an older description
+    assert review.cc_state(None, {"h": "h1", "verdict": "unsure"}, None, "h1") == {"state": "unsure"}
+    assert review.cc_state(None, {"h": "h1", "verdict": "correction"}, None, "h1") == {"state": "pending"}
+    assert review.cc_state("agent", None, None, "h1") == {"state": "corrected"}
+    assert review.cc_state(None, {"h": "old", "verdict": "agree"}, {"t": 1, "why": "blocked"}, "h1")["state"] == "tried"
+
+
+def test_unsure_ids_are_stable():
+    from scripts import agent_audit as A
+    q1, q2 = _q("acme|ml intern", False), _q("beta|data intern", False)
+    reviews = {q1["key"]: _rv(True, 60), q2["key"]: _rv(True, 60)}
+    ids1 = {u["key"]: u["id"] for u in A.corrections([q1, q2], reviews)[1]}
+    ids2 = {u["key"]: u["id"] for u in A.corrections([q2], reviews)[1]}   # list changed under the user
+    assert ids2[q2["key"]] == ids1[q2["key"]] and len(set(ids1.values())) == 2
+
+
+def test_jobs_keep_their_corrections_and_decisions_when_the_url_changes(tmp_path, monkeypatch):
+    monkeypatch.setattr(build, "STRICT", True)
+    board = [_bj("Acme", "US citizenship is required.", "https://g/new-url")]
+    key = store.job_key("Acme", "Software Engineer Intern")
+    ov = {key: {"us": True, "tech": "Software", "labels": elig.NEUTRAL, "quotes": {}}}
+    jobs, queue = _run_board(tmp_path, board, overrides=ov, decisions={})
+    assert jobs["Acme"]["match"] is True and jobs["Acme"]["key"] == key and queue["jobs"][0]["key"] == key
+
+
+def test_your_show_beats_an_agent_not_us_hide(tmp_path):
+    board = [_bj("Abroad", "Pursuing a BS or MS in CS.", "https://g/1")]
+    ov = {"https://g/1": {"us": False, "tech": "Software", "labels": elig.NEUTRAL, "quotes": {}}}
+    jobs, _ = _run_board(tmp_path, board, overrides=ov, decisions={"https://g/1": {"show": True}})
+    assert jobs["Abroad"]["match"] is True and jobs["Abroad"]["by"] == "you"
+
+
+def test_non_web_links_are_never_published(tmp_path):
+    board = [_bj("Evil", "Pursuing a BS or MS in CS.", "javascript:alert(1)"), _bj("Ok", "Pursuing a BS or MS in CS.", "https://g/2")]
+    jobs, queue = _run_board(tmp_path, board, overrides={}, decisions={})
+    assert set(jobs) == {"Ok"} and {q["company"] for q in queue["jobs"]} == {"Ok"}
+
+
+def test_corrections_live_counts_only_rows_the_agent_changed(tmp_path):
+    board = [_bj("A", "Pursuing a BS or MS in CS.", "https://g/1"), _bj("B", "Pursuing a BS or MS in CS.", "https://g/2")]
+    ov = {"https://g/1": {"us": True, "tech": "Software", "labels": elig.NEUTRAL, "quotes": {}},
+          "https://g/2": {"us": True, "tech": "Software", "labels": elig.NEUTRAL, "quotes": {}}}
+    _run_board(tmp_path, board, overrides=ov, decisions={"https://g/2": {"show": False}})
+    meta = json.load(open(tmp_path / "o" / "jobs.json"))["meta"]["agent"]
+    assert meta["applied"] == 1        # B is decided by you, not counted as an agent correction
+
+
+def test_push_file_commits_onto_the_newest_main_from_a_private_worktree(tmp_path, monkeypatch):
+    import subprocess
+    from scripts import agent_audit as A
+    def git(*a, cwd):
+        subprocess.run(["git", *a], cwd=cwd, check=True, capture_output=True,
+                       env={**os.environ, "GIT_AUTHOR_NAME": "t", "GIT_AUTHOR_EMAIL": "t@t", "GIT_COMMITTER_NAME": "t",
+                            "GIT_COMMITTER_EMAIL": "t@t"})
+    origin, work, other = tmp_path / "origin.git", tmp_path / "work", tmp_path / "other"
+    git("init", "-q", "--bare", "-b", "main", str(origin), cwd=tmp_path)
+    git("clone", "-q", str(origin), str(work), cwd=tmp_path)
+    (work / "README").write_text("x")
+    git("add", "README", cwd=work); git("commit", "-qm", "init", cwd=work); git("push", "-q", "origin", "HEAD:main", cwd=work)
+    (work / "dirty.txt").write_text("my uncommitted work")             # the developer's checkout
+    git("clone", "-q", str(origin), str(other), cwd=tmp_path)           # someone else pushes meanwhile
+    (other / "b.txt").write_text("b"); git("add", "b.txt", cwd=other); git("commit", "-qm", "b", cwd=other)
+    git("push", "-q", "origin", "HEAD:main", cwd=other)
+    real_root = A.ROOT
+    real_git = A._git
+    def guarded(*a, cwd=None, stdin=None):   # this test must never run git in the real repository
+        assert (cwd or A.ROOT) != real_root and not str(cwd or A.ROOT).startswith(real_root + "/"), "real repo touched"
+        return real_git(*a, cwd=cwd, stdin=stdin)
+    monkeypatch.setattr(A, "_git", guarded)
+    monkeypatch.setattr(A, "ROOT", str(work))
+    monkeypatch.setattr(A, "DIR", str(tmp_path / "agentdir"))
+    monkeypatch.setattr(A, "WT", str(tmp_path / "agentdir" / "wt"))
+    monkeypatch.setattr(A, "WT_LOCK", str(tmp_path / "agentdir" / "wt.lock"))
+    for k in ("GIT_AUTHOR_NAME", "GIT_COMMITTER_NAME"):
+        monkeypatch.setenv(k, "t")
+    for k in ("GIT_AUTHOR_EMAIL", "GIT_COMMITTER_EMAIL"):
+        monkeypatch.setenv(k, "t@t")
+    assert A.push_file("agent/overrides.json", "{}\n", "agent: test") == "pushed"
+    assert A.push_file("agent/overrides.json", "{}\n", "agent: test") == "no change"
+    log = subprocess.run(["git", "log", "--format=%s", "main"], cwd=origin, capture_output=True, text=True).stdout.split()
+    assert log[:2] == ["agent:", "test"] and "b" in log                  # on top of the other push
+    assert (work / "dirty.txt").read_text() == "my uncommitted work"      # working checkout untouched

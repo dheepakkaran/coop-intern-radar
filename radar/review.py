@@ -24,7 +24,7 @@ from . import escalate
 HERE = os.path.dirname(__file__)
 OVERRIDES = os.path.join(HERE, "..", "agent", "overrides.json")
 DECISIONS = os.path.join(HERE, "..", "agent", "decisions.json")
-QUEUE_VERSION = 1
+QUEUE_VERSION = 2   # 2: jobs keyed by the merge key (company + title), not the URL
 
 # priorities: lower = read first
 P_UNSURE, P_MATCH, P_FAILS, P_NOT_TECH = 1, 2, 3, 4
@@ -44,6 +44,32 @@ def jd_hash(excerpt: str | None) -> str | None:
     if not excerpt:
         return None
     return hashlib.sha1(re.sub(r"\s+", " ", excerpt).strip().lower().encode()).hexdigest()[:16]
+
+
+def lookup(d: dict, j: dict):
+    """Entry for a job: by its merge key (since queue v2), else by its URL (older corrections / decisions)."""
+    return d.get(j["_key"]) or d.get(j.get("_url_key"))
+
+
+def overrides_sha(overrides: dict) -> str:
+    """Fingerprint of the corrections a build applied: the agent compares it with what it pushed, so "not live"
+    is only reported when this build really had the agent's latest file."""
+    return hashlib.sha1(json.dumps(overrides, sort_keys=True).encode()).hexdigest()[:12]
+
+
+def cc_state(by: str | None, rv, tried: dict | None, h: str | None) -> dict:
+    """What Claude Code made of a job, for the page:
+    corrected (its correction is live) / agree / pending (correction pushed, not built yet) / unsure (disagrees,
+    not sure enough to correct) / tried (could not read the posting) / none."""
+    if by == "agent":
+        return {"state": "corrected"}
+    if isinstance(rv, str):          # heartbeat from before verdicts were sent: read, verdict unknown
+        rv = {"h": rv, "verdict": "agree"}
+    if rv and rv.get("h") == h:
+        return {"state": {"correction": "pending"}.get(rv.get("verdict"), rv.get("verdict") or "agree")}
+    if tried:
+        return {"state": "tried", "tried": tried}
+    return {"state": None}
 
 
 def override_applies(ov: dict | None, h: str | None) -> bool:
@@ -98,4 +124,6 @@ def agent_meta(status: dict, rows: list[dict], overrides: dict, applied: int, st
         "applied": applied,
         "stale": stale,
         "known": len(reviewed),
+        "ok": status.get("ok", True),
+        "errors": (status.get("errors") or [])[:3],
     }

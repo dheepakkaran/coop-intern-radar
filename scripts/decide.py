@@ -1,10 +1,12 @@
 """Your own call on a job: final over the rules, the AI reader and the review agent (see radar/review.py).
 
-python scripts/decide.py list                    # the agent's unsure jobs (numbered) + your decisions
-python scripts/decide.py show 2 "CPT is fine"    # show job #2 of the unsure list in My matches
-python scripts/decide.py hide 3 "hardware role"  # hide it from My matches
-python scripts/decide.py show https://...        # or give the job's URL
-python scripts/decide.py undo 2                  # remove your decision (the agent / rules decide again)
+python scripts/decide.py list                        # the agent's unsure jobs (with ids) + your decisions
+python scripts/decide.py show 3fa2c "CPT is fine"    # show that job in My matches
+python scripts/decide.py hide 9b01e "hardware role"  # hide it from My matches
+python scripts/decide.py show https://...            # or give the job's URL
+python scripts/decide.py undo 3fa2c                  # remove your decision (the agent / rules decide again)
+
+Ids come from the job itself (not its place in the list), so they never point at a different job.
 
 Writes agent/decisions.json on origin/main (from the agent's private worktree) and pushes: the site rebuilds in a
 few minutes. Decisions older than 14 days are dropped (jobs leave the page after 2 days).
@@ -32,17 +34,19 @@ def _current() -> dict:
         return {}
 
 
-def _target(arg: str) -> dict:
-    if arg.isdigit():
-        for u in A._load(A.UNSURE, []):
-            if u["n"] == int(arg):
-                return {"key": u["key"], "company": u["company"], "title": u["title"]}
-        sys.exit(f"no #{arg} in the unsure list (run: python scripts/decide.py list)")
+def _target(arg: str, dec: dict) -> dict:
     if arg.startswith("http"):
-        key = store.norm_url(arg)
-        rv = A._load(A.REVIEWS, {}).get(key) or {}
-        return {"key": key, "company": rv.get("company", ""), "title": rv.get("title", "")}
-    sys.exit("give a number from the unsure list or the job's URL")
+        u = store.norm_url(arg)
+        for k, rv in A._load(A.REVIEWS, {}).items():   # the job's key (company + title) from what the agent read
+            if rv.get("url") and store.norm_url(rv["url"]) == u:
+                return {"key": k, "company": rv.get("company", ""), "title": rv.get("title", "")}
+        return {"key": u, "company": "", "title": ""}  # the build also finds decisions by URL
+    reviews = A._load(A.REVIEWS, {})
+    for k in list(reviews) + list(dec):
+        if A.short_id(k) == arg:
+            v = reviews.get(k) or dec.get(k) or {}
+            return {"key": k, "company": v.get("company", ""), "title": v.get("title", "")}
+    sys.exit(f"no job with id {arg} (run: python scripts/decide.py list)")
 
 
 def main() -> None:
@@ -53,18 +57,18 @@ def main() -> None:
         unsure = A._load(A.UNSURE, [])
         print(f"Unsure ({len(unsure)}):" if unsure else "Unsure: none")
         for u in unsure:
-            print(f"  {u['n']:>2}. {u['company']} · {u['title']}\n      base: {u['was']} | agent: {u['now']} "
+            print(f"  {u['id']}  {u['company']} · {u['title']}\n      base: {u['was']} | agent: {u['now']} "
                   f"({u['confidence']}) {u['note']}\n      {u['url']}")
         dec = _current()
         print(f"\nYour decisions ({len(dec)}):" if dec else "\nYour decisions: none")
-        for v in dec.values():
-            print(f"  {'SHOW' if v['show'] else 'HIDE'}  {v['company']} · {v['title']}  {v.get('note', '')}")
+        for k, v in dec.items():
+            print(f"  {A.short_id(k)}  {'SHOW' if v['show'] else 'HIDE'}  {v['company']} · {v['title']}  {v.get('note', '')}")
         return
     if len(sys.argv) < 3:
         sys.exit(__doc__)
-    t = _target(sys.argv[2])
-    note = " ".join(sys.argv[3:]).strip()
     dec = _current()
+    t = _target(sys.argv[2], dec)
+    note = " ".join(sys.argv[3:]).strip()
     now = int(time.time())
     if cmd == "undo":
         if dec.pop(t["key"], None) is None:

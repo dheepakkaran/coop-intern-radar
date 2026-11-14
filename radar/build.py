@@ -192,6 +192,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     merged = merge(by_source)
     in_window = []
     for k, j in merged.items():
+        j["_key"] = k   # the merge key (company + title): survives URL changes between runs
         from_new_type = bool(new_types) and set(j["sources"]) <= new_types
         rec = store.mark_seen(state, k, now, boot or from_new_type)
         t = posted_at(j, rec)
@@ -237,20 +238,22 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     #    6a: US + tech, and the rules' reading.
     cands, audit_rows, others = [], [], []
     skipped_not_tech = skipped_inelig = skipped_non_us = skipped_unverified = skipped_review = 0
-    ov_applied = ov_stale = 0
+    ov_stale = 0
     for j, t in in_window:
         d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
              "sources": j["sources"], "jd_terms": (j.get("jd_terms") or [])[:8]}
         audit_rows.append(d)
-        j["_key"] = store.norm_url(j["url"])
+        if not j["url"].lower().startswith(("https://", "http://")):
+            d["result"] = "hidden: not a web link"   # never publish javascript:/data: links from outside feeds
+            continue
+        j["_url_key"] = store.norm_url(j["url"])     # older corrections / decisions were keyed by URL
         j["_h"] = review.jd_hash(j.get("excerpt"))
-        ov = overrides.get(j["_key"])
+        ov = review.lookup(overrides, j)
         if ov and not review.override_applies(ov, j["_h"]):
             j["_stale"], ov = True, None   # the agent read an older description: re-read, don't apply
             ov_stale += 1
         if ov:
             j["_agent"] = ov
-            ov_applied += 1
         if j.get("non_us"):
             skipped_non_us += 1
             d["result"] = "hidden: not US (JD country)"
@@ -355,10 +358,12 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     for j, t, (fld, why), e, reason in picked:
         e_base, base_reason = j["_base"]
         by = "agent" if j.get("_agent") else None
-        dec = decisions.get(j["_key"])
-        if dec and isinstance(dec.get("show"), bool):   # Dheepak's call is final
+        dec = review.lookup(decisions, j)
+        if dec and isinstance(dec.get("show"), bool):   # Dheepak's call is final, even over an agent's "not US"
             by = "you"
             reason = None if dec["show"] else "hidden by you" + (f": {dec['note']}" if dec.get("note") else "")
+            j["_row_hidden"] = False
+        cc = review.cc_state(by, review.lookup(reviewed, j), review.lookup(tried, j), j["_h"])
         if reason is not None and reason.startswith("fails"):
             skipped_inelig += 1
         elif reason is not None and reason.startswith("unverified"):
@@ -371,8 +376,9 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "jd_hash": j["_h"],
             "base": {"match": base_reason is None, "why_not": base_reason},
             "by": by,
-            "checked": j["_key"] in reviewed and reviewed[j["_key"]] == j["_h"],
-            "cc_tried": tried.get(j["_key"]) if j["_key"] not in reviewed else None,   # tried, couldn't read it
+            "checked": cc["state"] in ("agree", "corrected"),
+            "cc": cc,     # what Claude Code made of it: agree / corrected / pending / unsure / tried / None
+            "cc_tried": cc.get("tried"),
             "review": {"p": p, "why": pwhy},
             # who has read this job: the rules, the AI reader (Groq), the review agent (Claude Code, see "checked"/"by")
             "readers": {"rules": bool((j.get("elig") or {}).get("labels")), "ai": bool(j.get("_ai_read"))},
@@ -400,6 +406,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     rows.sort(key=lambda r: r["posted"], reverse=True)
     queue = review.queue_rows(rows)
+    applied = sum(1 for r in rows if r["by"] == "agent")
     rows = [{k: v for k, v in r.items() if k not in ("review", "hide_row")} for r in rows if not r["hide_row"]]
     state["ai_cache"] = {u: v for u, v in ai_cache.items() if v["t"] >= now - 10 * 86400}
     store.prune(state, now)
@@ -425,7 +432,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "jd": jd_stats,
         "ai": {**ai_stats, **budget.report(), "model": llm.MODEL, "on": ai_on},
         "check_count": sum(1 for r in rows if r["match"] and eligibility.needs_check(r["elig"])),
-        "agent": review.agent_meta(agent_status, rows, overrides, ov_applied, ov_stale, now),
+        "agent": review.agent_meta(agent_status, rows, overrides, applied, ov_stale, now),
         "decided_by_you": sum(1 for r in rows if r["by"] == "you"),
         "bootstrap": boot,
     }
@@ -434,7 +441,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         json.dump({"meta": meta, "jobs": rows}, f, separators=(",", ":"))
     with open(os.path.join(out_dir, "review-queue.json"), "w") as f:
         json.dump({"meta": {"generated": now, "version": review.QUEUE_VERSION, "count": len(queue),
-                            "rules_version": eligibility.RULES_VERSION}, "jobs": queue}, f, separators=(",", ":"))
+                            "rules_version": eligibility.RULES_VERSION,
+                            "overrides_sha": review.overrides_sha(overrides)}, "jobs": queue}, f, separators=(",", ":"))
     store.save(state, state_path)
     return meta
 
