@@ -1,1 +1,263 @@
-{}
+{
+ "https://ats.rippling.com/fieldpulse/jobs/bfade8ef-2509-4042-b400-019fe3a84a7d": {
+  "company": "FieldPulse",
+  "confidence": 92,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Current student pursuing a degree in Computer Science, Information Systems, Business, or a related field."
+  },
+  "tech": "AI/ML",
+  "title": "AI Intern",
+  "us": true,
+  "was": "unverified: no job description"
+ },
+ "https://jobs.ashbyhq.com/ramp/b87e898f-8d8b-447d-b3d5-9073ccf7d109": {
+  "company": "Ramp",
+  "confidence": 85,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Currently pursuing a B.S. or higher in Computer Science or a related technical field, graduating December 2027 or later, with coursework or project experience in data science, business analytics, machine learning, or AI.",
+   "grad": "Currently pursuing a B.S. or higher in Computer Science or a related technical field, graduating December 2027 or later, with coursework or project experience in data science, business analytics, machine learning, or AI."
+  },
+  "tech": "Data",
+  "title": "Risk Strategy Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://jobs.smartrecruiters.com/ServiceNow/744000161548289": {
+  "company": "ServiceNow",
+  "confidence": 85,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later."
+  },
+  "tech": "AI/ML",
+  "title": "AI Security Engineer Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://jobs.smartrecruiters.com/ServiceNow/744000161548528": {
+  "company": "ServiceNow",
+  "confidence": 88,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Master's degree in Computer Science or a related field, and graduating in December 2027 or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Master's degree in Computer Science or a related field, and graduating in December 2027 or later."
+  },
+  "tech": "Software",
+  "title": "Security Engineering & Automation Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://jobs.smartrecruiters.com/ServiceNow/744000161592679": {
+  "company": "ServiceNow",
+  "confidence": 88,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later."
+  },
+  "tech": "Software",
+  "title": "Security Engineer Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://netapp.eightfold.ai/careers/job/45497201": {
+  "company": "NetApp",
+  "confidence": 85,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Software Engineering, or a related technical field are encouraged to apply.",
+   "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
+  },
+  "tech": "Software",
+  "title": "Software Engineer Intern, Cloud",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://netapp.eightfold.ai/careers/job/45498081": {
+  "company": "NetApp",
+  "confidence": 85,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Electrical Engineering, Software Engineering, or a related technical field are encouraged to apply.",
+   "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
+  },
+  "tech": "Software",
+  "title": "Software Engineer Intern, Systems",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://ptc.wd1.myworkdayjobs.com/ptc/job/Boston-MA-USA/Onshape-Site-Reliability-Engineering-Intern--Summer-2027-_JR112926": {
+  "company": "PTC",
+  "confidence": 90,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Must be enrolled in some type of degree program in one of the following or related fields: Engineering, Software Engineering, Computer Engineering, Computer Science.",
+   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
+  },
+  "tech": "Software",
+  "title": "Site Reliability Engineering Intern, Onshape",
+  "us": true,
+  "was": "unverified: no job description"
+ },
+ "https://statestreet.wd1.myworkdayjobs.com/Global/job/Quincy-Massachusetts/Cyber-Security-Operations-Center-Analyst--Full-time-Internship--Jan---June-2027-_R-801091": {
+  "company": "State Street",
+  "confidence": 85,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "live": "reflected",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Final-year undergraduate or graduate students pursuing degrees in Computer Science or Information Technology with specializations in Network Security, Cloud Security, Data Analytics, Incident Response, or related disciplines who are interested in converting to a full-time role post-graduation"
+  },
+  "tech": "Software",
+  "title": "Cyber Security Operations Center Analyst Intern",
+  "us": true,
+  "was": "unverified: no job description"
+ },
+ "https://uscareers-idemia.icims.com/jobs/8642/software-engineering-internship---enrollment-and-credentialing-services/job": {
+  "company": "IDEMIA North America",
+  "confidence": 92,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Software Engineering, or a related technical field"
+  },
+  "tech": "Software",
+  "title": "Software Engineering Intern, Enrollment and Credentialing Services",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://xboxgaming.wd1.myworkdayjobs.com/External/job/Middleton/Activision-2027-Summer-Internships---Audio-Engineering_R028105-1": {
+  "company": "Activision Blizzard",
+  "confidence": 88,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
+   "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
+  },
+  "tech": "Software",
+  "title": "Activision 2027 Summer Internships - Audio Engineering",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
+ "https://xboxgaming.wd1.myworkdayjobs.com/External/job/Middleton/Activision-2027-Summer-Internships---Game-Systems-Engineering_R028106": {
+  "company": "Activision Blizzard",
+  "confidence": 93,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "live": "waiting for the next build",
+  "now": "match",
+  "pushed_at": 1794677665,
+  "quotes": {
+   "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
+   "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
+  },
+  "tech": "Software",
+  "title": "Game Systems Engineering Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ }
+}
