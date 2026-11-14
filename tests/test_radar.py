@@ -710,9 +710,9 @@ def test_llm_ask_parses_and_handles_thinking_and_errors():
     ex = "Students currently on CPT or OPT do not meet the requirements for this program."
     def post(body, key):
         assert body["temperature"] == 0 and body["response_format"] == {"type": "json_object"}
-        return {"choices": [{"message": {"content": '<think>hmm</think>{"citizenship":"not_required","cpt":"rejected",'
+        return {"choices": [{"message": {"content": '<think>hmm</think>{"r":[{"id":1,"citizenship":"not_required","cpt":"rejected",'
                                                     '"sponsorship":"silent","degree":"unclear","grad":"not_stated",'
-                                                    '"quotes":{"cpt":"Students currently on CPT or OPT do not meet the requirements for this program."}}'}}]}
+                                                    '"q":{"cpt":"Students currently on CPT or OPT do not meet the requirements for this program."}}]}'}}]}
     r = llm.ask(ex, key="k", post=post)
     assert r["labels"]["cpt"] == "rejected" and r["unverified"] == []
     assert llm.ask(ex, key=None) is None or os.environ.get("GROQ_API_KEY")   # no key -> off
@@ -728,9 +728,13 @@ def test_merge_worse_verified_answer_wins():
     lab, quo, dis = llm.merge(rules, ai)
     assert lab["cpt"] == "rejected" and quo["cpt"].startswith("CPT") and dis == ["cpt"]  # readers disagreed; worse one wins
     assert elig.hidden(elig.from_labels(lab, quo))
+    # The AI decides once it has read the JD (far fewer errors on the held-out set): a blocking answer only the
+    # rules gave is kept as a disagreement -> the job shows as "needs a look" instead of being hidden.
     rules2 = elig.check("US Citizenship is required. Pursuing a BS or MS.")
-    lab2, _, dis2 = llm.merge(rules2, {"labels": dict(elig.NEUTRAL, degree="ms_ok"), "quotes": {}})
-    assert lab2["citizenship"] == "required" and dis2 == ["citizenship"]   # the rules' 'no' still counts
+    lab2, quo2, dis2 = llm.merge(rules2, {"labels": dict(elig.NEUTRAL, degree="ms_ok"), "quotes": {}})
+    assert lab2["citizenship"] == "not_required" and dis2 == ["citizenship"] and "rules read" in quo2["citizenship"]
+    e2 = {**elig.from_labels(lab2, quo2), "disagree": dis2}
+    assert not elig.hidden(e2) and elig.needs_check(e2)
 
 
 def test_pipeline_ai_catches_what_rules_miss(tmp_path):
@@ -756,7 +760,7 @@ def test_pipeline_ai_catches_what_rules_miss(tmp_path):
                      poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now, ai=fake_ai)
     jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
     assert set(jobs) == {"B"} and jobs["B"]["elig"]["ai"] == "read"
-    assert meta["ai"]["calls"] == 2 and meta["ai"]["unverified"] == 1
+    assert meta["ai"]["answered"] == 2 and meta["ai"]["unverified"] == 1
     # cached: the next run asks nobody
     calls = []
     build.run(st, str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="no", now=now + 1800,
@@ -777,3 +781,82 @@ def test_gold_dev_set_no_regressions():
         fh += it["verdict"] != "not_eligible" and hid
     assert fh == 0, f"{fh} eligible jobs would be hidden"
     assert fs <= 1, f"{fs} not-eligible jobs would be shown"
+
+
+
+# ---- token management --------------------------------------------------------------------------------------------
+def test_trim_keeps_important_sentences_first():
+    ex = ("We love teamwork and great snacks. " * 30 + "US citizenship is required. Pursuing a BS or MS in CS. "
+          "Graduating between Dec 2027 and Jun 2028.")
+    t = llm.trim(ex, limit=200)
+    assert "US citizenship is required." in t and "Pursuing a BS or MS in CS." in t and len(t) <= 200
+    assert llm.key(ex) == llm.key(ex + " ")  and llm.key(ex) != llm.key("Pursuing a BS only.")
+
+
+def test_ask_batch_one_request_for_many_and_budget():
+    calls = []
+    def post(body, key):
+        calls.append(body)
+        assert body["max_tokens"] == llm.OUT_BASE + llm.OUT_PER_ITEM * 3 and body["reasoning_effort"] == "low"
+        assert body["messages"][1]["content"].count("[id ") == 3
+        rows = [{"id": "a", "citizenship": "required", "cpt": "silent", "sponsorship": "silent", "degree": "unclear",
+                 "grad": "not_stated", "q": {"citizenship": "US citizenship is required."}},
+                {"id": "b", "degree": "ms_ok", "q": {"degree": "Pursuing a BS or MS."}},
+                {"id": "zzz", "degree": "ug_only"}]  # unknown id is ignored; "c" missing -> not answered
+        return ({"choices": [{"message": {"content": json.dumps({"r": rows})}}],
+                 "usage": {"prompt_tokens": 900, "completion_tokens": 120}},
+                {"x-ratelimit-remaining-tokens": "7000", "x-ratelimit-reset-tokens": "4.5s"})
+    b = llm.Budget(run_tokens=5000, run_requests=5)
+    got = llm.ask_batch([("a", "US citizenship is required."), ("b", "Pursuing a BS or MS."), ("c", "Python.")],
+                        api_key="k", model="openai/gpt-oss-120b", budget=b, post=post)
+    assert len(calls) == 1 and set(got) == {"a", "b"}
+    assert got["a"]["labels"]["citizenship"] == "required" and got["b"]["labels"]["degree"] == "ms_ok"
+    assert b.report()["prompt_tokens"] == 900 and b.remaining_tokens == 7000 and abs(b.reset_tokens - 4.5) < 1e-9
+    assert not b.spent()
+    b.prompt = 5000
+    assert b.spent()
+
+
+def test_budget_waits_for_the_minute_window(monkeypatch):
+    slept = []
+    monkeypatch.setattr(llm.time, "sleep", lambda s: slept.append(s))
+    b = llm.Budget()
+    b.after({}, {"x-ratelimit-remaining-tokens": "300", "x-ratelimit-reset-tokens": "12.2s"})
+    b.before(need=1500)
+    assert slept and 12 < slept[0] < 13.5 and b.waited > 12
+    assert llm._seconds("1m2.5s") == 62.5 and llm._seconds("150ms") == 0.15
+
+
+def test_pipeline_dedupes_skips_and_defers(tmp_path, monkeypatch):
+    """Same excerpt on 3 jobs -> one AI answer; no eligibility words -> no call; over budget -> pending."""
+    now = 2_000_000_000
+    def bj(company, title, jd, url):
+        return {"source": "Greenhouse", "company": company, "title": title, "url": url, "locations": ["Boston, MA"],
+                "terms": [], "posted": now - 3600, "field": None, "sponsorship": None,
+                "jd_terms": tech.jd_terms(jd), "elig": elig.check(jd), "excerpt": elig.excerpt(jd)}
+    same = "Pursuing a BS or MS in Computer Science. Must be authorized to work in the US."
+    board = [bj("A", "Software Engineer Intern", same, "https://g/1"),
+             bj("A", "Data Engineer Intern", same, "https://g/2"),
+             bj("A", "ML Engineer Intern", same, "https://g/3"),
+             bj("B", "AI Engineer Intern", "We build robots with Python and C++ in a fun team.", "https://g/4")]
+    asked = []
+    def fake_ai(ex):
+        asked.append(ex)
+        return {"labels": dict(elig.NEUTRAL, degree="ms_ok"), "quotes": {"degree": "Pursuing a BS or MS in Computer Science."},
+                "unverified": [], "model": "fake"}
+    old = [_row("Z", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/z/jobs/0")]
+    meta = build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
+                     poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now, ai=fake_ai)
+    assert len(asked) == 1                      # three jobs, one excerpt, one answer
+    assert meta["ai"]["no_signal"] == 1         # "robots with Python and C++": no eligibility words, no call
+    jobs = json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]
+    assert sum(j["elig"]["ai"] == "read" for j in jobs) >= 3
+
+    # budget of 0 requests: everything new waits for the next run
+    monkeypatch.setattr(build, "MAX_AI_PER_RUN", 0)
+    board2 = [bj("C", "Software Engineer Intern", "Pursuing a Bachelor's or Master's degree. Visa sponsorship is not available.", "https://g/9")]
+    meta2 = build.run(str(tmp_path / "s2"), str(tmp_path / "o2"), fetch=_fake_fetch(now, old, []), poll="yes",
+                      poll_fn=lambda b: (list(board2), {"Greenhouse": {"ok": True}}), now=now, ai=fake_ai)
+    assert meta2["ai"]["pending"] == 1
+    j9 = json.load(open(tmp_path / "o2" / "jobs.json"))["jobs"][0]
+    assert j9["elig"]["ai"] == "pending"

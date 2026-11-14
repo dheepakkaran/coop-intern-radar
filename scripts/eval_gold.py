@@ -67,15 +67,16 @@ def main():
     results = [score("rules", items, lambda it: rules[it["id"]][0])]
 
     if a.ai:
-        path = os.path.join(HERE, f"ai_cache_{a.set}_{llm.MODEL.replace('/', '_')}_v{llm.LLM_VERSION}.json")
+        path = os.path.join(HERE, f"ai_cache_{a.set}_{llm.MODEL.replace('/', '_')}_v{llm.LLM_VERSION}"
+                                  f"_b{llm.BATCH}_{llm.EFFORT}.json")
         cache = json.load(open(path)) if os.path.exists(path) else {}
-        for it in items:
-            if str(it["id"]) not in cache:
-                res = llm.ask(it["excerpt"])
-                if res:
-                    cache[str(it["id"])] = res
-                    json.dump(cache, open(path, "w"), indent=1)
-                time.sleep(float(os.environ.get("RADAR_AI_SLEEP", "2")))
+        budget = llm.Budget(run_tokens=10**9, run_requests=10**6)
+        todo = [(str(it["id"]), it["excerpt"]) for it in items if str(it["id"]) not in cache]
+        for i in range(0, len(todo), llm.BATCH):
+            got = llm.ask_batch(todo[i:i + llm.BATCH], budget=budget)
+            cache.update(got)
+            json.dump(cache, open(path, "w"), indent=1)
+        print(f"AI tokens this run: {budget.report()}  (excerpts sent: {len(todo)})")
         ai = lambda it: (cache.get(str(it["id"])) or {}).get("labels")
         results.append(score(f"ai ({llm.MODEL})", items, ai))
 

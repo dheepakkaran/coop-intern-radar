@@ -36,5 +36,50 @@
    1072,
    1096
   ]
+ },
+ {
+  "reader": "ai (openai/gpt-oss-120b)",
+  "n": 130,
+  "verdict_acc": 0.954,
+  "false_show": 0,
+  "false_hide": 6,
+  "citizenship_acc": 0.969,
+  "cpt_acc": 0.969,
+  "sponsorship_acc": 1.0,
+  "degree_acc": 0.923,
+  "grad_acc": 0.977,
+  "false_show_ids": [],
+  "false_hide_ids": [
+   1003,
+   1034,
+   1057,
+   1071,
+   1072,
+   1094
+  ]
+ },
+ {
+  "reader": "rules + ai (merged)",
+  "n": 130,
+  "verdict_acc": 0.931,
+  "false_show": 0,
+  "false_hide": 9,
+  "citizenship_acc": 0.969,
+  "cpt_acc": 0.977,
+  "sponsorship_acc": 0.977,
+  "degree_acc": 0.931,
+  "grad_acc": 0.938,
+  "false_show_ids": [],
+  "false_hide_ids": [
+   1003,
+   1034,
+   1039,
+   1057,
+   1065,
+   1071,
+   1072,
+   1094,
+   1096
+  ]
  }
 ]

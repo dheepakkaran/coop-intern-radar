@@ -4,79 +4,93 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Co-op Intern Radar</title>
-<meta name="description" content="US tech (AI/ML, Data, Software) co-op and intern jobs first seen in the last 24 hours, from intern lists and company job boards.">
+<meta name="description" content="US tech co-op and intern jobs first seen in the last 24 hours, checked for a master's student on CPT.">
 <link rel="stylesheet" href="style.css">
 </head>
 <body>
-<header class="top">
-  <div class="brand">
-    <h1>Co-op Intern Radar</h1>
-    <p class="sub" id="status">Loading…</p>
-  </div>
-  <nav class="quick" aria-label="Search these sites yourself">
-    <span class="quick-label">Check by hand</span>
-    <a href="https://www.linkedin.com/jobs/search/?keywords=co-op%20OR%20intern&location=United%20States&f_TPR=r86400&f_E=1&sortBy=DD" target="_blank" rel="noopener">LinkedIn 24h</a>
-    <a href="https://www.indeed.com/jobs?q=co-op+OR+intern&l=United+States&fromage=1&sort=date" target="_blank" rel="noopener">Indeed 24h</a>
-    <a href="https://app.joinhandshake.com/login?school=northeastern" target="_blank" rel="noopener">Handshake</a>
-    <a href="https://northeastern-csm.symplicity.com/students/" target="_blank" rel="noopener">NUworks</a>
-    <a href="https://jobright.ai/jobs" target="_blank" rel="noopener">Jobright</a>
-    <a href="https://simplify.jobs/jobs?experience=Internship" target="_blank" rel="noopener">Simplify</a>
-    <a href="https://wellfound.com/jobs" target="_blank" rel="noopener">Wellfound</a>
-    <a href="https://app.joinrunway.io/" target="_blank" rel="noopener">Runway</a>
-    <a href="https://hiring.cafe/" target="_blank" rel="noopener">hiring.cafe</a>
-    <a href="https://www.trueup.io/internships" target="_blank" rel="noopener">TrueUp</a>
-  </nav>
-</header>
-
-<section class="controls" aria-label="Filters">
-  <div class="row">
-    <div class="seg" role="group" aria-label="Time window" id="win">
-      <button data-v="1" class="on">24 h</button><button data-v="2">2 days</button>
+<div class="wrap">
+  <header class="head">
+    <div class="brand">
+      <p class="eyebrow">Co-op &amp; Intern Radar</p>
+      <h1>New US tech roles, checked for MS&nbsp;+&nbsp;CPT</h1>
     </div>
-    <div class="seg" role="group" aria-label="Type" id="kind">
-      <button data-v="all" class="on">All</button><button data-v="co-op">Co-op</button><button data-v="intern">Intern</button>
-    </div>
-    <input id="q" type="search" placeholder="Search company, title, place…" aria-label="Search">
-  </div>
-  <div class="row">
-    <div class="chips" id="fields" aria-label="Field"></div>
-    <span class="sep"></span>
-    <div class="chips" id="places" aria-label="Place">
-      <button data-v="Boston/MA">Boston/MA</button><button data-v="Remote">Remote</button>
-    </div>
-    <span class="sep"></span>
-    <select id="term" aria-label="Term"><option value="">Any term</option></select>
-    <label class="tick" title="Show only jobs whose five checks all came back clean (no ⚠, no reader disagreement, JD read)"><input type="checkbox" id="hideCheck"> Only fully verified</label>
-    <label class="tick"><input type="checkbox" id="hideDone" checked> Hide applied/skipped</label>
-  </div>
-</section>
+    <dl class="stats" id="stats" aria-live="polite">
+      <div><dt>Last 24 h</dt><dd id="s24">–</dd></div>
+      <div><dt>Last 2 days</dt><dd id="s48">–</dd></div>
+      <div><dt>Updated</dt><dd id="supd">–</dd></div>
+    </dl>
+  </header>
 
-<main>
-  <p class="count" id="count"></p>
-  <ol class="jobs" id="jobs"></ol>
-  <p class="empty" id="empty" hidden>No jobs match these filters in this window.</p>
-</main>
+  <section class="bar" aria-label="Filters">
+    <div class="bar-top">
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search company, title or place" aria-label="Search">
+      </label>
+      <div class="seg" id="win" role="group" aria-label="Time window">
+        <button data-v="1">24 h</button><button data-v="2">2 days</button>
+      </div>
+    </div>
+    <div class="groups">
+      <div class="group"><span class="glabel">Type</span>
+        <div class="seg sm" id="kind" role="group" aria-label="Type">
+          <button data-v="all">All</button><button data-v="co-op">Co-op</button><button data-v="intern">Intern</button>
+        </div>
+      </div>
+      <div class="group"><span class="glabel">Field</span><div class="chips" id="fields"></div></div>
+      <div class="group"><span class="glabel">Location</span>
+        <div class="chips" id="places"><button data-v="Boston/MA">Boston / MA</button><button data-v="Remote">Remote</button></div>
+      </div>
+      <div class="group"><span class="glabel">Term</span>
+        <select id="term" aria-label="Term"><option value="">Any</option></select>
+      </div>
+      <div class="group"><span class="glabel">Eligibility</span>
+        <div class="seg sm" id="elig" role="group" aria-label="Eligibility">
+          <button data-v="all">All</button><button data-v="eligible">Eligible</button><button data-v="known">Hide unverified</button>
+        </div>
+      </div>
+      <label class="toggle"><input type="checkbox" id="hideDone"><span></span>Hide applied &amp; skipped</label>
+    </div>
+  </section>
 
-<footer class="foot">
-  <p id="health"></p>
-  <p>US tech jobs only: AI/ML, Data and Software. A job is shown when its title has a tech role word
-  (AI, ML, LLM, inference, forward deployed, data, analytics, software, developer, full stack, cloud …), or, when the
-  title doesn't, its job description has at least 3 strong tech terms incl. one core term (e.g. machine learning,
-  PyTorch, software development); those rows are tagged "JD".</p>
-  <p><b>The checks</b> (same for every job, whatever its source): C1 in the US · C2 AI/ML, Data or Software role ·
-  C3 no US citizenship / green card / clearance / ITAR · C4 F-1/CPT students not rejected, no "permanent" work
-  authorization · C5 sponsorship (⚠ if "no sponsorship now or in the future": often fine for CPT, read the JD) ·
-  C6 master's students can apply (not undergrad-only or PhD-only) · C7 graduation window includes May 2028.
-  A job fails C3, C4, C6 or C7 → it is hidden. Each JD is read by rules and by an AI reader (Groq); the AI must quote
-  the JD and the quote is checked word for word; a verified "no" from either hides the job. Hover a check to see the
-  JD sentence. "Unverified: no JD" = no description could be read; check it yourself.</p>
-  <p>Sources: the <a href="https://github.com/SimplifyJobs/Summer2027-Internships">SimplifyJobs</a> and
-  <a href="https://github.com/vanshb03/Summer2027-Internships">vanshb03</a> lists (every 30 min), plus the public
-  Greenhouse, Lever, Ashby, SmartRecruiters, Workday and Oracle Cloud job boards of every company those lists link to (about every 3 hours).
-  "New" = the earlier of the posted date and the first time this radar saw the job.
-  Applied/skip marks stay in this browser only.
-  <a href="https://github.com/dheepakkaran/coop-intern-radar">Code</a></p>
-</footer>
+  <main>
+    <div class="listhead"><p id="count"></p><p class="legend">
+      <span><i class="dot ok"></i>Clear</span><span><i class="dot warn"></i>Review</span><span><i class="dot unk"></i>Not stated</span>
+    </p></div>
+    <ol class="jobs" id="jobs"></ol>
+    <p class="empty" id="empty" hidden>No jobs match these filters.</p>
+  </main>
+
+  <footer class="foot">
+    <nav class="elsewhere" aria-label="Search other sites">
+      <span>Search elsewhere</span>
+      <a href="https://www.linkedin.com/jobs/search/?keywords=co-op%20OR%20intern&location=United%20States&f_TPR=r86400&f_E=1&sortBy=DD" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.indeed.com/jobs?q=co-op+OR+intern&l=United+States&fromage=1&sort=date" target="_blank" rel="noopener">Indeed</a>
+      <a href="https://app.joinhandshake.com/login?school=northeastern" target="_blank" rel="noopener">Handshake</a>
+      <a href="https://northeastern-csm.symplicity.com/students/" target="_blank" rel="noopener">NUworks</a>
+      <a href="https://jobright.ai/jobs" target="_blank" rel="noopener">Jobright</a>
+      <a href="https://simplify.jobs/jobs?experience=Internship" target="_blank" rel="noopener">Simplify</a>
+      <a href="https://wellfound.com/jobs" target="_blank" rel="noopener">Wellfound</a>
+      <a href="https://app.joinrunway.io/" target="_blank" rel="noopener">Runway</a>
+      <a href="https://hiring.cafe/" target="_blank" rel="noopener">hiring.cafe</a>
+      <a href="https://www.trueup.io/internships" target="_blank" rel="noopener">TrueUp</a>
+    </nav>
+    <details>
+      <summary>How jobs are checked</summary>
+      <div class="how">
+        <div><h3>Scope</h3><p>US locations only. AI/ML, Data and Software roles: a tech word in the title, or strong tech terms in the job description. First seen in the last 24 hours or 2 days.</p></div>
+        <div><h3>Work authorization</h3><p><b>Citizenship</b> no US citizenship, green card, clearance or ITAR "U.S. person". <b>CPT / F-1</b> not rejected, no "permanent" authorization. <b>Sponsorship</b> "no sponsorship now or in the future" is flagged for review: often fine for CPT.</p></div>
+        <div><h3>Education</h3><p><b>Degree</b> master's students can apply (not undergraduate-only or PhD-only). <b>Graduation</b> any stated window includes May 2028.</p></div>
+        <div><h3>Readers</h3><p>Rules read every description; an AI reader quotes the description and each quote is checked word for word. A failed citizenship, CPT, degree or graduation check hides the job. Open <b>Details</b> on a job to see the sentence behind each check.</p></div>
+      </div>
+    </details>
+    <details>
+      <summary>Sources &amp; status</summary>
+      <p id="health" class="health"></p>
+      <p class="health">Lists: <a href="https://github.com/SimplifyJobs/Summer2027-Internships">SimplifyJobs</a>, <a href="https://github.com/vanshb03/Summer2027-Internships">vanshb03</a> (every 30 min). Company boards: Greenhouse, Lever, Ashby, SmartRecruiters, Workday, Oracle Cloud (every ~3 h). Save / Applied / Skip stay in this browser. <a href="https://github.com/dheepakkaran/coop-intern-radar">Code</a></p>
+    </details>
+  </footer>
+</div>
 <script src="app.js"></script>
 </body>
 </html>

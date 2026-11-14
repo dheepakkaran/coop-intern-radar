@@ -353,4 +353,4 @@ def hidden(e: dict | None) -> bool:
 
 
 def needs_check(e: dict | None) -> bool:
-    return bool(e) and "check" in (e.get("auth"), e.get("degree"))
+    return bool(e) and ("check" in (e.get("auth"), e.get("degree")) or bool(e.get("disagree")))

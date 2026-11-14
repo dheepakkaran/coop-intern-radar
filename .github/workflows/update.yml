@@ -47,6 +47,9 @@ jobs:
           fi
 
       - name: Build
+        env:
+          GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}   # AI second reader; without it the rules decide alone
+          RADAR_LLM_MODEL: ${{ vars.RADAR_LLM_MODEL }}
         run: python -m radar.build --state state/seen.json.gz --out site/data --poll "${{ inputs.poll || 'auto' }}"
 
       - name: Save seen store (one orphan commit, force-pushed so the repo does not grow)

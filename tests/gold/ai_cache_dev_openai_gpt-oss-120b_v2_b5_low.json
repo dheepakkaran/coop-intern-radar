@@ -1,0 +1,2239 @@
+{
+ "1": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Enrolled in an undergraduate or graduate degree program."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "2": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in a Bachelor's degree program in Industrial Engineering, Manufacturing Engineering, Mechanical Engineering, Operations Management, or a related technical field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "3": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "fits"
+  },
+  "quotes": {
+   "sponsorship": "IMMIGRATION SPONSORSHIP IS NOT AVAILABLE FOR THIS ROLE.",
+   "degree": "Must be enrolled in a Bachelor's degree program currently",
+   "grad": "Expected graduation date between December 2027 and May 2028."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "4": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "In pursuit of a bachelor's degree in Engineering from an ABET-accredited program."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "5": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "A junior or senior in college, or a grad student, studying a relevant field (i.e. Marketing, Hospitality, Media Communications, Advertising, Business, etc.)"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "6": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Sponsorship for US employment authorization is not available now or in the future for this position.",
+   "degree": "Minimum Requirements: Candidates must be pursuing a Bachelor's degree in Planning, Urban Studies, or another related discipline and must have completed at least 2 years of study."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "7": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Current enrollment in a four-year undergraduate Accounting program with completion of at least one foundational accounting course."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "8": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "9": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's in Electrical, Computer, or Robotics Engineering, Computer Science, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "10": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "This position requires access to export controlled information. Government export regulations applicable to that information, applicant must either be (A) a U.S. person, defined as a (i) U.S. citizen or national, (ii) U.S. lawful, permanent resident (green card holder), (iii) refugee under 8 U.S.C. \u00a7 1157, or (iv) asylee under 8 U.S.C. \u00a7 1158"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "11": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "12": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "This position is not eligible for sponsorship for work authorization by Farmers Mutual Hail Insurance Company, SI. Therefore, if you will require sponsorship for work authorization now or in the future, we cannot consider your application at this time.",
+   "degree": "Education: Must be a currently-enrolled sophomore, junior, or senior at a college or university majoring in Agriculture (May 2027 graduates will not be eligible) ."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "15": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "employer will not sponsor applicants for U.S. work authorization (e.g. H-1B visa) for this opportunity."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "16": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Required Qualifications: Studying Finance, Economics, Business Administration, or relevant undergraduate degree."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "17": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Sponsorship: Not available",
+   "degree": "Completed at least 2 years towards a Bachelor of Science (BS) Degree in Electrical Engineering, or equivalent required"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "19": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "sponsors",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Sponsorship: Yes"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "20": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [
+   "degree"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "21": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "person or non-U.S. citizen or national, (ii) U.S. lawful permanent resident, (iii) refugee under 8 U.S.C. \u00a7 1158, or not otherwise permitted to access the export-controlled technology without U.S. government authorization, the Company reserves the right not to apply for an export license for such applicants whose access to export-controlled technology or software source code requires authorization and may decline to proceed with the application process and any offer of employment on that basis.",
+   "degree": "Reliable Robotics has year-round internship opportunities for students pursuing an undergraduate or graduate degree in aerospace engineering, software engineering or a similar field of study."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "22": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "What You Bring Education Currently pursuing a bachelor's degree in one of the following areas: Architecture Architectural engineering Construction management Facilities management Interior architecture Interior design Civil engineering Environmental design Real estate development Urban planning"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "23": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "To be successful in this role you have: Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field field and graduating December 2027, or later.",
+   "grad": "graduating December 2027, or later"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "24": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Current graduate student in communications, writing, journalism, English, creative writing, technical writing, or a related discipline, or equivalent advanced or professional writing experience."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "26": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Citizenship and Immigration Services' E-Verify program (For U.S. applicants and employees only)."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "27": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Citizenship is required.",
+   "degree": "Minimum Requirements: Candidates must be pursuing a Bachelor's degree in Civil Engineering, Industrial Engineering or Construction Management, or related field, and must have completed at least two years of study."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "30": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in or recently completed a Bachelor's or Master's degree program, majoring in Life Sciences, Biological Sciences, Medical Laboratory Sciences, Biomedical Sciences, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "34": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "This position does not offer visa sponsorship."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "35": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "This position is ineligible for visa sponsorship."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "36": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a bachelor's degree in Electrical Engineering, Mechanical Engineering, Industrial Engineering, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "37": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "38": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "39": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "40": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Person, defined as either a U.S. citizen or a lawful permanent resident (Green Card holder), and must be able to provide appropriate documentation upon hire to verify this status."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "41": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Sponsorship for US employment authorization is not available now or in the future for this position.",
+   "degree": "Candidates who have recently graduated with a Bachelor's degree and plan to continue with the Master's degree are eligible to apply for these positions."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "42": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "This position is ineligible for visa sponsorship.",
+   "degree": "Qualifications: Bachelor's degree in Statistics, Data Science, Applied Mathematics, Computer Science, Operations Research, or a related quantitative field"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "43": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "44": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "REQUIRED QUALIFICATIONS: \\n * Currently pursuing BS or MS degree in Mechanical, Industrial, Manufacturing, or other Engineering discipline."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "47": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "48": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "49": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Current PHD student with self-driven research capability is preferred."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "56": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Person status required (due to ITAR regulations)"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "57": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "cpt": "To be eligible for this position you should be a student currently enrolled in a post-secondary program, available for a full-time 3-6 month internship, co-op, or research work term."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "58": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "cpt": "This is a Spring 2027 internship, running for the duration of the spring semester."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "59": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Export Control Analysis: This position involves access to technology that is subject to U.S. export controls."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "60": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "cpt": "Who we're looking for We're hiring industrial designers who build: students, recent grads, or anyone whose portfolio shows physical products they designed and made themselves."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "13": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "14": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "ServiceNow is looking to recruit students in their final year of education (college or university) to a Security Intern position"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "18": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "25": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "28": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "29": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "31": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "32": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "33": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "45": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Applicants must be a U.S. citizen or Green Card holder to be considered for this role.",
+   "cpt": "Applicants must be a U.S. citizen or Green Card holder to be considered for this role.",
+   "sponsorship": "Applicants must be a U.S. citizen or Green Card holder to be considered for this role.",
+   "degree": "Currently pursuing a bachelor's or master's degree in Business Analytics, Data Analytics, Information Systems, Computer Science, Engineering, Business, Mathematics, Statistics, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "46": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "50": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "51": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "ITAR/EAR Requirements This position requires access to export controlled information. Government export regulations applicable to that information, applicant must either be (A) a U.S. person, defined as a (i) U.S. citizen or national, (ii) U.S. lawful, permanent resident (green card holder), (iii) refugee under 8 U.S.C. \u00a7 1157, or (iv) asylee under 8 U.S.C. \u00a7 1158, (B) eligible to access the export controlled information without a required export authorization, or (C) eligible and reasonably likely to obtain the required export authorization from the applicable U.S. government agency."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "52": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "53": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Student should be at least a junior or senior at an accredited four-year college or university."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "54": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Working towards a Bachelor's Degree in Computer Science, Data Science, or a related field;"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "55": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Qualified candidate will be working towards a Bachelor's Degree in Computer Science or a related field;"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "61": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "62": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "The Merrick Intern Program will provide an undergraduate or graduate student with an opportunity to gain technical experience in the field of Geographic Information Systems (GIS) data production, processing, and analysis."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "63": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "64": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a bachelor's degree in Computer Science, Software Engineering, Information Technology, Cybersecurity, or a related field"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "65": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "66": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "67": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's degree in Finance, Business Analytics, Information Systems, Data Analytics, Supply Chain, Economics, Business Administration, or a related field"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "68": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "69": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Must be a student enrolled in an accredited university or institution pursuing an undergraduate's degree in a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "70": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "You are a great fit for this internship if you: - Are currently pursuing an M.S. or Ph.D. in Computer Science/Artificial Intelligence. Exceptional undergraduates entering their senior year are welcome to apply."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "71": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "You are pursuing a bachelor's degree in industrial, mechanical, or another relevant engineering discipline."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "72": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "73": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "The Company is unable to provide immigration sponsorship for this position."
+  },
+  "unverified": [
+   "degree"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "74": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in an associate's, bachelor's or master's degree program in computer science, information systems"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "75": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "All applicants are asked to provide documentation that legally establishes status as a U.S. person or non-U.S. person). citizen or national, (ii) U.S. lawful permanent resident, (iii) refugee under 8 U.S.C. \u00a7 1158, or not otherwise permitted to access the export-controlled technology without U.S. government authorization"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "76": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "77": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Master's degree in Computer Science or a related field, and graduating in December 2027 or later.",
+   "grad": "graduating in December 2027 or later"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "78": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Enrolled in MS EE or PhD EE with a minimum GPA of 3.5/4.0"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "79": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Requirements: Currently enrolled in a Bachelor's program in Electrical Engineering, Physics, Optical Engineering, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "80": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "81": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "82": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "83": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "84": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a degree with Junior standing or higher in Biochemistry, Chemistry, Biology, or a closely related scientific field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "85": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "86": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "87": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Junior or Senior pursuing a Technical or Bachelor's degree in Plastic Engineering Technology, Packaging Engineering or other related degree"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "88": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "All applicants are asked to provide documentation that legally establishes status as a U.S. person or non-U.S. person). citizen or national, (ii) U.S. lawful permanent resident, (iii) refugee under 8 U.S.C. \u00a7 1158, or not otherwise permitted to access the export-controlled technology without U.S. government authorization"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "90": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Current enrollment in a Medicine (MD), Bioengineering, Biomedical Sciences, or related degree-seeking program at the Doctorate (MD or PhD) level."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "93": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in a PhD program in neuroscience, biology, or a related life science, or in a computational discipline with biological research experience."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "94": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Current undergraduate or graduate student pursuing a degree in Finance, Economics, Accounting, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "95": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "cpt": "Applicants must be legally authorized to work in the United States for any employer without requiring current or future visa sponsorship (for example, employment-based visas such as H-1B, F-1/OPT, or similar)"
+  },
+  "unverified": [
+   "sponsorship"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "96": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Qualifications Rising Junior, rising Senior or graduate class standing"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "97": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a BS/BA, MS, or PhD in Computer Science or a related field"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "98": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "99": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "sponsorship": "we are not able to sponsor visas",
+   "degree": "Been working toward undergraduate or master's degree in Engineering, Business, Finance, Economics, or other quantitative degrees, or equivalent experience.",
+   "grad": "Acceptable Graduation Dates: December 2027 - June 2028"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "100": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "101": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "The 2027 Global Transaction Banking Summer Analyst Program is for undergraduate students in a four-year program who have an anticipated graduation date of May/June 2028.",
+   "grad": "undergraduate student in a four-year program with an expected graduation date of May/June 2028"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "102": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "quotes": {
+   "grad": "Graduating May 2028 or later"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "103": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "We are looking for Masters interns to join us in summer 2025. Degree focus in Business, Corporate Strategy, Business Development, Finance, or related field",
+   "grad": "Graduating May 2028 or later"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "104": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "Currently studying towards an undergraduate or graduate degree (risk management, business, or a related subject is helpful, but not essential)",
+   "grad": "Graduating between December 2027 and May 2028"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "105": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "Currently working towards a B.S., M.S., Ph.D., or advanced degree in Systems Engineering, Computer Science, Electrical Engineering, Robotics, Mechanical Engineering, or a related discipline.",
+   "grad": "Expected to graduate between Fall 2027 and Summer 2028"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "106": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "107": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a BS, MS, or PhD in Computer Science, Computer Engineering, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "108": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "You will be subject to a background check and must be eligible to work in the United States without Visa sponsorship.",
+   "sponsorship": "You will be subject to a background check and must be eligible to work in the United States without Visa sponsorship.",
+   "degree": "Enrolled in an undergraduate degree granting program pursuing a degree in Computer Science, Cybersecurity, Data Science, or a related technical field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "109": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "iMove, the Sanofi VIE Program, is available to citizens of the European Economic Area (EU + Norway, Liechtenstein and Iceland) aged between 18 and 28.",
+   "degree": "Education: Master's degree (or equivalent) in Life Sciences, Pharmacy, Biology or Health Sciences."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "110": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Work authorization eligibility: To be considered, you must also be a U.S.",
+   "degree": "Working towards a bachelor's degree in Business, Program Management, Criminal Justice, Security Studies, and/or related degree"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "111": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Must be legally authorized to work in the United States without company sponsorship now and in the future."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "112": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "113": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "In order to comply with U.S. export control laws and regulations, this position requires applicants to either provide proof of U.S. citizenship or lawful permanent resident status or be eligible to receive an export authorization (a license) under the International Traffic in Arms Regulations and/or the Export Administration Regulations.",
+   "sponsorship": "Legal authorization to work permanently in the United States for any employer without requiring a visa transfer or visa sponsorship"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "114": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "US work authorization is a precondition of employment.",
+   "cpt": "US work authorization is a precondition of employment.",
+   "sponsorship": "The company will not consider candidates who require sponsorship for a work-authorized visa, now or in the future.",
+   "degree": "We welcome individuals who are currently pursuing an undergraduate (BS) degree to participate in 6 month paid intern opportunities at our site in Reedsville."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "115": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Reliable Robotics has year-round internship opportunities for students pursuing an undergraduate or graduate degree in aerospace engineering, electrical engineering, or a similar field of study."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "116": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "117": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "118": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "We are seeking candidates who are currently pursuing a degree in Information Technology or Computer Science and are in their freshman or sophomore year of study"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "119": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "PwC does not intend to hire experienced or entry level job seekers who will need, now or in the future, PwC sponsorship through the H-1B lottery, except as set forth within the following policy: https://pwc.to/H-1B-Lottery-Policy."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "120": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "121": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "122": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Bachelor's degree in Electrical Engineering, Electronics Engineering, Computer Engineering, or a related discipline."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "123": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Applicants must be authorized to work for any employer in the U.S."
+  },
+  "unverified": [
+   "degree"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "124": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Juniors, seniors or recent graduates with prior experience at a college news publication or professional news organization."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "127": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "quotes": {
+   "degree": "Eligibility Requirements: Undergraduate or master's students graduating between December 2027 and June 2028",
+   "grad": "Eligibility Requirements: Undergraduate or master's students graduating between December 2027 and June 2028"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "129": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Must be legally authorized to work in the United States without company sponsorship now and in the future."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "130": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "All applicants are asked to provide documentation that legally establishes status as a U.S. person or non-U.S. person). citizen or national, (ii) U.S. lawful permanent resident, (iii) refugee under 8 U.S.C. \u00a7 1158, or not otherwise permitted to access the export-controlled technology without U.S. government authorization"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "131": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Requirements: Rising senior or recent graduate in Business, Industrial Engineering, Operations Research, Engineering, or a related field; must be graduating within one year."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "132": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "cpt": "We offer competitive pay and support CPT."
+  },
+  "unverified": [
+   "citizenship",
+   "degree"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "133": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "134": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's degree in Information Security or a related degree from accredited college or university."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "135": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "quotes": {
+   "grad": "with an anticipated graduation date of May '28 or later."
+  },
+  "unverified": [
+   "degree"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "136": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Applicants must be authorized to access such information or eligible for government authorization."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "137": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "All applicants are asked to provide documentation that legally establishes status as a U.S. person or non-U.S. person)."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "138": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "person or non-U.S. citizen or national, (ii) U.S. lawful permanent resident, (iii) refugee under 8 U.S.C. \u00a7 1158"
+  },
+  "unverified": [
+   "degree"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "139": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Please Note: To be eligible for a Research Internship, you must be currently pursuing a PhD in Machine Learning, NLP, or a related discipline."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "140": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Graduate students in AI or security programs are strongly encouraged to apply."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "141": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Required Skills: Currently enrolled in a PhD program in Computer Science/Electrical Engineering/Computer Engineering or equivalent combination of education, training, and experience."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "142": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_preferred",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "What You'll Bring Juniors, seniors or recent graduates with prior experience at a college news publication or professional news organization."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "143": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Education and experience Minimum 60 hours completed (required) towards a Bachelor's or Master's degree in an Engineering field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "144": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "ITAR REQUIREMENTS To conform to U.S. Government export regulations, applicant must be a (i) U.S. citizen or national, (ii) U.S. lawful, permanent resident (aka green card holder), (iii) Refugee under 8 U.S.C. \u00a7 1157, or (iv) Asylee under 8 U.S.C. \u00a7 1158, or be eligible to obtain the required authorizations from the U.S."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "145": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Sponsorship for US work authorization is not available for this position now or in the future."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "148": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "This position is not eligible for sponsorship for work authorization by Farmers Mutual Hail Insurance Company, SI. Therefore, if you will require sponsorship for work authorization now or in the future, we cannot consider your application at this time.",
+   "degree": "Education: Must be a currently-enrolled sophomore, junior or senior at an undergraduate college or university, majoring in Computer Science, Data Science, MIS or related technical field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "149": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Must be able to work on U.S. Government contracts that may be restricted to U.S. citizens",
+   "degree": "Currently enrolled in a BA degree seeking program (current MA or MS students preferred)"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "150": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "cpt": "Applicants must be legally authorized to work in the United States for any employer without requiring current or future visa sponsorship (for example, employment-based visas such as H-1B, F-1/OPT, or similar)"
+  },
+  "unverified": [
+   "sponsorship"
+  ],
+  "model": "openai/gpt-oss-120b"
+ },
+ "151": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Engineering, Robotics, or Computer Science student (undergrad junior or senior, or a master's student)."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "152": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "We're looking for current PhD students with a passion for robotic research and applications to join us in 2027 as Robotics Applied Scientist II Interns/Co-ops to shape the future of robotics and transform automation at Amazon's scale."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "153": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Our internship program is intended for students currently enrolled in an academic program."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "154": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "sponsorship": "Sponsorship for US employment authorization is not available now or in the future for this position.",
+   "degree": "Minimum Requirements: Candidates must be pursuing a Bachelor's degree in Landscape Architecture and must have completed at least 1 year of study."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "155": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "person or non-U.S. person (and nationalities in the case of a non-U.S. person). citizen or national, (ii) U.S. lawful permanent resident, (iii) refugee under 8 U.S.C. \u00a7 1158, or not otherwise permitted to access the export-controlled technology without U.S. government authorization"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "156": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "157": {
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "citizenship": "Additional Eligibility Requirements This position may require access to classified information or restricted U.S. Government security clearance or other government authorization, and to satisfy any citizenship or other eligibility requirements imposed by applicable law, regulation, executive order, or government contract requirements."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "158": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Requirements & Qualifications Currently enrolled in a Bachelor of Science or Engineering degree in Chemical Engineering, Mechanical Engineering, or other related technical discipline."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "159": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Pursuing a Masters or PhD in Computer Science, Computer Engineering or Electrical Engineering; PhD preferred."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "160": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Engineering or a related technical field (Mechanical, Electrical, Industrial, Manufacturing, or similar)."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "161": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Minimum Qualifications Currently pursuing a Bachelor's degree in: Business Administration, Data Analytics, Data Science, Computer Science, Mathematics, Economics, Engineering Management or a related discipline."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "162": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "163": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's Degree in Computer Engineering, Software Engineering, or related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "164": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "cpt": "Western Alliance Bank will not provide any assistance or sign any documentation in support of any other form of immigration sponsorship or benefit, including Optional Practical Training (OPT) or Curricular Practical Training (CPT).",
+   "sponsorship": "We do not offer any type of employment-based immigration sponsorship for this program.",
+   "degree": "Undergraduate students currently enrolled in a related field of study."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "165": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Engineering or a related technical field (Mechanical, Electrical, Industrial, Manufacturing, or similar)."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "166": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Pursuing a Bachelor's Degree in Business, Finance, Accounting or Economics from an accredited college or university required"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "167": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "quotes": {},
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "168": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently enrolled in a Bachelor's program in Electrical Engineering, Physics, Optical Engineering, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "169": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's in Electrical Engineering, Mechanical Engineering, Computer Science, or a related field"
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ },
+ "170": {
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "quotes": {
+   "degree": "Currently pursuing a Ph.D. in robotics, machine learning, computer science, or a related field."
+  },
+  "unverified": [],
+  "model": "openai/gpt-oss-120b"
+ }
+}

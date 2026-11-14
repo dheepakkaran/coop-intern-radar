@@ -16,7 +16,7 @@ WINDOW_DAYS = 2          # the page shows 24 h or 2 days
 POLL_EVERY = 170 * 60    # 'auto' polls the boards about every 3 hours
 MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest next run; results are cached)
 JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
-MAX_AI_PER_RUN = int(os.environ.get("RADAR_AI_PER_RUN", "12"))  # AI reader calls per run (free-tier friendly)
+MAX_AI_PER_RUN = int(os.environ.get("RADAR_AI_REQUESTS", "20"))  # AI requests per run (each = up to llm.BATCH JDs)
 ATS_SOURCES = set(ats.ATS_NAMES.values())
 
 
@@ -191,10 +191,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     state["jd_cache"] = {u: v for u, v in jd_cache.items() if v["t"] >= now - 10 * 86400}
 
     # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
-    ai_cache = state.setdefault("ai_cache", {})
-    ai_stats = {"calls": 0, "failed": 0, "unverified": 0}
-    ai_on = ai is not llm.ask or bool(os.environ.get("GROQ_API_KEY"))  # tests pass a fake reader
-    picked, decisions = [], []
+    #    6a: US + tech, and the rules' reading.
+    cands, decisions = [], []
     skipped_not_tech = skipped_inelig = skipped_non_us = 0
     for j, t in in_window:
         d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
@@ -209,25 +207,59 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             skipped_not_tech += 1
             d["result"] = "hidden: not tech"
             continue
+        cands.append((j, t, tc, d))
+
+    #    6b: the AI reader, token-managed: one answer per distinct excerpt (cached by its hash), no call for
+    #        excerpts without eligibility words, batches of llm.BATCH, newest / co-op / Boston first, and a
+    #        per-run token + request budget (the rest waits for the next run).
+    ai_cache = state.setdefault("ai_cache", {})
+    ai_on = ai is not llm.ask or bool(os.environ.get("GROQ_API_KEY"))  # tests pass a fake reader
+    budget = llm.Budget(run_tokens=int(os.environ.get("RADAR_AI_RUN_TOKENS", "60000")), run_requests=MAX_AI_PER_RUN)
+    ai_stats = {"answered": 0, "from_cache": 0, "no_signal": 0, "unverified": 0, "pending": 0}
+    todo = {}
+    for j, t, tc, d in cands:
+        ex = j.get("excerpt")
+        if not (j.get("elig") or {}).get("labels") or ex is None:
+            continue
+        h = llm.key(ex)
+        j["_ai_key"] = h
+        if h in ai_cache:
+            ai_stats["from_cache"] += 1
+        elif (ns := llm.neutral_if_no_signal(ex)):
+            ai_cache[h] = {"t": now, **ns}
+            ai_stats["no_signal"] += 1
+        elif h not in todo:
+            boston = "Boston/MA" in classify.places(j["locations"])
+            coop = classify.kind(j["title"], j["terms"]) == "co-op"
+            todo[h] = ((-t, not coop, not boston), ex)
+    queue = sorted(todo.items(), key=lambda kv: kv[1][0])
+    if ai_on:
+        for i in range(0, len(queue), llm.BATCH):
+            if budget.spent():
+                break
+            batch = [(h, ex) for h, (_, ex) in queue[i:i + llm.BATCH]]
+            if ai is llm.ask:
+                got = llm.ask_batch(batch, budget=budget)
+            else:  # test reader: one excerpt at a time
+                got = {h: r for h, ex in batch if (r := ai(ex))}
+            for h, res in got.items():
+                ai_cache[h] = {"t": now, **res}
+                ai_stats["answered"] += 1
+                ai_stats["unverified"] += len(res.get("unverified") or [])
+    ai_stats["pending"] = sum(1 for h in todo if h not in ai_cache)
+    state["ai_cache"] = {h: v for h, v in ai_cache.items() if v["t"] >= now - 14 * 86400}
+
+    #    6c: final decision per job.
+    picked = []
+    for j, t, tc, d in cands:
         lst = eligibility.from_list(j.get("sponsorship"), j.get("degrees")) if "Simplify" in j["sources"] else None
         rules = j.get("elig")
-        if rules and rules.get("labels") and not eligibility.hidden(rules):
-            # second reader: the AI reads the same excerpt (cached per URL; capped per run)
-            c = ai_cache.get(j["url"])
-            need = not (c and c.get("v") == llm.LLM_VERSION) and bool(j.get("excerpt"))
-            if ai_on and need and ai_stats["calls"] < MAX_AI_PER_RUN:
-                ai_stats["calls"] += 1
-                res = ai(j["excerpt"])
-                if res:
-                    c = ai_cache[j["url"]] = {"t": now, "v": llm.LLM_VERSION, **res}
-                    ai_stats["unverified"] += len(res.get("unverified") or [])
-                else:
-                    ai_stats["failed"] += 1
-            if c and c.get("v") == llm.LLM_VERSION:
-                lab, quo, dis = llm.merge(rules, c)
-                rules = {**eligibility.from_labels(lab, quo, source="rules+ai"), "disagree": dis, "ai": "read"}
-            else:
-                rules = {**rules, "ai": "pending" if j.get("excerpt") else "no excerpt"}
+        c = ai_cache.get(j.get("_ai_key")) if j.get("_ai_key") else None
+        if rules and rules.get("labels") and c:
+            lab, quo, dis = llm.merge(rules, c)
+            rules = {**eligibility.from_labels(lab, quo, source="ai+rules"), "disagree": dis, "ai": "read"}
+        elif rules and rules.get("labels"):
+            rules = {**rules, "ai": "pending" if ai_on else "off"}
         e = eligibility.with_list(rules, lst)
         d["elig"], d["field"] = e, tc
         if eligibility.hidden(e):
@@ -281,7 +313,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "ineligible_skipped": skipped_inelig,
         "non_us_skipped": skipped_non_us,
         "jd": jd_stats,
-        "ai": {**ai_stats, "model": llm.MODEL, "on": ai_on},
+        "ai": {**ai_stats, **budget.report(), "model": llm.MODEL, "on": ai_on},
         "check_count": sum(1 for r in rows if eligibility.needs_check(r["elig"])),
         "bootstrap": boot,
     }

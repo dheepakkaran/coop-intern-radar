@@ -6,3 +6,5 @@ BUILD-LOG.md
 PLAN.md
 docs/
 .env
+.venv/
+.cache/
