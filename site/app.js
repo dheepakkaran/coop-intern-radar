@@ -43,6 +43,7 @@
   ];
 
   function status(e, j) {
+    if (j && j.by === "you") return j.match === false ? ["no", j.why_not || "Hidden by you"] : ["ok", "Shown by you"];
     if (j && j.match === false) return ["no", "Not a match: " + (j.why_not || "")];
     if (!e || !e.labels) return ["unk", "Unverified"];
     if (e.auth === "check" || e.degree === "check" || (e.disagree || []).length) return ["warn", "Review"];
@@ -88,7 +89,7 @@
       ["Location", (j.locations.join(" · ") || "Not listed") + (j.more_locations ? ` +${j.more_locations} more` : "")],
     ];
     secs.push(`<div class="dsec"><h4>Role</h4>${role.map(([k, v]) => `<div class="drow"><b>${k}</b><span class="v">${esc(v)}</span></div>`).join("")}</div>`);
-    const reader = !e || !e.labels ? "no description" : e.ai === "agent" ? "review agent read the full description (quotes verified)" : e.ai === "read" ? "rules + AI reader (quotes verified)" : "rules";
+    const reader = j.by === "you" ? "you (your decision is final)" : !e || !e.labels ? "no description" : e.ai === "agent" ? "review agent read the full description (quotes verified)" : e.ai === "read" ? "rules + AI reader (quotes verified)" : "rules";
     secs.push(`<p class="dfoot">Read by ${reader} · found via ${esc(j.sources.join(", "))} · first seen ${ago(j.posted)}</p>`);
     return `<div class="detail">${secs.join("")}</div>`;
   }
@@ -116,7 +117,9 @@
     const extra = Math.max(0, j.locations.length - 2) + (j.more_locations || 0);
     const loc = (j.locations.slice(0, 2).join(" · ") || "Location not listed") + (extra ? ` +${extra}` : "");
     const pills = [`<span class="pill${j.kind === "co-op" ? " coop" : ""}">${j.kind === "co-op" ? "Co-op" : "Intern"}</span>`,
-      `<span class="pill">${esc(j.field)}</span>`, ...j.terms.slice(0, 2).map((t) => `<span class="pill">${esc(t)}</span>`)];
+      `<span class="pill">${esc(j.field)}</span>`, ...j.terms.slice(0, 2).map((t) => `<span class="pill">${esc(t)}</span>`),
+      ...(j.by === "agent" ? [`<span class="pill agent" title="The review agent read the full description and corrected this verdict">Corrected by agent</span>`]
+        : j.checked ? [`<span class="pill agent" title="The review agent read the full description and agrees">Agent checked</span>`] : [])];
     return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${open.has(j.url) ? " open" : ""}" data-url="${esc(j.url)}">
       <div class="top"><div><span class="co">${esc(j.company)}</span><span class="age${fresh ? " fresh" : ""}">${ago(j.posted)}</span></div>
         <span class="badge ${s}" title="${esc(label)}">${esc(label)}</span></div>
@@ -197,7 +200,10 @@
       return `${k}: ${v.rows} rows`;
     }).join(" · ") + (m.polled ? ` · boards checked ${ago(m.polled)}` : "") +
       (m.ineligible_skipped !== undefined ? ` · hidden: ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} failed a check` +
-        (m.review_skipped !== undefined ? `, ${m.review_skipped} need review, ${m.unverified_skipped} unverified` : "") : "");
+        (m.review_skipped !== undefined ? `, ${m.review_skipped} need review, ${m.unverified_skipped} unverified` : "") : "") +
+      (m.agent ? (m.agent.last_run
+        ? ` · review agent: ran ${ago(m.agent.last_run)}${m.agent.hours_since > 6 ? " (laptop off?)" : ""}, checked ${m.agent.checked}/${m.agent.total}, ${m.agent.applied} corrections live`
+        : " · review agent: not seen yet") : "");
 
     const fields = [...new Set(d.jobs.map((j) => j.field))].sort();
     $("fields").innerHTML = fields.map((f) => `<button data-v="${esc(f)}">${esc(f)}</button>`).join("");

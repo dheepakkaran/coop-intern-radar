@@ -966,3 +966,113 @@ def test_agent_audit_checks_quotes_word_for_word():
     assert ok["confidence"] == 97 and A.agent_verdict(ok) == (False, "fails: citizenship")
     made_up = A.check_answer({**a, "quotes": {"citizenship": "Only US citizens may apply."}}, text)
     assert made_up["confidence"] < A.MIN_CONF and made_up["unverified"] == ["citizenship"]
+
+
+# ---- review contract: cloud <-> local agent <-> Dheepak (radar/review.py) -----------------------------------
+from radar import review  # noqa: E402
+
+NOW = 2_000_000_000
+
+
+def _bj(company, jd, url, title="Software Engineer Intern"):
+    return {"source": "Greenhouse", "company": company, "title": title, "url": url,
+            "locations": ["Boston, MA"], "terms": [], "posted": NOW - 3600, "field": None, "sponsorship": None,
+            "jd_terms": tech.jd_terms(jd), "elig": elig.check(jd), "excerpt": elig.excerpt(jd)}
+
+
+def _run_board(tmp_path, board, **kw):
+    old = [_row("Z", "Old Intern", NOW - 60 * 86400, url="https://boards.greenhouse.io/z/jobs/0")]
+    build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(NOW, old, []), poll="yes",
+              poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=NOW, **kw)
+    jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    queue = json.load(open(tmp_path / "o" / "review-queue.json"))
+    return jobs, queue
+
+
+def test_override_tied_to_jd_hash_stale_one_is_not_applied_and_goes_first(tmp_path, monkeypatch):
+    monkeypatch.setattr(build, "STRICT", True)
+    jd = "Pursuing a BS or MS in CS. Python."
+    board = [_bj("Fresh", jd, "https://g/1"), _bj("Stale", jd, "https://g/2")]
+    neutral = {**elig.NEUTRAL, "citizenship": "required"}
+    ov = {"https://g/1": {"jd_hash": review.jd_hash(elig.excerpt(jd)), "us": True, "tech": "Software",
+                          "labels": neutral, "quotes": {"citizenship": "x"}, "now": "fails: citizenship"},
+          "https://g/2": {"jd_hash": "0000", "us": True, "tech": "Software", "labels": neutral,
+                          "quotes": {"citizenship": "x"}, "now": "fails: citizenship"}}
+    jobs, queue = _run_board(tmp_path, board, overrides=ov, decisions={})
+    assert jobs["Fresh"]["match"] is False and jobs["Fresh"]["by"] == "agent"
+    assert jobs["Fresh"]["base"] == {"match": True, "why_not": None}        # what the rules said, for the agent
+    assert jobs["Stale"]["match"] is True and jobs["Stale"]["by"] is None   # description changed: not applied
+    q = {x["company"]: x for x in queue["jobs"]}
+    assert q["Stale"]["p"] == review.P_UNSURE and "changed" in q["Stale"]["why"]
+    assert queue["jobs"][0]["company"] == "Stale"                           # most important first
+
+
+def test_your_decision_is_final_and_leaves_the_queue(tmp_path, monkeypatch):
+    monkeypatch.setattr(build, "STRICT", True)
+    board = [_bj("Hidden", "US citizenship is required.", "https://g/1"),
+             _bj("Shown", "Pursuing a BS or MS in CS.", "https://g/2"),
+             _bj("Other", "Pursuing a BS or MS in CS.", "https://g/3")]
+    ov = {"https://g/2": {"us": True, "tech": "Software", "labels": elig.NEUTRAL, "quotes": {}}}
+    dec = {"https://g/1": {"show": True, "note": "CPT ok", "t": NOW}, "https://g/2": {"show": False, "note": "hw"}}
+    jobs, queue = _run_board(tmp_path, board, overrides=ov, decisions=dec)
+    assert jobs["Hidden"]["match"] is True and jobs["Hidden"]["by"] == "you"
+    assert jobs["Shown"]["match"] is False and jobs["Shown"]["why_not"] == "hidden by you: hw"   # beats the agent
+    assert {x["company"] for x in queue["jobs"]} == {"Other"}
+
+
+def test_agent_hidden_non_us_job_stays_in_the_queue(tmp_path):
+    board = [_bj("Abroad", "Pursuing a BS or MS in CS.", "https://g/1")]
+    ov = {"https://g/1": {"us": False, "tech": "Software", "labels": elig.NEUTRAL, "quotes": {}}}
+    jobs, queue = _run_board(tmp_path, board, overrides=ov, decisions={})
+    assert "Abroad" not in jobs                                              # not on the page
+    (q,) = queue["jobs"]
+    assert q["company"] == "Abroad" and q["base_match"] is True              # but its correction keeps its anchor
+
+
+def test_queue_priorities_and_agent_heartbeat(tmp_path, monkeypatch):
+    monkeypatch.setattr(build, "STRICT", True)
+    board = [_bj("Match", "Pursuing a BS or MS in CS.", "https://g/1"),
+             _bj("Review", "Bachelor's students preferred. Python.", "https://g/2"),
+             _bj("Mkt", "Pursuing a BS or MS.", "https://g/3", title="Marketing Intern")]
+    status = {"t": NOW - 3600, "reviewed": {"https://g/1": review.jd_hash(elig.excerpt("Pursuing a BS or MS in CS."))}}
+    jobs, queue = _run_board(tmp_path, board, overrides={}, decisions={}, agent_status=status)
+    p = {x["company"]: x["p"] for x in queue["jobs"]}
+    assert p["Match"] == review.P_MATCH and p["Mkt"] == review.P_NOT_TECH
+    assert jobs["Match"]["checked"] is True and jobs["Review"]["checked"] is False
+    meta = json.load(open(tmp_path / "o" / "jobs.json"))["meta"]["agent"]
+    assert meta["last_run"] == NOW - 3600 and meta["checked"] == 1
+
+
+def _q(key, base_match, h="h1", **kw):
+    return {"key": key, "url": key, "company": "C", "title": "T", "jd_hash": h, "base_match": base_match,
+            "base_why_not": None if base_match else "needs review: degree", "match": base_match, "by": None, **kw}
+
+
+def _rv(agent_match, conf, h="h1"):
+    a = {"us": True, "tech": "Software", **elig.NEUTRAL, "quotes": {}, "confidence": conf}
+    return {"t": NOW, "jd": True, "jd_hash": h, "agent_match": agent_match,
+            "agent_reason": None if agent_match else "fails: citizenship", "answer": a, "note": ""}
+
+
+def test_agent_corrections_are_a_pure_function_of_queue_and_reviews():
+    from scripts import agent_audit as A
+    queue = [_q("a", False), _q("b", False), _q("c", True), _q("d", False, h="new"), _q("e", False)]
+    reviews = {"a": _rv(True, 95), "b": _rv(True, 60), "c": _rv(True, 99), "d": _rv(True, 99, h="old")}
+    ov, unsure = A.corrections(queue, reviews)
+    assert set(ov) == {"a"} and ov["a"]["jd_hash"] == "h1" and ov["a"]["now"] == "match"
+    assert [u["key"] for u in unsure] == ["b"]
+    assert A.corrections(queue, reviews) == (ov, unsure)    # same input -> same file -> no empty commits
+    # a crash after reading but before pushing loses nothing: the next run derives the same corrections
+    assert A.needs_read(queue[0], reviews["a"], NOW) is False
+    assert A.needs_read(queue[3], reviews["d"], NOW) is True        # description changed: read again
+    assert A.needs_read(queue[4], None, NOW) is True
+    assert A.needs_read(queue[4], {"t": NOW - 100, "jd": False}, NOW) is False   # no JD: retry later
+    assert A.needs_read(queue[4], {"t": NOW - 7 * 3600, "jd": False}, NOW) is True
+
+
+def test_agent_live_state():
+    from scripts import agent_audit as A
+    ov = {"a": {"now": "match"}, "b": {"now": "match"}, "c": {"now": "match"}}
+    queue = [{**_q("a", False), "by": "agent", "match": True}, _q("b", False), _q("c", False)]
+    st = A.live_state(ov, queue, {"b": NOW - 3600, "c": NOW}, NOW)
+    assert st == {"a": "reflected", "b": "NOT live", "c": "waiting for the next build"}

@@ -10,7 +10,7 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from . import ats, classify, eligibility, jdfetch, llm, sources, store, tech
+from . import ats, classify, eligibility, jdfetch, llm, review, sources, store, tech
 
 WINDOW_DAYS = 2          # the page shows 24 h or 2 days
 POLL_EVERY = 170 * 60    # 'auto' polls the boards about every 3 hours
@@ -19,17 +19,45 @@ MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest ne
 JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
 MAX_AI_PER_RUN = int(os.environ.get("RADAR_AI_REQUESTS", "20"))  # AI requests per run (each = up to llm.BATCH JDs)
 ATS_SOURCES = set(ats.ATS_NAMES.values())
-# Corrections from the local review agent (scripts/agent_audit.py, run on Dheepak's laptop with Claude Code): it reads
-# each live job's full description and, where its reading differs from ours, its answer is the final word.
-OVERRIDES = os.path.join(os.path.dirname(__file__), "..", "agent", "overrides.json")
+# Corrections from the local review agent and Dheepak's own decisions: see radar/review.py for the contract.
+OVERRIDES = review.OVERRIDES
+DECISIONS = review.DECISIONS
+NOT_TECH = "not an AI/ML, Data or Software role"
 
 
-def load_overrides(path: str | None = OVERRIDES) -> dict:
-    try:
-        with open(path) as f:
-            return json.load(f)
-    except (OSError, ValueError, TypeError):
-        return {}
+def load_overrides(path: str | None = None) -> dict:
+    return review.load(path or OVERRIDES)
+
+
+def _elig_base(j: dict, c: dict | None, ai_on: bool) -> dict:
+    """The verdict from the rules, the list hint and the AI reader: everything except the agent and Dheepak."""
+    lst = eligibility.from_list(j.get("sponsorship"), j.get("degrees")) if "Simplify" in j["sources"] else None
+    rules = j.get("elig")
+    if rules and rules.get("labels") and c:
+        lab, quo, dis = llm.merge(rules, c)
+        rules = {**eligibility.from_labels(lab, quo, source="ai+rules"), "disagree": dis, "ai": "read"}
+    elif rules and rules.get("labels"):
+        # re-derive the verdict from the five answers with today's policy (cached verdicts may be older)
+        rules = {**rules, **eligibility.from_labels(rules["labels"], rules.get("quotes") or {}),
+                 "ai": "pending" if ai_on else "off"}
+    return eligibility.with_list(rules, lst)
+
+
+def _reason(e: dict) -> str | None:
+    """None = a match; else why not."""
+    if eligibility.hidden(e):
+        return "fails: " + ", ".join(k for k in ("citizenship", "cpt", "degree", "grad")
+                                     if (e.get("labels") or {}).get(k) in ("required", "rejected", "ug_only",
+                                                                            "phd_only", "misses")) or "fails a check"
+    # Dheepak (2026-11-14): "My matches" lists only jobs that pass every check. No job description read ->
+    # not a match; anything that needs a second look (bachelor's preferred, readers disagree) -> not a match.
+    # "Not stated" (the JD sets no degree / graduation rule) is not a restriction, so it passes.
+    if STRICT and not e.get("labels"):
+        return "unverified: no job description"
+    if STRICT and eligibility.needs_check(e):
+        return "needs review: " + ", ".join(
+            [k for k in ("auth", "degree") if e.get(k) == "check"] + (e.get("disagree") or []))
+    return None
 
 
 def posted_at(job: dict, rec: dict) -> int | None:
@@ -88,8 +116,10 @@ def apply_jd(j: dict, c: dict) -> None:
 
 def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources.resolve_shortlink,
         poll: str = "auto", poll_fn=ats.poll, now: int | None = None, jd_fetch=None, audit: str | None = None,
-        ai=None, overrides: dict | None = None) -> dict:
+        ai=None, overrides: dict | None = None, decisions: dict | None = None, agent_status: dict | None = None) -> dict:
     overrides = load_overrides() if overrides is None else overrides
+    decisions = review.load(DECISIONS) if decisions is None else decisions
+    agent_status = agent_status or {}
     jd_fetch = jd_fetch or jdfetch.fetch
     ai = ai or llm.ask
     now = now or int(time.time())
@@ -205,22 +235,36 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
     #    6a: US + tech, and the rules' reading.
-    cands, decisions, others = [], [], []
+    cands, audit_rows, others = [], [], []
     skipped_not_tech = skipped_inelig = skipped_non_us = skipped_unverified = skipped_review = 0
+    ov_applied = ov_stale = 0
     for j, t in in_window:
         d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
              "sources": j["sources"], "jd_terms": (j.get("jd_terms") or [])[:8]}
-        decisions.append(d)
-        ov = overrides.get(store.norm_url(j["url"]))
+        audit_rows.append(d)
+        j["_key"] = store.norm_url(j["url"])
+        j["_h"] = review.jd_hash(j.get("excerpt"))
+        ov = overrides.get(j["_key"])
+        if ov and not review.override_applies(ov, j["_h"]):
+            j["_stale"], ov = True, None   # the agent read an older description: re-read, don't apply
+            ov_stale += 1
         if ov:
             j["_agent"] = ov
-        if j.get("non_us") or (ov and ov.get("us") is False):
+            ov_applied += 1
+        if j.get("non_us"):
             skipped_non_us += 1
             d["result"] = "hidden: not US (JD country)"
             continue
-        tc = tech.classify(j["title"], j.get("field"), j.get("jd_terms"))
+        j["_tc_base"] = tc = tech.classify(j["title"], j.get("field"), j.get("jd_terms"))
         if ov and "tech" in ov:
             tc = (ov["tech"], "agent") if ov["tech"] else None
+        if ov and ov.get("us") is False:
+            # hidden by the agent, but kept in the review queue so its correction stays tied to the job
+            skipped_non_us += 1
+            d["result"] = "hidden: not US (review agent)"
+            j["_row_hidden"] = True
+            others.append((j, t))
+            continue
         if not tc:
             skipped_not_tech += 1
             d["result"] = "all roles only: not tech"
@@ -270,48 +314,25 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     ai_stats["pending"] = sum(1 for h in todo if h not in ai_cache)
     state["ai_cache"] = {h: v for h, v in ai_cache.items() if v["t"] >= now - 14 * 86400}
 
-    #    6c: final decision per job.
+    #    6c: final decision per job: the base verdict (rules + list + AI reader), then the agent's correction.
     picked = []
     for j, t, tc, d in cands:
-        lst = eligibility.from_list(j.get("sponsorship"), j.get("degrees")) if "Simplify" in j["sources"] else None
-        rules = j.get("elig")
-        c = ai_cache.get(j.get("_ai_key")) if j.get("_ai_key") else None
+        e_base = _elig_base(j, ai_cache.get(j.get("_ai_key")) if j.get("_ai_key") else None, ai_on)
+        j["_base"] = (e_base, _reason(e_base) if j["_tc_base"] else NOT_TECH)
         ov = j.get("_agent")
         if ov and ov.get("labels"):
             # the review agent read the whole description: its reading is final (no list hint on top)
-            rules = {**eligibility.from_labels(ov["labels"], ov.get("quotes") or {}, source="agent"),
-                     "disagree": [], "ai": "agent"}
-            lst = None
-        elif rules and rules.get("labels") and c:
-            lab, quo, dis = llm.merge(rules, c)
-            rules = {**eligibility.from_labels(lab, quo, source="ai+rules"), "disagree": dis, "ai": "read"}
-        elif rules and rules.get("labels"):
-            # re-derive the verdict from the five answers with today's policy (cached verdicts may be older)
-            rules = {**rules, **eligibility.from_labels(rules["labels"], rules.get("quotes") or {}),
-                     "ai": "pending" if ai_on else "off"}
-        e = rules if lst is None and rules and rules.get("ai") == "agent" else eligibility.with_list(rules, lst)
+            e = {**eligibility.from_labels(ov["labels"], ov.get("quotes") or {}, source="agent"),
+                 "disagree": [], "ai": "agent"}
+        else:
+            e = e_base
         d["elig"], d["field"] = e, tc
-        reason = None
-        if eligibility.hidden(e):
-            skipped_inelig += 1
-            reason = "fails: " + ", ".join(k for k in ("citizenship", "cpt", "degree", "grad")
-                                            if (e.get("labels") or {}).get(k) in ("required", "rejected", "ug_only",
-                                                                                    "phd_only", "misses")) or "fails a check"
-        # Dheepak (2026-11-14): "My matches" lists only jobs that pass every check. No job description read ->
-        # not a match; anything that needs a second look (bachelor's preferred, readers disagree) -> not a match.
-        # "Not stated" (the JD sets no degree / graduation rule) is not a restriction, so it passes.
-        elif STRICT and not e.get("labels"):
-            skipped_unverified += 1
-            reason = "unverified: no job description"
-        elif STRICT and eligibility.needs_check(e):
-            skipped_review += 1
-            reason = "needs review: " + ", ".join(
-                [k for k in ("auth", "degree") if e.get(k) == "check"] + (e.get("disagree") or []))
+        reason = _reason(e)
         d["result"] = "shown" if not reason else "all roles only: " + reason
         picked.append((j, t, tc, e, reason))
     if audit:  # every decision with its reason, for checking the filters by hand (not published)
         with open(audit, "w") as f:
-            json.dump(decisions, f, indent=1)
+            json.dump(audit_rows, f, indent=1)
 
     rows = []
     for j, t in others:  # non-tech roles: "All roles" view only, rules' reading for information, no AI
@@ -320,9 +341,36 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             e = {**e, **eligibility.from_labels(e["labels"], e.get("quotes") or {})}
         f = classify.field(j["title"], None)
         f = {"AI/ML/Data": "Other", "Software": "Other"}.get(f, f)  # tech fields belong to matched roles only
-        picked.append((j, t, (f, "title"), e, "not an AI/ML, Data or Software role"))
+        if j.get("_tc_base"):   # a tech role the agent moved out: its base verdict is the eligibility one
+            e_base = _elig_base(j, ai_cache.get(j.get("_ai_key")) if j.get("_ai_key") else None, ai_on)
+            j["_base"] = (e_base, _reason(e_base))
+        else:
+            j["_base"] = (e, NOT_TECH)
+        reason = "not US (review agent)" if j.get("_row_hidden") else NOT_TECH
+        picked.append((j, t, (f, "title"), e, reason))
+    reviewed = agent_status.get("reviewed") or {}
     for j, t, (fld, why), e, reason in picked:
+        e_base, base_reason = j["_base"]
+        by = "agent" if j.get("_agent") else None
+        dec = decisions.get(j["_key"])
+        if dec and isinstance(dec.get("show"), bool):   # Dheepak's call is final
+            by = "you"
+            reason = None if dec["show"] else "hidden by you" + (f": {dec['note']}" if dec.get("note") else "")
+        if reason is not None and reason.startswith("fails"):
+            skipped_inelig += 1
+        elif reason is not None and reason.startswith("unverified"):
+            skipped_unverified += 1
+        elif reason is not None and reason.startswith("needs review"):
+            skipped_review += 1
+        p, pwhy = review.priority(base_reason, e_base, j.get("excerpt"), bool(j.get("_stale")))
         rows.append({
+            "key": j["_key"],
+            "jd_hash": j["_h"],
+            "base": {"match": base_reason is None, "why_not": base_reason},
+            "by": by,
+            "checked": j["_key"] in reviewed and reviewed[j["_key"]] == j["_h"],
+            "review": {"p": p, "why": pwhy},
+            "hide_row": bool(j.get("_row_hidden")),
             "match": reason is None,
             "why_not": reason,
             "company": j["company"],
@@ -345,6 +393,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         })
 
     rows.sort(key=lambda r: r["posted"], reverse=True)
+    queue = review.queue_rows(rows)
+    rows = [{k: v for k, v in r.items() if k not in ("review", "hide_row")} for r in rows if not r["hide_row"]]
     state["ai_cache"] = {u: v for u, v in ai_cache.items() if v["t"] >= now - 10 * 86400}
     store.prune(state, now)
     if len(state["links"]) > 8000:
@@ -369,11 +419,16 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "jd": jd_stats,
         "ai": {**ai_stats, **budget.report(), "model": llm.MODEL, "on": ai_on},
         "check_count": sum(1 for r in rows if r["match"] and eligibility.needs_check(r["elig"])),
+        "agent": review.agent_meta(agent_status, rows, overrides, ov_applied, ov_stale, now),
+        "decided_by_you": sum(1 for r in rows if r["by"] == "you"),
         "bootstrap": boot,
     }
     os.makedirs(out_dir, exist_ok=True)
     with open(os.path.join(out_dir, "jobs.json"), "w") as f:
         json.dump({"meta": meta, "jobs": rows}, f, separators=(",", ":"))
+    with open(os.path.join(out_dir, "review-queue.json"), "w") as f:
+        json.dump({"meta": {"generated": now, "version": review.QUEUE_VERSION, "count": len(queue),
+                            "rules_version": eligibility.RULES_VERSION}, "jobs": queue}, f, separators=(",", ":"))
     store.save(state, state_path)
     return meta
 
@@ -384,8 +439,9 @@ def main() -> None:
     ap.add_argument("--out", default="site/data")
     ap.add_argument("--poll", choices=["auto", "yes", "no"], default="auto")
     ap.add_argument("--audit", help="write every job's decision + reason to this JSON file")
+    ap.add_argument("--agent-status", help="status.json from the agent-status branch (heartbeat + jobs read)")
     a = ap.parse_args()
-    meta = run(a.state, a.out, poll=a.poll, audit=a.audit)
+    meta = run(a.state, a.out, poll=a.poll, audit=a.audit, agent_status=review.load(a.agent_status))
     print(json.dumps(meta, indent=1))
     if not any(s["ok"] for s in meta["sources"].values()):
         sys.exit(1)

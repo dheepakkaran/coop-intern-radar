@@ -2,7 +2,7 @@
 
 Three checks, each 'ok' / 'check' / 'no' (+ 'unknown' when there is no JD):
   auth   : US citizenship / clearance / ITAR "U.S. person" / "F-1, CPT, OPT not eligible" -> no
-           "authorized for any employer" / "no sponsorship now or in future"              -> check
+           "no sponsorship now or in future"  -> ok: an internship is authorized through CPT/OPT (2026-11-14)
            CPT / OPT / F-1 explicitly welcome                                              -> ok (tag CPT ok)
   degree : undergrad-only ("enrolled in an undergraduate program", "rising junior/senior", Bachelor's only),
            PhD-only                                                                        -> no

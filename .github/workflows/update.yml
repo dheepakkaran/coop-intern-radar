@@ -46,6 +46,14 @@ jobs:
             echo "No data branch yet: first run, bootstrap mode."
           fi
 
+      - name: Fetch the review agent's heartbeat (agent-status branch, pushed from Dheepak's laptop)
+        run: |
+          if git fetch -q --depth 1 origin agent-status; then
+            git show origin/agent-status:status.json > state/agent-status.json || true
+          else
+            echo "No agent-status branch yet."
+          fi
+
       - name: Build
         env:
           GROQ_API_KEY: ${{ secrets.GROQ_API_KEY }}   # AI second reader; without it the rules decide alone
@@ -53,7 +61,7 @@ jobs:
           RADAR_AI: "on"              # AI second reader on (Dheepak, 2026-11-14)
           RADAR_LLM_PROFILE: v1       # the setup measured on the held-out test set (95%, 0 not-eligible shown)
           RADAR_AI_REQUESTS: "15"     # per run; stops early when Groq's free daily token limit is reached
-        run: python -m radar.build --state state/seen.json.gz --out site/data --poll "${{ inputs.poll || 'auto' }}"
+        run: python -m radar.build --state state/seen.json.gz --out site/data --poll "${{ inputs.poll || 'auto' }}" --agent-status state/agent-status.json
 
       - name: Save seen store (one orphan commit, force-pushed so the repo does not grow)
         run: |

@@ -102,6 +102,7 @@ select { height: 26px; padding: 0 8px; border: 1px solid var(--line); border-rad
 .meta { display: flex; flex-wrap: wrap; gap: 6px 12px; align-items: center; color: var(--muted); font-size: 13px; }
 .meta .pill { padding: 0 8px; border-radius: 6px; background: var(--soft); color: var(--fg); font-size: 12px; line-height: 22px; }
 .meta .pill.coop { background: var(--accent); color: var(--on-accent); }
+.meta .pill.agent { background: transparent; color: var(--ok); box-shadow: inset 0 0 0 1px var(--ok-bg); }
 
 .badge { flex: none; display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 600; padding: 2px 9px; border-radius: 999px; }
 .badge.ok { color: var(--ok); background: var(--ok-bg); }

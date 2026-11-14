@@ -49,6 +49,21 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
 - **Only clean matches (2026-11-14):** a job is published only when every check passes. Failed checks, "no
   sponsorship" / "bachelor's preferred" / readers that disagree ("needs review"), and postings whose description
   can't be read ("unverified") are all left out; the counts are in the page footer.
+- **Second opinion from a local review agent (2026-11-14):** Claude Code on my laptop re-reads every job's full
+  description and corrects the page when it is confident. Git is the message bus, so the laptop never has to be
+  reachable and nothing is lost while it is off (`radar/review.py` has the contract):
+  - cloud → laptop: `data/review-queue.json` on the page: each job's verdict before any correction, a priority
+    (unsure rules first, then every match, then failed checks, then non-tech roles) and `jd_hash`, a fingerprint of
+    the description the verdict read;
+  - laptop → cloud: `agent/overrides.json` (a push rebuilds the page). Each correction is tied to its `jd_hash`;
+    if the company edits the posting, the correction stops applying and the job is read again;
+  - heartbeat: `status.json` on the `agent-status` branch, so the page shows when the agent last ran and marks jobs
+    "Agent checked" / "Corrected by agent";
+  - my own calls: `python scripts/decide.py list | show <n> | hide <n> | undo <n>` writes `agent/decisions.json`,
+    final over everything. Order of authority: me > review agent > AI reader + rules > rules.
+  The agent derives the corrections from scratch on every run (a pure function of the queue and what it has read),
+  so a crash or a reboot mid-run can never leave a stale or missing correction. `scripts/agent_audit.py gold` turns
+  its corrections into gold-set candidates, so the rules learn from them.
 - **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).

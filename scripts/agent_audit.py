@@ -1,16 +1,22 @@
-"""Local review agent: Claude Code (headless, on Dheepak's laptop) re-checks every live job and fixes the live site.
+"""Local review agent: Claude Code (headless, on Dheepak's laptop) re-reads the jobs and corrects the live site.
 
-One run (the Pet hub starts it every hour while the laptop is on, see pet/bots/radar-audit/):
-  1. read the live page data (what the site shows right now)
-  2. verify: corrections pushed earlier, are they live now? (reflected / not reflected yet / NOT reflected)
-  3. review: jobs the agent has not read yet -> fetch the full description -> Claude reads it (all five checks
-     plus US + tech role, with a word-for-word quote for every finding and a confidence)
-  4. compare with the live verdict. Live wrong + agent confident -> agent/overrides.json, commit, push
-     (the push rebuilds the site; radar/build.py treats the agent's reading as final)
-  5. docs/agent-report.md (local): every mismatch, what was done, whether the live site shows it
+Contract with the cloud build: radar/review.py. Git is the message bus, so nothing is lost while the laptop is off.
+
+One run (Pet bot pet/bots/radar-audit/ starts it on boot / wake and every 30 min while the laptop is on):
+  1. pull the review queue (site/data/review-queue.json on Pages): every live job with its base verdict (rules +
+     AI reader, before any correction), a priority and why, and jd_hash (which description the verdict read)
+  2. read: jobs never read, or whose description changed (jd_hash differs), most important first -> fetch the full
+     description -> Claude reads it (US, tech role, five checks, word-for-word quotes, confidence). Saved per batch.
+  3. corrections = a pure function of (queue, everything read): base verdict wrong + agent confident (>= 85) ->
+     correction tied to its jd_hash; not confident -> "unsure" list for Dheepak (scripts/decide.py)
+  4. push agent/overrides.json from a private worktree of origin/main (never from the working checkout), only
+     when it changed; the push rebuilds the site
+  5. heartbeat: status.json force-pushed to the agent-status branch (when it ran, which jobs it has read)
+  6. docs/agent-report.md (local): corrections + whether the site shows them, and the unsure list
 
 python scripts/agent_audit.py run [--max 40] [--batch 8] [--dry]
-python scripts/agent_audit.py report
+python scripts/agent_audit.py report         # last run summary
+python scripts/agent_audit.py gold           # corrections -> tests/gold/candidates.json (confirm, then add to dev)
 """
 import argparse
 import fcntl
@@ -25,14 +31,18 @@ from concurrent.futures import ThreadPoolExecutor
 
 ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 sys.path.insert(0, ROOT)
-from radar import eligibility as E, jdfetch, store  # noqa: E402
+from radar import eligibility as E, jdfetch  # noqa: E402
 
-LIVE = "https://dheepakkaran.github.io/coop-intern-radar/data/jobs.json"
+QUEUE = "https://dheepakkaran.github.io/coop-intern-radar/data/review-queue.json"
 DIR = os.path.join(ROOT, ".cache", "agent")
 REVIEWS = os.path.join(DIR, "reviews.json")      # every job the agent read (local)
 LAST = os.path.join(DIR, "last.json")            # last run summary (the Pet bot shows it)
-OVERRIDES = os.path.join(ROOT, "agent", "overrides.json")   # corrections the live build applies (pushed)
 REPORT = os.path.join(ROOT, "docs", "agent-report.md")
+UNSURE = os.path.join(DIR, "unsure.json")        # numbered unsure list (scripts/decide.py uses the numbers)
+PUSHED = os.path.join(DIR, "pushed.json")        # when each correction was first pushed (for "NOT live")
+WT = os.path.join(DIR, "wt")                     # private worktree of origin/main, used only to push
+STATUS_BRANCH = "agent-status"
+NO_JD_RETRY = 6 * 3600   # a job whose description could not be fetched is tried again after this
 MIN_CONF = 85          # below this the agent's answer is listed for Dheepak, never pushed
 TEXT_LIMIT = 9000      # characters of description per job
 MODEL = os.environ.get("RADAR_AGENT_MODEL", "opus")
@@ -98,10 +108,13 @@ def _norm(s: str) -> str:
     return re.sub(r"\s+", " ", s).strip().lower()
 
 
-def live_data() -> dict:
-    req = urllib.request.Request(f"{LIVE}?t={int(time.time())}", headers={"User-Agent": "coop-intern-radar-agent"})
+def fetch_queue() -> dict:
+    req = urllib.request.Request(f"{QUEUE}?t={int(time.time())}", headers={"User-Agent": "coop-intern-radar-agent"})
     with urllib.request.urlopen(req, timeout=30) as r:
-        return json.load(r)
+        data = json.load(r)
+    if not isinstance(data.get("jobs"), list) or not (data.get("meta") or {}).get("generated"):
+        raise ValueError("review queue has no jobs list / generated time")
+    return data
 
 
 def agent_verdict(a: dict) -> tuple[bool, str | None]:
@@ -173,20 +186,104 @@ def fetch_text(url: str) -> str | None:
     return E._clean(r["text"])[:TEXT_LIMIT] if r and r.get("text") else None
 
 
-def git_push(n_new: int, dry: bool) -> str:
+def _git(*a, cwd=ROOT, stdin=None):
+    return subprocess.run(["git", *a], cwd=cwd, capture_output=True, text=True, timeout=180, input=stdin)
+
+
+def push_file(rel: str, content: str, msg: str, dry: bool = False) -> str:
+    """Commit one file onto the newest origin/main and push it, from a private worktree, retrying on a race.
+    The working checkout (where Dheepak and Claude edit code) is never touched or pushed."""
     if dry:
         return "dry run: not pushed"
-    def g(*a):
-        return subprocess.run(["git", *a], cwd=ROOT, capture_output=True, text=True, timeout=120)
-    g("add", "agent/overrides.json")
-    if g("diff", "--cached", "--quiet").returncode == 0:
-        return "nothing to push"
-    c = g("commit", "-m", f"Review agent: {n_new} correction(s) to the live checks", "--", "agent/overrides.json")
-    if c.returncode != 0:
-        return "commit failed: " + c.stderr[-200:]
-    p = g("pull", "--rebase", "--autostash", "origin", "main")
-    p = g("push", "origin", "HEAD:main")
-    return "pushed" if p.returncode == 0 else "push failed: " + p.stderr[-200:]
+    err = ""
+    for _ in range(3):
+        f = _git("fetch", "-q", "origin", "main")
+        if f.returncode != 0:
+            return "fetch failed: " + f.stderr[-200:]
+        if not os.path.isdir(os.path.join(WT, ".git")) and not os.path.isfile(os.path.join(WT, ".git")):
+            _git("worktree", "prune")
+            w = _git("worktree", "add", "-f", "--detach", WT, "origin/main")
+            if w.returncode != 0:
+                return "worktree failed: " + w.stderr[-200:]
+        _git("checkout", "-q", "-f", "--detach", "origin/main", cwd=WT)
+        _git("clean", "-fdq", cwd=WT)
+        path = os.path.join(WT, rel)
+        try:
+            with open(path) as fh:
+                if fh.read() == content:
+                    return "no change"
+        except OSError:
+            pass
+        os.makedirs(os.path.dirname(path), exist_ok=True)
+        with open(path, "w") as fh:
+            fh.write(content)
+        _git("add", rel, cwd=WT)
+        c = _git("commit", "-q", "-m", msg, cwd=WT)
+        if c.returncode != 0:
+            return "commit failed: " + (c.stderr or c.stdout)[-200:]
+        p = _git("push", "-q", "origin", "HEAD:main", cwd=WT)
+        if p.returncode == 0:
+            return "pushed"
+        err = p.stderr[-200:]   # someone pushed meanwhile: start again from the new origin/main
+    return "push failed: " + err
+
+
+def push_status(status: dict, dry: bool = False) -> str:
+    """Heartbeat: one commit holding status.json, force-pushed to its own branch (no history, no rebuild)."""
+    if dry:
+        return "dry run"
+    blob = _git("hash-object", "-w", "--stdin", stdin=json.dumps(status, sort_keys=True))
+    tree = _git("mktree", stdin=f"100644 blob {blob.stdout.strip()}\tstatus.json\n")
+    commit = _git("commit-tree", tree.stdout.strip(), "-m", f"agent status {time.strftime('%Y-%m-%dT%H:%M')}")
+    if commit.returncode != 0:
+        return "status commit failed: " + commit.stderr[-200:]
+    p = _git("push", "-q", "-f", "origin", f"{commit.stdout.strip()}:refs/heads/{STATUS_BRANCH}")
+    return "ok" if p.returncode == 0 else "status push failed: " + p.stderr[-200:]
+
+
+def needs_read(q: dict, rv: dict | None, now: int) -> bool:
+    if not rv:
+        return True
+    if not rv.get("jd"):
+        return now - rv.get("t", 0) >= NO_JD_RETRY
+    return rv.get("jd_hash") != q["jd_hash"]
+
+
+def corrections(queue_jobs: list[dict], reviews: dict) -> tuple[dict, list[dict]]:
+    """Pure: (overrides, unsure) from the queue and everything the agent has read.
+    Recomputed from scratch every run, so a crash, a restart or a changed description can never leave a stale
+    or missing correction behind."""
+    out, unsure = {}, []
+    for q in queue_jobs:
+        rv = reviews.get(q["key"])
+        if not rv or not rv.get("jd") or "answer" not in rv or rv.get("jd_hash") != q["jd_hash"]:
+            continue
+        if rv["agent_match"] == q["base_match"]:
+            continue
+        a = rv["answer"]
+        item = {"company": q["company"], "title": q["title"], "was": q["base_why_not"] or "match",
+                "now": "match" if rv["agent_match"] else rv["agent_reason"], "confidence": a["confidence"]}
+        if a["confidence"] < MIN_CONF:
+            unsure.append({**item, "key": q["key"], "url": q["url"], "note": rv.get("note") or ""})
+            continue
+        out[q["key"]] = {**item, "jd_hash": q["jd_hash"], "us": a["us"], "tech": a["tech"],
+                         "labels": {x: a[x] for x in E.LABELS}, "quotes": a["quotes"], "read_at": rv["t"]}
+    return out, unsure
+
+
+def live_state(overrides: dict, queue_jobs: list[dict], pushed: dict, generated: int) -> dict:
+    """Is each correction on the site? reflected / waiting for the next build / NOT live."""
+    by = {q["key"]: q for q in queue_jobs}
+    out = {}
+    for k, ov in overrides.items():
+        q = by.get(k) or {}
+        if q.get("by") == "agent" and q.get("match") == (ov["now"] == "match"):
+            out[k] = "reflected"
+        elif pushed.get(k, generated) < generated - 120:
+            out[k] = "NOT live"
+        else:
+            out[k] = "waiting for the next build"
+    return out
 
 
 def run(max_jobs: int, batch: int, dry: bool) -> dict:
@@ -197,53 +294,36 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
     except OSError:
         return {"status": "ok", "say": "review agent already running"}
     now = int(time.time())
-    reviews, overrides = _load(REVIEWS, {}), _load(OVERRIDES, {})
-    live = live_data()
-    rows = {store.norm_url(r["url"]): r for r in live["jobs"]}
-    live_at = live["meta"].get("updated") or live["meta"].get("generated") or 0
-    # 1b. a run that died mid-way (laptop off) saved its reviews but not its corrections: rebuild them
-    recovered = 0
-    for k, rv in reviews.items():
-        if rv.get("status") == "corrected" and k not in overrides and k in rows:
-            a = rv["answer"]
-            overrides[k] = {"us": a["us"], "tech": a["tech"], "labels": {x: a[x] for x in E.LABELS},
-                            "quotes": a["quotes"], "confidence": a["confidence"], "company": rv["company"],
-                            "title": rv["title"], "was": rv.get("live_reason") or ("match" if rv.get("live_match") else "not a match"),
-                            "now": "match" if rv["agent_match"] else rv["agent_reason"], "pushed_at": now,
-                            "live": "waiting for the next build"}
-            recovered += 1
+    try:
+        qd = fetch_queue()
+    except Exception as e:  # no queue = no decisions this run (never recompute corrections from nothing)
+        res = {"status": "error", "say": f"review queue unavailable: {str(e)[:120]}", "t": now}
+        _save(LAST, res)
+        return res
+    queue, generated = qd["jobs"], qd["meta"]["generated"]
+    reviews = _load(REVIEWS, {})
+    # records read before jd_hash existed: adopt today's hash once instead of re-reading 400 jobs
+    for q in queue:
+        rv = reviews.get(q["key"])
+        if rv and "jd_hash" not in rv:
+            rv["jd_hash"] = q["jd_hash"]
 
-    # 2. verify earlier corrections
-    for k, ov in overrides.items():
-        r = rows.get(k)
-        rv = reviews.get(k) or {}
-        if r is None:
-            ov["live"] = "gone (out of the 2-day window)"
-        elif r["match"] == rv.get("agent_match"):
-            ov["live"] = "reflected"
-        elif ov.get("pushed_at", now) > live_at - 60:
-            ov["live"] = "waiting for the next build"
-        else:
-            ov["live"] = "NOT reflected"
-    # 3. review new jobs: matches first (a wrong "match" costs an application), then tech roles, then the rest
-    todo = [(k, r) for k, r in rows.items() if k not in reviews]
-    todo.sort(key=lambda kr: (not kr[1]["match"], kr[1]["field"] not in ("AI/ML", "Data", "Software"), -kr[1]["posted"]))
-    todo = todo[:max_jobs]
+    # 1. read: never read, or the description changed; most important first (the queue is already ordered)
+    todo = [q for q in queue if needs_read(q, reviews.get(q["key"]), now)][:max_jobs]
     with ThreadPoolExecutor(max_workers=8) as pool:
-        texts = list(pool.map(lambda kr: fetch_text(kr[1]["url"]), todo))
+        texts = list(pool.map(lambda q: fetch_text(q["url"]), todo))
     ready = []
-    for (k, r), text in zip(todo, texts):
-        if not text:
-            reviews[k] = {"t": now, "company": r["company"], "title": r["title"], "jd": False,
-                          "live_match": r["match"], "agent_match": r["match"]}
-            continue
-        ready.append((k, r, text))
-    stats = {"reviewed": 0, "agree": 0, "new_corrections": recovered, "recovered": recovered, "unsure": 0, "no_jd": len(todo) - len(ready),
-             "tokens": 0, "errors": []}
+    for q, text in zip(todo, texts):
+        if text:
+            ready.append((q, text))
+        else:
+            reviews[q["key"]] = {"t": now, "company": q["company"], "title": q["title"], "jd": False,
+                                 "jd_hash": q["jd_hash"]}
+    stats = {"read": 0, "no_jd": len(todo) - len(ready), "tokens": 0, "errors": []}
     for i in range(0, len(ready), batch):
         part = ready[i:i + batch]
-        items = [{"id": str(n), "company": r["company"], "title": r["title"], "locations": r["locations"],
-                  "text": text} for n, (k, r, text) in enumerate(part)]
+        items = [{"id": str(n), "company": q["company"], "title": q["title"], "locations": q["locations"],
+                  "text": text} for n, (q, text) in enumerate(part)]
         try:
             answers, tok = ask_claude(items)
         except Exception as e:  # a failed call: these jobs are tried again next run
@@ -251,83 +331,112 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
             continue
         stats["tokens"] += tok
         by_id = {str(a.get("id")): a for a in answers}
-        for n, (k, r, text) in enumerate(part):
+        for n, (q, text) in enumerate(part):
             a = by_id.get(str(n))
             if not a:
                 continue
             a = check_answer(a, text)
-            if a["tech"] == "Borderline":  # undecided role family: keep the live site's tech decision
-                a["tech"] = r["field"] if r["field"] in ("AI/ML", "Data", "Software") else None
+            if a["tech"] == "Borderline":  # undecided role family: keep the site's own tech decision
+                a["tech"] = q["field"] if q["field"] in ("AI/ML", "Data", "Software") else None
                 a["note"] = ("borderline role family; " + (a.get("note") or "")).strip("; ")
             m, reason = agent_verdict(a)
-            rec = {"t": now, "company": r["company"], "title": r["title"], "url": r["url"], "jd": True,
-                   "live_match": r["match"], "live_reason": r["why_not"], "agent_match": m, "agent_reason": reason,
-                   "answer": {x: a[x] for x in ("us", "tech", *E.LABELS, "quotes", "confidence")},
-                   "note": a.get("note") or "", "unverified": a.get("unverified") or []}
-            stats["reviewed"] += 1
-            if m == r["match"]:
-                stats["agree"] += 1
-                rec["status"] = "agree"
-            elif a.get("confidence", 0) >= MIN_CONF:
-                rec["status"] = "corrected"
-                overrides[k] = {"us": a["us"], "tech": a["tech"], "labels": {x: a[x] for x in E.LABELS},
-                                "quotes": a["quotes"], "confidence": a["confidence"], "company": r["company"],
-                                "title": r["title"], "was": "match" if r["match"] else (r["why_not"] or "not a match"),
-                                "now": "match" if m else reason, "pushed_at": now, "live": "waiting for the next build"}
-                stats["new_corrections"] += 1
-            else:
-                rec["status"] = "unsure (for Dheepak)"
-                stats["unsure"] += 1
-            reviews[k] = rec
-        _save(OVERRIDES, overrides)  # save both each batch, so a crash never loses a correction
-        _save(REVIEWS, reviews)
-    # drop corrections for jobs that left the window a while ago (keeps the file small)
-    overrides = {k: v for k, v in overrides.items() if k in rows or now - v.get("pushed_at", now) < 3 * 86400}
-    reviews = {k: v for k, v in reviews.items() if now - v["t"] < 7 * 86400}
+            reviews[q["key"]] = {
+                "t": now, "company": q["company"], "title": q["title"], "url": q["url"], "jd": True,
+                "jd_hash": q["jd_hash"], "excerpt": E.excerpt(text), "base_match": q["base_match"],
+                "base_reason": q["base_why_not"], "agent_match": m, "agent_reason": reason,
+                "answer": {x: a[x] for x in ("us", "tech", *E.LABELS, "quotes", "confidence")},
+                "note": a.get("note") or "", "unverified": a.get("unverified") or []}
+            stats["read"] += 1
+        _save(REVIEWS, reviews)   # every batch: a crash loses at most one batch of reading
+    live_keys = {q["key"] for q in queue}
+    reviews = {k: v for k, v in reviews.items() if k in live_keys or now - v.get("t", 0) < 7 * 86400}
     _save(REVIEWS, reviews)
-    _save(OVERRIDES, overrides)
-    stats["push"] = git_push(stats["new_corrections"], dry) if stats["new_corrections"] or not dry else "no changes"
-    stats["left"] = sum(1 for k in rows if k not in reviews)
-    stats["not_reflected"] = sum(1 for v in overrides.values() if v.get("live") == "NOT reflected")
-    write_report(reviews, overrides, rows, stats, now)
-    say = (f"read {stats['reviewed']} jobs, {stats['new_corrections']} fixed, {stats['unsure']} unsure"
-           f"{', ' + str(stats['not_reflected']) + ' NOT live' if stats['not_reflected'] else ''}, {stats['left']} left")
-    res = {"status": "error" if stats["errors"] and not stats["reviewed"] else "ok", "say": say, "t": now,
+
+    # 2. corrections from everything read (pure), then push only if the file changed
+    overrides, unsure = corrections(queue, reviews)
+    pushed = _load(PUSHED, {})
+    prev = _load(os.path.join(WT, "agent", "overrides.json"), None) if os.path.isdir(WT) else None
+    content = json.dumps(overrides, indent=1, sort_keys=True) + "\n"
+    stats["push"] = push_file("agent/overrides.json", content,
+                              f"Review agent: {len(overrides)} correction(s) on the live jobs", dry)
+    if stats["push"] == "pushed":
+        for k in overrides:
+            pushed.setdefault(k, now)
+    pushed = {k: v for k, v in pushed.items() if k in overrides}
+    _save(PUSHED, pushed)
+    live = live_state(overrides, queue, pushed, generated)
+    for n, u in enumerate(unsure, 1):
+        u["n"] = n
+    _save(UNSURE, unsure)
+
+    stats.update(corrections=len(overrides), unsure=len(unsure),
+                 not_live=sum(1 for v in live.values() if v == "NOT live"),
+                 left=sum(1 for q in queue if needs_read(q, reviews.get(q["key"]), now)),
+                 changed=prev is not None and prev != overrides)
+    say = (f"read {stats['read']} jobs, {len(overrides)} corrections live-bound, {len(unsure)} unsure"
+           f"{', ' + str(stats['not_live']) + ' NOT live' if stats['not_live'] else ''}, {stats['left']} left")
+    status = {"t": now, "say": say, "stats": {k: v for k, v in stats.items() if k != "errors"},
+              "reviewed": {k: v["jd_hash"] for k, v in reviews.items() if v.get("jd") and k in live_keys}}
+    stats["heartbeat"] = push_status(status, dry)
+    write_report(overrides, unsure, live, queue, reviews, stats, now)
+    res = {"status": "error" if stats["errors"] and not stats["read"] else "ok", "say": say, "t": now,
            "stats": stats}
     _save(LAST, res)
     return res
 
 
-def write_report(reviews, overrides, rows, stats, now):
-    live_reviewed = [v for k, v in reviews.items() if k in rows and v.get("jd")]
-    agree = sum(1 for v in live_reviewed if v.get("status") == "agree")
-    lines = [f"# Review agent report", "",
-             f"Updated {time.strftime('%Y-%m-%d %H:%M', time.localtime(now))}. Live jobs {len(rows)}, read by the "
-             f"agent {len(live_reviewed)} (agree {agree}), no description {sum(1 for k, v in reviews.items() if k in rows and not v.get('jd'))}, "
-             f"not read yet {stats['left']}. Last run: {stats}", "",
-             "## Corrections (the agent overrode the live verdict)", "",
-             "| Job | Live said | Agent says | Conf | Live now |", "|---|---|---|---|---|"]
-    for k, v in sorted(overrides.items(), key=lambda kv: -kv[1].get("pushed_at", 0)):
-        lines.append(f"| {v['company']} · {v['title']} | {v['was']} | {v['now']} | {v['confidence']} | {v.get('live')} |")
-    lines += ["", "## Unsure (not pushed; please look)", "", "| Job | Live | Agent | Conf | Note |", "|---|---|---|---|---|"]
-    for k, v in reviews.items():
-        if v.get("status", "").startswith("unsure") and k in rows:
-            lines.append(f"| [{v['company']} · {v['title']}]({v['url']}) | {v['live_reason'] or 'match'} | "
-                         f"{v['agent_reason'] or 'match'} | {v['answer']['confidence']} | {v['note']} |")
+def write_report(overrides, unsure, live, queue, reviews, stats, now):
+    read = sum(1 for q in queue if (reviews.get(q["key"]) or {}).get("jd")
+               and reviews[q["key"]].get("jd_hash") == q["jd_hash"])
+    lines = ["# Review agent report", "",
+             f"Updated {time.strftime('%Y-%m-%d %H:%M', time.localtime(now))}. Queue {len(queue)} jobs, read by the "
+             f"agent {read}, still to read {stats['left']}. Last run: {json.dumps(stats)}", "",
+             "## Corrections (the agent overrides the base verdict)", "",
+             "| Job | Base said | Agent says | Conf | On the site |", "|---|---|---|---|---|"]
+    for k, v in sorted(overrides.items(), key=lambda kv: -kv[1]["read_at"]):
+        lines.append(f"| {v['company']} · {v['title']} | {v['was']} | {v['now']} | {v['confidence']} | {live[k]} |")
+    lines += ["", "## Unsure: your call (`python scripts/decide.py show|hide <n> \"note\"`)", "",
+              "| n | Job | Base | Agent | Conf | Note |", "|---|---|---|---|---|---|"]
+    for u in unsure:
+        lines.append(f"| {u['n']} | [{u['company']} · {u['title']}]({u['url']}) | {u['was']} | {u['now']} | "
+                     f"{u['confidence']} | {u['note']} |")
     os.makedirs(os.path.dirname(REPORT), exist_ok=True)
     with open(REPORT, "w") as f:
         f.write("\n".join(lines) + "\n")
 
 
+def gold_candidates() -> str:
+    """Agent disagreements -> tests/gold/candidates.json, in the gold-set format. Confirm by hand, then move the
+    right ones into tests/gold/dev.json: the rules learn from their mistakes and fewer jobs need the agent."""
+    reviews = _load(REVIEWS, {})
+    out = []
+    for k, v in reviews.items():
+        if not v.get("jd") or "answer" not in v or v["agent_match"] == v.get("base_match", v.get("live_match")):
+            continue
+        a = v["answer"]
+        out.append({"company": v["company"], "title": v["title"], "url": v.get("url"), "excerpt": v.get("excerpt"),
+                    "gold": {x: a[x] for x in E.LABELS}, "quotes": a["quotes"], "confidence": a["confidence"],
+                    "base": v.get("base_reason", v.get("live_reason")) or "match",
+                    "note": "from the review agent " + time.strftime("%Y-%m-%d", time.localtime(v["t"]))
+                            + "; confirm the labels before adding to dev.json"})
+    path = os.path.join(ROOT, "tests", "gold", "candidates.json")
+    with open(path, "w") as f:
+        json.dump(out, f, indent=1)
+    return f"{len(out)} candidates -> {os.path.relpath(path, ROOT)} ({sum(1 for o in out if not o['excerpt'])} without excerpt)"
+
+
 def main():
     ap = argparse.ArgumentParser()
-    ap.add_argument("cmd", choices=["run", "report"])
+    ap.add_argument("cmd", choices=["run", "report", "gold"])
     ap.add_argument("--max", type=int, default=40)
     ap.add_argument("--batch", type=int, default=8)
     ap.add_argument("--dry", action="store_true")
     a = ap.parse_args()
     if a.cmd == "report":
         print(json.dumps(_load(LAST, {}), indent=1))
+        return
+    if a.cmd == "gold":
+        print(gold_candidates())
         return
     print(json.dumps(run(a.max, a.batch, a.dry)))
 
