@@ -17,7 +17,7 @@ A job is hidden when any check says 'no'. 'check' jobs are shown with a tag (the
 import re
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
-RULES_VERSION = 4  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+RULES_VERSION = 5  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 
 TAG = re.compile(r"<[^>]+>")
 WS = re.compile(r"\s+")
@@ -52,8 +52,10 @@ CITIZEN = re.compile(
     r"(security|government|secret) clearance (is )?required|requires? (a|an) (active )?(security|secret) clearance|"
     r"itar[^.]{0,120}u\.?s\.? (person|citizen)|export control[^.]{0,80}u\.?s\.? person", re.I)
 F1_REJECT = re.compile(
-    r"(f-?1|cpt|opt|j-?1|student visa)[^.]{0,120}(not eligible|ineligible|will not be considered|cannot be considered|"
-    r"not able to|unable to|do(es)? not (accept|support|qualify)|not accepted)|"
+    r"(f-?1|\bcpt\b|\bopt\b|j-?1|student visa)[^.]{0,160}(not eligible|ineligible|will not be considered|cannot be considered|"
+    r"not able to|unable to|do(es)? not (accept|support|qualify|meet)|don'?t meet|not meet|not accepted|not be accepted|"
+    r"excluded|not considered|disqualif)|"
+    r"permanent(ly)? (authori[sz]ed|work authori[sz]ation|right to work)|"
     r"(not eligible|ineligible|cannot|will not|do not|unable)[^.]{0,80}(f-?1|cpt|\bopt\b|student visa)|"
     r"sponsorship \(for example,? [^)]*(f-?1|opt|cpt)", re.I)
 CPT_OK = re.compile(
@@ -65,7 +67,7 @@ NO_SPONSOR = re.compile(
     r"(will not|won't|cannot|can't|unable to|do not|does not|not able to) (provide |offer )?(visa |immigration |employment |work )?sponsor|"
     r"not (be )?eligible for (visa |immigration |work authorization |employment )?sponsorship|"
     r"(no|not offer(ing)?) (visa |immigration )?sponsorship|"
-    r"(now or in the future|currently or in the future)[^.]{0,40}sponsor|sponsor[^.]{0,60}(now or in the future)|"
+    r"(now or in the future|currently or in the future)[^.]{0,40}sponsor|sponsor[^.]{0,100}\bin the future\b|"
     r"authori[sz]ed to work (in the (u\.?s\.?|united states) )?for any employer", re.I)
 SPONSOR_YES = re.compile(r"(we|will|do|does|can) (sponsor|offer (visa )?sponsorship|provide (visa )?sponsorship)(?! benefits)", re.I)
 

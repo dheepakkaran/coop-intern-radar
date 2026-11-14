@@ -437,7 +437,12 @@ def test_elig_auth():
           "To conform to export regulations, applicant must be a U.S. citizen, lawful permanent resident, protected individual as defined by 8 U.S.C.",
           "Applicants requiring future sponsorship for continued work authorization (for example, following F-1 OPT/CPT, or J-1 status) are not eligible.",
           "Applicants must be legally authorized to work in the United States for any employer without requiring current or future visa sponsorship (for example, employment-based visas such as H-1B, F-1/OPT, or similar)",
-          "Ability to obtain a security clearance"]
+          "Ability to obtain a security clearance",
+          # Sanofi co-op (Dheepak caught this one, 2026-11-14)
+          "Students currently on CPT, OPT, or STEM OPT usually require future sponsorship for long term employment "
+          "and do not meet the Internal requirements for this program unless eligible for an alternative long-term status.",
+          "Must be permanently authorized to work in the U.S. and not require sponsorship of an employment visa "
+          "(e.g., H-1B or green card) at the time of application or in the future."]
     for s in no:
         assert _e(s)["auth"] == "no", s
     cpt = ["Work authorization is required on the first day of employment including F-1 students using CPT, OPT or STEM OPT.",
@@ -447,7 +452,8 @@ def test_elig_auth():
     check = ["Applicants must be authorized to work for any employer in the U.S.",
              "We are unable to sponsor or take over sponsorship of an employment Visa at this time.",
              "Applicants must be currently authorized to work in the United States without the need for employer sponsorship now or in the future.",
-             "This position is not eligible for sponsorship."]
+             "This position is not eligible for sponsorship.",
+             "Candidates must not require sponsorship of an employment visa at the time of application or in the future."]
     for s in check:
         assert _e(s)["auth"] == "check", s
     assert _e("Comply with U.S. export laws without sponsorship for an export license.")["auth"] == "ok"
