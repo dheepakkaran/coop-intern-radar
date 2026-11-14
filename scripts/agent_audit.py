@@ -43,7 +43,10 @@ SYSTEM = """You check internship / co-op job postings for one applicant. Read ea
 
 Applicant: MS in Electrical & Computer Engineering student (Northeastern, Boston). F-1 student visa: can work through
 CPT/OPT, is NOT a US citizen, has no green card, cannot get a security clearance, is not a "U.S. person" under ITAR/EAR.
-Graduates May 2028.
+Graduates May 2028. These are internships / co-ops: the university authorizes the work through CPT, so the employer
+never has to sponsor a visa. "No sponsorship now or in future" is therefore FINE and must not lower your confidence.
+The only work-authorization question is whether the employer accepts a CPT/OPT (F-1) student at all: a citizenship /
+green card / clearance / U.S. person requirement, or an explicit "F-1 / CPT / OPT not eligible", blocks the job.
 
 For each job answer:
 - us: true if the job is in the United States (remote-US counts), false if it is only outside the US.
