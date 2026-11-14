@@ -123,6 +123,7 @@ def _job(ats, company, title, url, locations, countries, posted, extra_intern=Fa
 JD_DAYS = 3          # only jobs recent enough to show up need their JD
 JD_MAX_PER_BOARD = 25    # new JD fetches per board per poll; the rest come next poll (JDs are cached)
 KNOWN: dict = {}         # url -> {"elig", "jd_terms"} from earlier polls, set by poll()
+FAILED: set = set()      # board ids that failed in the last poll() (their old jobs should be kept)
 
 
 def enrich(jobs: list, now: int) -> list:
@@ -405,8 +406,9 @@ def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None)
     """Poll every live board. Updates each board's `fails` counter in place. Returns (jobs, health).
 
     `known` = JD results from earlier polls (url -> elig/jd_terms), so each JD is fetched once."""
-    global KNOWN
+    global KNOWN, FAILED
     KNOWN = known or {}
+    FAILED = set()
     jobs, health = [], {}
     for ats, fetch in FETCHERS.items():
         todo = [(bid, b) for bid, b in boards.items() if b["ats"] == ats and b.get("fails", 0) < max_fails]
@@ -428,7 +430,10 @@ def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None)
             for bid, got, err in pool.map(one, todo):
                 if err == "gone":
                     boards[bid]["fails"] = boards[bid].get("fails", 0) + 1
+                for j in got:
+                    j["board"] = bid
                 if err:
+                    FAILED.add(bid)
                     h["failed"] += 1
                     h["errors"][err] = h["errors"].get(err, 0) + 1
                 else:

@@ -113,6 +113,9 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         jd_cache = state.setdefault("jd_cache", {})
         takes_known = "known" in inspect.signature(poll_fn).parameters  # test stubs take only the boards
         got, ats_health = poll_fn(state["boards"], known=jd_cache) if takes_known else poll_fn(state["boards"])
+        # A board that failed this time (outage, 429...) keeps the jobs it had last poll.
+        failed = ats.FAILED if poll_fn is ats.poll else set()
+        got = got + [j for j in (last.get("jobs") or []) if j.get("board") in failed]
         for j in got:
             if j.get("elig") is not None and j["url"] not in jd_cache:
                 jd_cache[j["url"]] = {"t": now, "elig": j["elig"], "jd_terms": j.get("jd_terms")}

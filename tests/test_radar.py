@@ -530,3 +530,26 @@ def test_jd_cache_skips_second_fetch(monkeypatch):
     j2 = [j for j in ats.fetch_workday("t.wd1.myworkdayjobs.com|t|S", "T") if j][0]
     assert len(calls) == 1 and j2["elig"] == j1["elig"]   # served from the cache
     ats.KNOWN = {}
+
+
+def test_failed_board_keeps_last_jobs(tmp_path, monkeypatch):
+    now = 2_000_000_000
+    old = [_row("Acme", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/acme/jobs/0")]
+    job = {"source": "Greenhouse", "company": "Acme", "title": "Data Science Intern", "url": "https://g/1",
+           "locations": ["Boston, MA"], "terms": [], "posted": now - 3600, "field": None, "sponsorship": None,
+           "jd_terms": None, "elig": None}
+    state = {"fail": False}
+
+    def fake_fetch_gh(token, company):
+        if state["fail"]:
+            raise ats.urllib.error.HTTPError("u", 521, "down", None, None)
+        return [dict(job)]
+    monkeypatch.setitem(ats.FETCHERS, "gh", fake_fetch_gh)
+    for k in [k for k in ats.FETCHERS if k != "gh"]:
+        monkeypatch.setitem(ats.FETCHERS, k, lambda t, c: [])
+    st, out = str(tmp_path / "s"), str(tmp_path / "o")
+    build.run(st, out, fetch=_fake_fetch(now, old, []), poll="yes", poll_fn=ats.poll, now=now)
+    state["fail"] = True
+    meta = build.run(st, out, fetch=_fake_fetch(now, old, []), poll="yes", poll_fn=ats.poll, now=now + 600)
+    titles = [j["title"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]]
+    assert "Data Science Intern" in titles and meta["sources"]["Greenhouse"]["errors"] == {"HTTP 521": 1}
