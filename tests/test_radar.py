@@ -684,3 +684,96 @@ def test_poll_jd_results_are_cached_in_state(tmp_path, monkeypatch):
               poll_fn=lambda b, known=None: ([dict(job)], {"Greenhouse": {"ok": True}}), now=now)
     saved = store.load(st)["jd_cache"]["https://g/1"]
     assert saved["v"] == elig.RULES_VERSION and saved["elig"]["degree"] == "ok"
+
+
+# ---- AI second reader (Groq) ------------------------------------------------------------------------------------
+from radar import llm
+
+
+def test_llm_verify_drops_made_up_quotes():
+    ex = "Must be permanently authorized to work in the U.S. Pursuing a BS or MS in Computer Science."
+    ans = {"citizenship": "not_required", "cpt": "rejected", "sponsorship": "no_sponsorship", "degree": "ms_ok",
+           "grad": "misses",
+           "quotes": {"cpt": "Must be permanently authorized to work in the U.S.",
+                      "sponsorship": "We never sponsor visas.",          # not in the excerpt -> dropped
+                      "degree": "pursuing a BS or MS in computer science",  # case/space differences are fine
+                      "grad": ""}}                                       # no quote -> dropped
+    lab, quo, unv = llm.verify(ans, ex)
+    assert lab["cpt"] == "rejected" and lab["degree"] == "ms_ok"
+    assert lab["sponsorship"] == "silent" and lab["grad"] == "not_stated"
+    assert sorted(unv) == ["grad", "sponsorship"]
+    bad = llm.verify({"citizenship": "maybe", "quotes": {}}, ex)[0]
+    assert bad["citizenship"] == "not_required"  # invalid value -> neutral
+
+
+def test_llm_ask_parses_and_handles_thinking_and_errors():
+    ex = "Students currently on CPT or OPT do not meet the requirements for this program."
+    def post(body, key):
+        assert body["temperature"] == 0 and body["response_format"] == {"type": "json_object"}
+        return {"choices": [{"message": {"content": '<think>hmm</think>{"citizenship":"not_required","cpt":"rejected",'
+                                                    '"sponsorship":"silent","degree":"unclear","grad":"not_stated",'
+                                                    '"quotes":{"cpt":"Students currently on CPT or OPT do not meet the requirements for this program."}}'}}]}
+    r = llm.ask(ex, key="k", post=post)
+    assert r["labels"]["cpt"] == "rejected" and r["unverified"] == []
+    assert llm.ask(ex, key=None) is None or os.environ.get("GROQ_API_KEY")   # no key -> off
+    def broken(body, key):
+        raise llm.urllib.error.HTTPError("u", 400, "bad", None, None)
+    assert llm.ask(ex, key="k", post=broken) is None
+
+
+def test_merge_worse_verified_answer_wins():
+    rules = elig.check("Pursuing a BS or MS in CS. Python.")
+    ai = {"labels": {**elig.NEUTRAL, "cpt": "rejected", "degree": "ms_ok"},
+          "quotes": {"cpt": "CPT students do not meet requirements", "degree": "Pursuing a BS or MS in CS."}}
+    lab, quo, dis = llm.merge(rules, ai)
+    assert lab["cpt"] == "rejected" and quo["cpt"].startswith("CPT") and dis == ["cpt"]  # readers disagreed; worse one wins
+    assert elig.hidden(elig.from_labels(lab, quo))
+    rules2 = elig.check("US Citizenship is required. Pursuing a BS or MS.")
+    lab2, _, dis2 = llm.merge(rules2, {"labels": dict(elig.NEUTRAL, degree="ms_ok"), "quotes": {}})
+    assert lab2["citizenship"] == "required" and dis2 == ["citizenship"]   # the rules' 'no' still counts
+
+
+def test_pipeline_ai_catches_what_rules_miss(tmp_path):
+    """Sanofi-style wording the rules don't know: the AI's verified quote hides the job; a made-up quote does not."""
+    now = 2_000_000_000
+    def bj(company, title, jd, url):
+        return {"source": "Greenhouse", "company": company, "title": title, "url": url, "locations": ["Boston, MA"],
+                "terms": [], "posted": now - 3600, "field": None, "sponsorship": None,
+                "jd_terms": tech.jd_terms(jd), "elig": elig.check(jd), "excerpt": elig.excerpt(jd)}
+    odd = "Pursuing a BS or MS in CS. Those holding student work permits tied to their studies cannot be placed in this program."
+    board = [bj("A", "Software Engineer Intern", odd, "https://g/a"),
+             bj("B", "Data Engineer Intern", "Pursuing a BS or MS in CS. Python and SQL.", "https://g/b")]
+    def fake_ai(excerpt):
+        if "cannot be placed" in excerpt:
+            return {"labels": dict(elig.NEUTRAL, cpt="rejected", degree="ms_ok"),
+                    "quotes": {"cpt": "Those holding student work permits tied to their studies cannot be placed in this program."},
+                    "unverified": [], "model": "fake"}
+        # hallucination already removed by verify(): only neutral answers survive
+        return {"labels": dict(elig.NEUTRAL, degree="ms_ok"), "quotes": {}, "unverified": ["citizenship"], "model": "fake"}
+    old = [_row("Z", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/z/jobs/0")]
+    st = str(tmp_path / "s")
+    meta = build.run(st, str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
+                     poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now, ai=fake_ai)
+    jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    assert set(jobs) == {"B"} and jobs["B"]["elig"]["ai"] == "read"
+    assert meta["ai"]["calls"] == 2 and meta["ai"]["unverified"] == 1
+    # cached: the next run asks nobody
+    calls = []
+    build.run(st, str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="no", now=now + 1800,
+              ai=lambda e: calls.append(e))
+    assert calls == []
+
+
+def test_gold_dev_set_no_regressions():
+    """Hand-labeled dev set (170 real JD excerpts, labeled by a reader who never saw the rules).
+    The rules were tuned on it, so this guards against regressions; the honest number is the test set."""
+    import subprocess, sys
+    items = json.load(open(os.path.join(HERE, "gold", "dev.json")))
+    fs = fh = 0
+    for it in items:
+        lab = elig.labels(it["excerpt"])[0]
+        hid = elig.hidden(elig.from_labels(lab, {}))
+        fs += it["verdict"] == "not_eligible" and not hid
+        fh += it["verdict"] != "not_eligible" and hid
+    assert fh == 0, f"{fh} eligible jobs would be hidden"
+    assert fs <= 1, f"{fs} not-eligible jobs would be shown"

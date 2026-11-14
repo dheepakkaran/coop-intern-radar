@@ -5,3 +5,4 @@ site/data/
 BUILD-LOG.md
 PLAN.md
 docs/
+.env

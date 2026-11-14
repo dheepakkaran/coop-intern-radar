@@ -1,0 +1,2298 @@
+[
+ {
+  "id": 1001,
+  "company": "Bot Auto",
+  "title": "Intern, Deep Learning Engineer",
+  "excerpt": "We are looking for MS/PhD interns to join our core AI team for a 3-6 month internship to tackle real-world edge cases. Project Ownership: Own a targeted research project from data analysis to model verification under senior mentorship. Qualifications Required: Education: Current Master's or Ph.D. candidate in CS, Robotics, or a related field, specifically focusing on Deep Learning, Computer Vision, Robotics, or related fields.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Current Master's or Ph.D. candidate"
+  },
+  "note": ""
+ },
+ {
+  "id": 1002,
+  "company": "Samba TV",
+  "title": "Ontology Engineer-Knowledge Graph & Identity",
+  "excerpt": "Working closely with the Senior Ontologist and peer data scientists, you will implement ontological frameworks in production, contribute to entity resolution and data enrichment pipelines, and help ensure the graph layer remains accurate, consistent, and production-ready. You are expected to write clean, production-quality Python and SPARQL, take ownership of well-scoped graph work streams, and grow your depth in semantic modeling under the guidance of senior team members.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1003,
+  "company": "Heven AeroTech",
+  "title": "HR & Recruiting Intern",
+  "excerpt": "Qualifications & Experience Required Currently enrolled in or recently graduated from an accredited college or university pursuing a degree in Human Resources, Business Administration, Psychology, Communications, or a related field. This position is not eligible for visa sponsorship. Applicants must be legally authorized to work in the United States without employer sponsorship, now or in the future. If this role requires access to information controlled under U.S. export control laws (ITAR/EAR), applicants must also qualify as a \"U.S. person\" under 22 CFR §120.62 (U.S. citizen, U.S. national, lawful permanent resident, or protected individual such as an asylee or refugee).",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "Applicants must be legally authorized to work in the United States without employer sponsorship, now or in the future."
+  },
+  "note": "U.S. person rule is conditional (\"If this role requires access...\"); HR role, so not counted as required"
+ },
+ {
+  "id": 1004,
+  "company": "Altar'd State",
+  "title": "Spring 2027 Talent Acquisition Intern",
+  "excerpt": "Qualifications Upcoming junior, senior or recent graduate with a strong academic record pursuing a degree in Human Resources, Business Administration, or related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Upcoming junior, senior or recent graduate"
+  },
+  "note": ""
+ },
+ {
+  "id": 1005,
+  "company": "Deeplocal",
+  "title": "Creative Technology Intern",
+  "excerpt": "The specific rate offered will be based on the candidate's prior relevant experience and anticipated graduation date.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1006,
+  "company": "Altar'd State",
+  "title": "Spring 2027 Associate Experience Intern",
+  "excerpt": "Qualifications Currently pursuing a degree in Hospitality, Event Management, Communications, Marketing, Human Resources, Business, or a related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1007,
+  "company": "Marshall Wace Internship Programmes ",
+  "title": "Technology Intern - New York - 2027",
+  "excerpt": "Interns are then assigned to selected projects in pairs, reporting to a senior engineer. In addition to direct mentorship by their managers, this support includes regular seminars on the many segments of the MW tech estate, informational sessions on other areas of the business with senior leaders, social events, and opportunities to engage in the firm's charitable activities. Successful participants may have the opportunity to return full time as a member of our Technology Graduate Programme when they complete their studies. We don't specifically look for those working towards a computer science degree, but we do look for those who are high-achieving academically and have actively developed technical, software engineering skills. Progression at Marshall Wace The aim of our internships is to convert the best performers into graduates. The rotational format of our graduate program then allows you to explore various roles within the Technology team before determining the best fit for you. Instead, your personal growth may involve taking on more challenging projects, mentoring a team or new hires, or even pursuing opportunities for international assignments. This role may also be eligible for a discretionary bonus and benefits.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1008,
+  "company": "The Voleon Group",
+  "title": "Research Intern",
+  "excerpt": "For more details regarding eligibility, terms and conditions please make sure to review the Voleon Referral Bonus Program https://voleon.com/assets/Voleon-Referral-Bonus-Program.pdf. Applicants are considered without regard to race, color, religion, creed, national origin, age, sex, gender, marital status, sexual orientation and identity, genetic information, veteran status, citizenship, or any other factors prohibited by local, state, or federal law. #LI-MD1",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1009,
+  "company": "Virtu Financial",
+  "title": "2027 Internship- Hardware Engineer (FPGA)",
+  "excerpt": "Interns will work from a list of projects and have several senior mentors throughout the summer program Perks : Onsite Gym & workout classes, Onsite Barista, weekly happy hours/social events, Breakfast & Lunch, Transportation At Virtu, our internship is designed to put you at the very center of ultra-low latency trading. THE CANDIDATE Currently pursuing a Masters Degree in Electrical Engineering or related field Experience with Hardware Description Languages (SystemVerilog, Verilog) Comfortable with software programming languages (Python, C++, or similar) Basic understanding of network protocols Strong problem solving and communication skills THE PROCESS After applicants pass an initial resume screening, an online programming test will be emailed to you via HackerRank.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a Masters Degree in Electrical Engineering"
+  },
+  "note": ""
+ },
+ {
+  "id": 1010,
+  "company": "Valstad",
+  "title": "Software Engineering Intern, 3D & Manufacturing Applications",
+  "excerpt": "REQUIRED QUALIFICATIONS - Currently pursuing a bachelor's or master's degree in computer science, software engineering, computer engineering or a related field. - Participation in research, student robotics, Formula SAE, engineering design teams or relevant open-source projects. Strong candidates often have: - Personal projects with meaningful technical depth - Open-source contributions - Research or laboratory experience - Previous technical internships - Student-team experience - A portfolio or GitHub profile showing completed work - A strong explanation of the tradeoffs and failures encountered while building something Shipbuilding experience is not required.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a bachelor's or master's degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1011,
+  "company": "SESCO",
+  "title": "Quantitative Research and Trading Intern",
+  "excerpt": "Quantitative Research and Trading Intern This role is ideal for students eager to apply quantitative skills to real-world energy markets while gaining exposure to the fast-paced environment of a trading desk. You will collaborate closely with senior members of the Trading team on the design, development, and enhancement of quantitative tools, while also conducting market research and modeling to support real-time trading decisions. Qualifications Undergrad or master's in a technical discipline (e.g., Mathematics, Statistics, Physics, Economics, Engineering) or equivalent professional experience with progressive responsibilities.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Undergrad or master's in a technical discipline"
+  },
+  "note": ""
+ },
+ {
+  "id": 1012,
+  "company": "PanAgora",
+  "title": "Intern, Equity Investments (Winter 2026-2027)",
+  "excerpt": "Position: Intern, Equity Team - PanAgora Asset Management Group: Equity Summary We are constantly looking for smart and aspiring students to intern within our investment team.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1013,
+  "company": "Exa",
+  "title": "Software Engineer, Intern",
+  "excerpt": "Who You Are - Currently pursuing a degree in Computer Science, Engineering, Physics, or a related technical field AND are willing to take off a semester to work full time in SF. We're happy to sponsor international candidates (e.g., STEM OPT, OPT, H1B, O1, E3).",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "sponsors",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "sponsorship": "We're happy to sponsor international candidates (e.g., STEM OPT, OPT, H1B, O1, E3)."
+  },
+  "note": ""
+ },
+ {
+  "id": 1014,
+  "company": "Logiqal",
+  "title": "Quantum Error Correction and Architecture Intern",
+  "excerpt": "This role is open to current students at the undergraduate, MS or PhD level at US-based institutions.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "open to current students at the undergraduate, MS or PhD level"
+  },
+  "note": ""
+ },
+ {
+  "id": 1015,
+  "company": "Parspec",
+  "title": "Applied AI Engineer Intern",
+  "excerpt": "This is an ideal role for a student who wants hands-on experience applying AI to complex, messy industry data and customer-facing product workflows. Qualifications - Currently enrolled in a US-based, degree-seeking program (Bachelor's, Master's, or PhD) in Engineering, Computer Science, or related fields - Strong familiarity with core ML/AI concepts and tooling, such as model training(LoRA/QLoRA) and evaluation, embeddings, RAG systems, agentic frameworks like LangGraph, CrewAI or related techniques.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "(Bachelor's, Master's, or PhD)"
+  },
+  "note": ""
+ },
+ {
+  "id": 1016,
+  "company": "Physical Intelligence",
+  "title": "Mechatronics Intern",
+  "excerpt": "Students below 3A with exceptional projects, GitHubs, portfolios, and work experience will also be considered.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1017,
+  "company": "H3X Technologies",
+  "title": "Test Engineering Intern (Spring)",
+  "excerpt": "A high degree of self-motivation and responsibility is required as you will be given significant freedom and will be directly responsible for your parts. Equal Opportunity Employer H3X is an equal opportunity-affirmative action employer and considers all qualified applicants for employment based on business needs, job requirements and individual qualifications, without regard to race, color, religion, sex, age, disability, sexual orientation, gender identity or expression, marital status, past or present military service or any other status protected by the laws or regulations in the locations where we operate.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1018,
+  "company": "Genesis Molecular AI",
+  "title": "Computational Chemistry Intern - 2027",
+  "excerpt": "You are - A PhD student with a proven track record of applying or developing computational chemistry and physics methods. Exceptional MS or advanced undergraduate students with substantial research experience are also encouraged to apply.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Exceptional MS or advanced undergraduate students with substantial research experience are also encouraged to apply."
+  },
+  "note": "PhD is the main target; MS explicitly encouraged"
+ },
+ {
+  "id": 1019,
+  "company": "IEX Group (Interns)",
+  "title": "Network & Data Center Engineer Co-op – Spring 2027",
+  "excerpt": "This role is eligible for bonus and equity. We are an Equal Opportunity Employer that does not discriminate on the basis of actual or perceived race, color, creed, religion, alienage or national origin, ancestry, citizenship status, age, disability or handicap, sex, marital status, veteran status, sexual orientation, genetic information or any other characteristic protected by applicable federal, state or local laws.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1020,
+  "company": "MegazoneCloud",
+  "title": "Data Engineer Co-op 2027",
+  "excerpt": "We need students who are curious, driven, and comfortable asking \"what if?\" to solve complex challenges. - Technical Mentorship: Collaborate with senior engineers under a \"force multiplier\" leadership philosophy designed to level up your technical expertise. WHAT YOU BRING (REQUIREMENTS) - Education: Currently pursuing a Bachelor's or Master's degree in Computer Science, Data Science, or a related technical field. - Timeline: Expected graduation date of December 2026 or later. - Eligibility: Must be currently eligible to work in the US. NOTE: We are unable to provide sponsorship for this position. Megazone Cloud is an Equal Opportunity Employer and participates in E-Verify to confirm the employment eligibility of all new hires.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "We are unable to provide sponsorship for this position.",
+   "degree": "Currently pursuing a Bachelor's or Master's degree",
+   "grad": "Expected graduation date of December 2026 or later."
+  },
+  "note": ""
+ },
+ {
+  "id": 1021,
+  "company": "ParetoHealth",
+  "title": "Cost Containment Summer Intern",
+  "excerpt": "Please note that ParetoHealth does not provide employment visa sponsorship for this position. Candidates must be authorized to work in the United States without sponsorship both now or in the future. 2027 Summer Internship Information: Roles will be posted from 11/2/2026 to 12/4/2026. About you: Currently pursuing a degree in Business, Finance, Risk Management, or a related field (Risk Management and Insurance (RMI) is ideal. Must be a Rising Junior or Rising Senior attending an accredited College or University. Disclosures: ParetoHealth is an Equal Opportunity Employer and does not discriminate on the basis of race, color, religion (creed), gender, gender expression, age, national origin (ancestry), disability, marital status, sexual orientation, or military status, in any of its activities or operations.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "Candidates must be authorized to work in the United States without sponsorship both now or in the future.",
+   "degree": "Must be a Rising Junior or Rising Senior"
+  },
+  "note": ""
+ },
+ {
+  "id": 1022,
+  "company": "Hive Financial Systems",
+  "title": "HFA Internship 2027",
+  "excerpt": "Qualifications Junior, senior, or master's student in Finance, Data Analytics, Statistics, Economics, Information Systems, or a related field. Pathways to full-time roles after graduation.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Junior, senior, or master's student"
+  },
+  "note": ""
+ },
+ {
+  "id": 1023,
+  "company": "Hex Technologies",
+  "title": "AI Engineer Intern",
+  "excerpt": "ABOUT YOU - You are pursuing a degree in Computer Science, Engineering, or a related field, with plans to graduate in December 2027 or sometime in 2028 - You have AI research, applied AI, or ML experience, ideally having worked on substantive generative AI or transformer-based projects - You have an interest in how you can build delightful product experiences backed by cutting edge technology, and an appetite for pushing the boundaries of what agents can accomplish - You care about users and enjoy thinking about how technical systems translate into polished, intuitive experiences. - You enjoy collaborating with others, asking questions, and learning from more senior engineers.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "grad": "plans to graduate in December 2027 or sometime in 2028"
+  },
+  "note": ""
+ },
+ {
+  "id": 1024,
+  "company": "Toshiba Global Commerce Solutions - External",
+  "title": "AI Automation & Revenue Ops Intern",
+  "excerpt": "Note: Toshiba Global Commerce Solutions will not be providing visa sponsorship for this position now or in the future. Therefore, in order to be considered for this position, you must have the ability to work without a need for current or future visa sponsorship . This is an ideal opportunity for a student who combines technical curiosity and problem-solving skills with an interest in understanding how businesses operate and how technology can make them more efficient. Currently pursuing a bachelor's or master's degree in Computer Science, Software Engineering, Information Systems, Data Science, Business Analytics, or a related field. Pursuing a double major or minor in Business or a related discipline alongside a technical degree. EEO: Toshiba is an equal opportunity/affirmative action employer that evaluates qualified applicants without regard to age, ancestry, color, religious creed, disability, marital status, medical condition, genetic information, military or veteran status, national origin, race, sex, gender, gender identity, gender expression and sexual orientation or any other protected factor.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "will not be providing visa sponsorship for this position now or in the future",
+   "degree": "Currently pursuing a bachelor's or master's degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1025,
+  "company": "Skyband Systems",
+  "title": "Spring 2027 Internship: Electrical Engineering",
+  "excerpt": "You'll work directly with senior engineers who will give you real ownership and expect real results.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1026,
+  "company": "ClickHouse",
+  "title": "Research Intern, ClickHouse Labs",
+  "excerpt": "PROGRAM OVERVIEW The ClickHouse PhD Research Internship Program offers doctoral students the opportunity to pursue ambitious research alongside ClickHouse Labs researchers and engineers working on some of the most interesting challenges in databases, systems, and data infrastructure. In some cases, an internship may build on research, a prototype, or a system the student has already begun exploring at their university. Identify exceptional PhD researchers working in areas directly relevant to ClickHouse. 2. CANDIDATE PROFILE We are looking for exceptional PhD students conducting research directly relevant to ClickHouse and the broader database/systems space. - Equity in the company - Every new eligible team member who joins our company receives equity.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "We are looking for exceptional PhD students"
+  },
+  "note": ""
+ },
+ {
+  "id": 1027,
+  "company": "Axle Informatics LLC",
+  "title": "Computer Science/Bioinformatics Intern",
+  "excerpt": "Requirements: Junior or senior BA/BS or working towards a MS, Postbaccalaureate or PhD candidate in Bioinformatics, Computer Science, or related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "working towards a MS"
+  },
+  "note": ""
+ },
+ {
+  "id": 1028,
+  "company": "Constellation Space",
+  "title": "Software Engineering Intern (Winter/Spring)",
+  "excerpt": "REQUIREMENTS - Currently pursuing a B.S. or M.S. in Computer Science, Engineering, or a related field. - U.S. person required (ITAR).",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "U.S. person required (ITAR).",
+   "degree": "Currently pursuing a B.S. or M.S."
+  },
+  "note": ""
+ },
+ {
+  "id": 1029,
+  "company": "BillionToOne",
+  "title": "Research Associate Intern",
+  "excerpt": "The Research Associate Intern position at BillionToOne is exceptionally rare at the undergraduate or early-career level. Whether your ambition is to grow here at BillionToOne or ultimately pursue graduate studies, this position would be a solid foundation for your scientific career. Candidates who expect to graduate before Fall 2027 or who have already graduated are encouraged to apply to our full-time Research Associate position .",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "grad": "Candidates who expect to graduate before Fall 2027 or who have already graduated are encouraged to apply to our full-time Research Associate position"
+  },
+  "note": "grad window implied (Fall 2027 or later); degree level only hinted (undergraduate/early-career)"
+ },
+ {
+  "id": 1030,
+  "company": "Maxinsights",
+  "title": "Data Operations Intern",
+  "excerpt": "• Current students and recent graduates are encouraged to apply. Position Type: Full-Time, Paid Internship Duration: Ongoing / Flexible Benefits: Paid sick leave, internships are not eligible for other default benefits.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1031,
+  "company": "Architect Labs",
+  "title": "Member of Technical Staff - Research Intern",
+  "excerpt": "WHAT WE'D LIKE TO SEE Qualifications & Skills: - Education: Currently pursuing a PhD or Master's degree in Computer Science, Machine Learning, Mathematics, or a related field. Exceptional undergraduates with strong research experience are also encouraged to apply.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a PhD or Master's degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1032,
+  "company": "Capstone Investment Advisors",
+  "title": "Summer 2027 - Investment Internship NYC",
+  "excerpt": "Our future colleague has these skills: Current enrollment in a bachelor's or master's degree program in a quantitative discipline, such as Economics, Econometrics, Finance, Applied Mathematics, Statistics, or a related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Current enrollment in a bachelor's or master's degree program"
+  },
+  "note": ""
+ },
+ {
+  "id": 1033,
+  "company": "Varda Space Industries",
+  "title": "Aerodynamics & Analysis Engineering Internship - Summer 2027",
+  "excerpt": "All dates dependent upon the university schedule of the selected students. To be considered for this internship, candidates must be actively enrolled in an accredited undergraduate or graduate degree program. Internships at Varda are optimal for students looking to grow technically and professionally while working on impactful projects critical to the company's success. Additionally, our employees are exposed to and have access to certain export-controlled items. Because our employees are provided access to export-controlled items, our policy is to only hire “U.S. persons” who are permitted to have access to our technology without an export license. “US person” means: U.S. citizen, U.S. lawful permanent resident, or protected individual as defined by 8 U.S.C. 1324b(a)(3) (i.e., individual admitted to the U.S. as a refugee or granted asylum). The E-Verify program is an Internet-based employment eligibility verification system operated by the U.S. Citizenship and Immigration Services.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "our policy is to only hire “U.S. persons”",
+   "degree": "actively enrolled in an accredited undergraduate or graduate degree program"
+  },
+  "note": ""
+ },
+ {
+  "id": 1034,
+  "company": "Hex Technologies",
+  "title": "Product Engineer Intern",
+  "excerpt": "ABOUT YOU - You are pursuing a degree in Computer Science, Engineering, or a related field, with plans to graduate in December 2027 or 2028. - You enjoy collaborating with others, asking questions, and learning from more senior engineers.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "grad": "plans to graduate in December 2027 or 2028"
+  },
+  "note": ""
+ },
+ {
+  "id": 1035,
+  "company": "Geneva Trading",
+  "title": "C++ Developer (Intern)",
+  "excerpt": "Intern With Geneva Trading Geneva Trading is looking for ambitious, entrepreneurial students to join our core development team for a C++/software engineering internship next summer. The summer internship program is a proven path to earn full-time opportunities at Geneva Trading after graduation.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1036,
+  "company": "Laminar",
+  "title": "Laminar | Technical Intern",
+  "excerpt": "What You'll Need - Currently pursuing a BS or MS in Computer Science, Software Engineering, or a related technical field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a BS or MS"
+  },
+  "note": ""
+ },
+ {
+  "id": 1037,
+  "company": "Mill",
+  "title": "Electrical Engineering Intern, Fall/Winter 2026",
+  "excerpt": "Applicants must be authorized to work for any employer in the U.S. We are unable to sponsor an employment visa for this role",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "Applicants must be authorized to work for any employer in the U.S. We are unable to sponsor an employment visa for this role"
+  },
+  "note": ""
+ },
+ {
+  "id": 1038,
+  "company": "National Life Insurance Company",
+  "title": "Affiliated Distribution Strategy & Marketing Intern – Summer 2027",
+  "excerpt": "Please note that we do not offer visa sponsorship for this position POSITION SUMMARY: The National Life Group Internship Program was developed to provide real workplace learning and growth opportunities for undergraduate students. Over the years the program has provided students with the opportunity to engage in meaningful, career-relevant work at National Life Group in preparation for full-time employment. QUALIFICATIONS: Pursuing Undergraduate degree in Marketing, Communications, Psychology or Business Management. The total compensation package for this position may also include a full range of medical, financial, and/or other benefits (including 401(k) eligibility and various paid time off benefits, such as vacation, sick time, and parental leave), dependent on the position offered. The successful candidate may also be eligible to participate in National Life's discretionary annual incentive programs, subject to the rules governing such programs. Life Insurance Company of the Southwest is not an authorized insurer in New York and does not conduct insurance business in New York.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "we do not offer visa sponsorship for this position",
+   "degree": "Pursuing Undergraduate degree in Marketing"
+  },
+  "note": ""
+ },
+ {
+  "id": 1039,
+  "company": "Cleveland Guardians - Baseball Operations",
+  "title": "Athletic Training Internship 2027",
+  "excerpt": "Primary Purpose The Cleveland Guardians Player Development Medical Services Department is seeking highly motivated graduate athletic training students to participate in the 2027 Athletic Training Internship Program. Program Overview The Cleveland Guardians Athletic Training Internship Program is intended to provide graduate athletic training students with an educational and clinical experience through observation, participation, and supervised hands-on learning in professional baseball. Education & Background Requirements Currently enrolled in a CAATE-accredited graduate athletic training program. Recent graduates pursuing advanced athletic training experience may be considered.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently enrolled in a CAATE-accredited graduate athletic training program."
+  },
+  "note": "graduate level but field (athletic training) does not match applicant"
+ },
+ {
+  "id": 1040,
+  "company": "OpenArt AI",
+  "title": "Early Adopter & Product Builder Intern, Creative AI",
+  "excerpt": "EMPLOYMENT TYPE Year-round internship with rolling start dates: full-time in summer, part-time (15–20 hrs/week) during the fall and spring semesters. We welcome undergraduate and graduate students at any stage, as well as candidates on a gap year or in other situations. WORK SETUP - Bay Area required (hybrid allowed) - Visa sponsorship available COMPENSATION & BENEFITS The expected base salary range for this role is $40 to $50 per hour, plus the same in-office benefits as our full-time employees.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "sponsors",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "sponsorship": "Visa sponsorship available",
+   "degree": "We welcome undergraduate and graduate students at any stage"
+  },
+  "note": ""
+ },
+ {
+  "id": 1041,
+  "company": "Faire",
+  "title": "Applied AI/ML Scientist, Intern - Winter 2027",
+  "excerpt": "Why you'll love working at Faire Flexible paid time off, plus company-wide recharge days Paid parental leave up to 16 weeks Comprehensive health coverage, with options varying by location Fertility and family-building benefits through Carrot, including a lifetime reimbursement allowance Mental health support and coaching through Modern Health Stipends to support your professional development, wellness, and work from home needs Employer-sponsored retirement plan, dependent on country of employment Faire was founded in 2017 by a team of early product and engineering leads from Square.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1042,
+  "company": " Luxe Media, LLC",
+  "title": "Fashion Stylist Intern/Volunteer",
+  "excerpt": "Hasana, Inc. is seeking talented students in the Chicago Loop area for a variety of spring internship positions.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1043,
+  "company": "ParetoHealth",
+  "title": "Analytics Summer Intern",
+  "excerpt": "Please note that ParetoHealth does not provide employment visa sponsorship for this position. Candidates must be authorized to work in the United States without sponsorship both now or in the future. 2027 Summer Internship Information: Roles will be posted from 11/2/2026 to 12/4/2026. About you: Pursuing a degree in Data Science, Statistics, Computer Science, Business Analytics, or related fields. Must be a Rising Junior or Rising Senior attending an accredited College or University. Disclosures: ParetoHealth is an Equal Opportunity Employer and does not discriminate on the basis of race, color, religion (creed), gender, gender expression, age, national origin (ancestry), disability, marital status, sexual orientation, or military status, in any of its activities or operations.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "Candidates must be authorized to work in the United States without sponsorship both now or in the future.",
+   "degree": "Must be a Rising Junior or Rising Senior"
+  },
+  "note": ""
+ },
+ {
+  "id": 1044,
+  "company": "Hive Financial Systems",
+  "title": "Analytics Internship 2027",
+  "excerpt": "Qualifications Junior, senior, or master's student in Information Systems, Data Analytics, Statistics, Computer Science, Finance, or a related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Junior, senior, or master's student"
+  },
+  "note": ""
+ },
+ {
+  "id": 1045,
+  "company": "ISO New England, Inc Student Internships",
+  "title": "Student Intern - Market Analysis Tool",
+  "excerpt": "Internship Title: Market Analysis Tool Intern Department: Day Ahead & FTR Market Applications Minimum Education Level: Masters Preferred Majors: Computer Science Power the future of New England —one line of code, one data insight, and one smarter market tool at a time. ISO New England is looking for a curious, tech-savvy college student to join our Day-Ahead & FTR Market Applications team and gain real-world experience where software development, data analytics, AI, and the electric grid intersect. This employer will not sponsor applicants for work visas for this position (ex: H-1B, F-1/CPT/OPT, O-1, E-3, TN, J, etc.). Interns are eligible for some paid time off benefits and have access to our wellness program. To be eligible for the internship candidate must have completed at least the first year of college and be currently enrolled in a four year or graduate-level academic program. Candidates must have the authority to work in the US on a permanent basis, without requiring sponsorship. Applicants for employment are considered without regard to race, color, religion, creed, sex (including pregnancy, childbirth, and related medical conditions), gender identity or expression, sexual orientation, citizenship, national origin, age, ancestry, marital status, disability (including learning, mental, intellectual, and physical), service in the uniformed services, genetic information, or any other status protected by applicable law.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "cpt": "Candidates must have the authority to work in the US on a permanent basis, without requiring sponsorship.",
+   "sponsorship": "This employer will not sponsor applicants for work visas for this position (ex: H-1B, F-1/CPT/OPT, O-1, E-3, TN, J, etc.).",
+   "degree": "Minimum Education Level: Masters"
+  },
+  "note": ""
+ },
+ {
+  "id": 1046,
+  "company": "Armadin",
+  "title": "Summer 2027 Internship - Member of Technical Staff - Agent Systems",
+  "excerpt": "Required - Currently pursuing a Bachelor's degree in Computer Science, Software Engineering, Math, or a related technical field, with an expected graduation in 2027 or 2028. Benefits & Perks | FTE 🏥 Full Health, Dental, & Vision Coverage 📈 Meaningful Equity Ownership 🥙 In-Office Meals ✂️ Haircuts at the Office 🎉 Company Sponsored Conferences & Events 💸 401(k), HSA, and FSA Plans 🌴 Flexible PTO",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "fits"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's degree in Computer Science",
+   "grad": "with an expected graduation in 2027 or 2028"
+  },
+  "note": ""
+ },
+ {
+  "id": 1047,
+  "company": "GCM Grosvenor",
+  "title": "2027 Cybersecurity Summer Intern",
+  "excerpt": "Intern positions are classified as short-term roles and therefore are not eligible for company-sponsored benefits, including health insurance, paid time off, or the 401(k) plan. This position is not eligible for employer visa sponsorship now or in the future (including, but not limited to, H-1B, TN, or other employment-based visas). Applicants must be currently authorized to work in the United States without the need for employer sponsorship now or in the future. Applicants requiring future sponsorship for continued work authorization (for example, following F-1 OPT/CPT, or J-1 status) are not eligible. Employees may be eligible for a discretionary bonus based on factors such as individual, team, and company performance as well as a comprehensive benefits package. Eligible employees can elect to participate in comprehensive healthcare coverage (including medical, dental, vision and life insurance), flexible spending accounts, and the employer sponsored retirement plan. Additionally, employees are eligible for paid time off, parental leave, short-term and long-term disability, as well as other care/wellness programs.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "cpt": "Applicants requiring future sponsorship for continued work authorization (for example, following F-1 OPT/CPT, or J-1 status) are not eligible.",
+   "sponsorship": "This position is not eligible for employer visa sponsorship now or in the future"
+  },
+  "note": ""
+ },
+ {
+  "id": 1048,
+  "company": "Envita Solutions",
+  "title": "Software Engineering Intern, Applied AI",
+  "excerpt": "This is a great fit for a student who enjoys making systems more reliable, readable, and maintainable and wants to understand how modern AI applications work under the hood. Education Qualifications Required High School or Equivalent Preferred Bachelor's Degree and open to college sophomore, junior, senior, recent grad, or 1st or 2nd master's student majoring in Computer Science, Software Engineering, AI/ML, Statistics/Mathematics, or a related field in progress. Interns can expect to network with other students and professionals, gain useful skills, receive mentoring, and make their own contributions to the organization. Intern pay is non-negotiable and is calculated based on current academic class standing $18/hour (Freshman) - $21/hour (Senior), etc.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "1st or 2nd master's student"
+  },
+  "note": "Bachelor's preferred but master's students explicitly open"
+ },
+ {
+  "id": 1049,
+  "company": "LinkedIn",
+  "title": "Software Engineer Intern (First Play)  - Summer 2027 (Mountain View, CA)",
+  "excerpt": "First Play is LinkedIn's software engineering internship designed for students earlier in their computer science journey to build strong engineering foundations through real-world experience. Candidates must be currently enrolled in an undergraduate degree program, with an expected graduation date of December 2028 or later. Participate in First Play cohort experiences and LinkedIn's broader intern programming to build connections, develop skills, and engage with the LinkedIn community. \"},\"qualifications\":{\"title\":\"Qualifications\",\"text\":\" Basic Qualifications Pursuing a B.A. or B.S. degree in Computer Science or a related technical field. LinkedIn considers qualified applicants without regard to race, color, religion, creed, gender, national origin, age, disability, veteran status, marital status, pregnancy, sex, gender expression or identity, sexual orientation, citizenship, or any other legally protected class.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "misses"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Candidates must be currently enrolled in an undergraduate degree program",
+   "grad": "expected graduation date of December 2028 or later"
+  },
+  "note": ""
+ },
+ {
+  "id": 1050,
+  "company": "Logiqal",
+  "title": "Quantum Hardware Intern",
+  "excerpt": "You would be a particularly strong fit if you have experience in one or more of: - Atomic physics, optics, or laser physics - Experimental data acquisition and analysis - Programming (Python/C++) and computational physics - Mechanical engineering as well as general strengths in: - Analytical and problem‑solving skills - Ability to design, build, debug, and iterate quickly - Working in a fast‑paced, experimental environment - Curiosity, initiative, and a love of building real hardware This role is open to current students at the undergraduate, MS or PhD level at US-based institutions.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "open to current students at the undergraduate, MS or PhD level"
+  },
+  "note": ""
+ },
+ {
+  "id": 1051,
+  "company": "National Life Insurance Company",
+  "title": "Actuarial Intern  - Summer 2027",
+  "excerpt": "Please note that we do not offer visa sponsorship for this position. Role Summary National Life Group's (NLG) Summer Internship Program exposes currently matriculating students to a variety of critical business assignments. Essential Duties and Responsibilities Update actuarial models for either product development or valuation related work Perform queries in SQL or build macros in Excel to manipulate data Learn and leverage data analytics tools (Alteryx and Tableau) to investigate business trends and summarize findings Run reports, analyze trends, and detect patterns in results Minimum Qualifications Pursuing a Bachelor's Degree in Actuarial Science, Mathematics, Statistics, or related field Preferably a Junior in College – Expected Date of Graduation – May 2026 Passing score on at least 1 SOA actuarial exam. The total compensation package for this position may also include a full range of medical, financial, and/or other benefits (including 401(k) eligibility and various paid time off benefits, such as vacation, sick time, and parental leave), dependent on the position offered. The successful candidate may also be eligible to participate in National Life's discretionary annual incentive programs, subject to the rules governing such programs. Life Insurance Company of the Southwest is not an authorized insurer in New York and does not conduct insurance business in New York.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "misses"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "we do not offer visa sponsorship for this position",
+   "degree": "Pursuing a Bachelor's Degree in Actuarial Science",
+   "grad": "Expected Date of Graduation – May 2026"
+  },
+  "note": ""
+ },
+ {
+  "id": 1052,
+  "company": "Divergent",
+  "title": "Summer 2027 Data & Process Analytics Intern",
+  "excerpt": "Additionally, benefit from company-sponsored life insurance and short and long-term disability coverage for peace of mind. E-Verify is a program that electronically confirms a candidate's eligibility to work in the United States after completing the Employment Eligibility Verification (Form I-9). This helps employers verify the identity and employment eligibility of newly hired employees. Eligibility to Work Poster (English) | Eligibility to Work Poster (Spanish) Los Angeles Fair Chance Initiative for Hiring Ordinance (FCIHO) Pursuant to the Los Angeles Fair Chance Initiative for Hiring Ordinance (FCIHO), we will consider for employment qualified applicants with arrest and conviction records.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1053,
+  "company": "Charta Health",
+  "title": "Software Engineer (FDE / Platform) - Intern",
+  "excerpt": "- Adaptability and the ability to quickly learn and master new technologies and concepts. - Completed at least your 2nd year of a Computer Science, Engineering, or related technical degree Nice-to-have: - Experience in a startup environment - Experience and/or demonstrated interest in healthcare - Experience with Large Language Models (LLMs) and prompt engineering. - Experience with neural networks and machine learning - Degree in Computer Science / Engineering or related field What we offer: - Competitive salary - Team dinners and snacks in the office to keep you at your best - Growth opportunities in a fast-paced, innovative tech startup - Ongoing professional development and access to cutting-edge AI and healthcare tools - Lively, in-person work culture at our SF Headquarters or NYC office - $40–$60/hour based on experience OUR COMMITMENT TO DIVERSITY We are an equal opportunity employer and value diversity at our company.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1054,
+  "company": "CapTech Consulting",
+  "title": "Consulting Internship: UX/Product Design (Summer 2027)",
+  "excerpt": "CapTech is looking for undergraduate Juniors that are passionate problem solvers who strive to produce user-informed design solutions to complex business challenges, all while honing their craft and growing in their careers. Characteristics of a qualified candidate include: Current undergraduates with expected graduation dates in Winter 2027 - Spring 2028 who will be seeking full-time work after graduation. At this time, CapTech cannot transfer nor sponsor a work visa for this position. Applicants must be authorized to work directly for any employer in the United States without visa sponsorship.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "fits"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "Applicants must be authorized to work directly for any employer in the United States without visa sponsorship.",
+   "degree": "Current undergraduates with expected graduation dates",
+   "grad": "expected graduation dates in Winter 2027 - Spring 2028"
+  },
+  "note": ""
+ },
+ {
+  "id": 1055,
+  "company": "Legend Biotech US",
+  "title": "Intern, FFBA Analytical Development",
+  "excerpt": "This is a closely mentored role, and most decisions about planning and execution will require collaboration,consensus and alignment with senior scientists. Contractors are not eligible for benefits through Legend Biotech. Work Authorization & Employment Eligibility Applicants must be authorized to work in the United States. If you are selected for employment, you will be required to complete the Form I-9 process, and your employment eligibility will be verified through E-Verify in accordance with applicable federal law. EEO Statement It is the policy of Legend Biotech to provide equal employment opportunities without regard to actual or perceived race, color, creed, religion, national origin, ancestry, citizenship status, age, sex or gender (including pregnancy, childbirth, related medical conditions and lactation), gender identity or gender expression (including transgender status), sexual orientation, marital status, military service and veteran status, disability, genetic information, or any other protected characteristic under applicable federal, state or local laws or ordinances.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1056,
+  "company": "NextToken",
+  "title": "Applied Research Intern",
+  "excerpt": "ABOUT YOU - Currently a student (BS / MS / PhD) in CS, ML, or an adjacent field, or recently graduated.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently a student (BS / MS / PhD)"
+  },
+  "note": ""
+ },
+ {
+  "id": 1057,
+  "company": "Toshiba Global Commerce Solutions - External",
+  "title": "AI Data Science & Business Analytics Intern",
+  "excerpt": "Note: Toshiba Global Commerce Solutions will not be providing visa sponsorship for this position now or in the future. Therefore, in order to be considered for this position, you must have the ability to work without a need for current or future visa sponsorship . We're looking for an analytically strong, business-minded student to make our forecasting more predictive and more robust. Currently pursuing a bachelor's or master's degree in Data Science, Business Analytics, AI, Statistics, Computer Science, Mathematics, Economics, Business Administration, or a related field. Preferred Qualifications: Pursuing a master's degree in a quantitative or analytics-focused program. EEO: Toshiba is an equal opportunity/affirmative action employer that evaluates qualified applicants without regard to age, ancestry, color, religious creed, disability, marital status, medical condition, genetic information, military or veteran status, national origin, race, sex, gender, gender identity, gender expression and sexual orientation or any other protected factor.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "will not be providing visa sponsorship for this position now or in the future",
+   "degree": "Currently pursuing a bachelor's or master's degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1058,
+  "company": "Etched",
+  "title": "Inference Intern",
+  "excerpt": "- Develop and leverage a deep understanding of our architecture to co-design both HW instructions and model architecture operations to maximize model performance - Implement high-performance software components for the Model Toolkit You may be a good fit if you have - Progress towards a Bachelor's, Master's, or PhD degree in computer science, computer engineering, applied mathematics, or a related field - Proficiency in Python, C++ - Understanding of performance-sensitive or complex distributed software systems, e.g.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Progress towards a Bachelor's, Master's, or PhD degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1059,
+  "company": "Pacific Fusion",
+  "title": "Summer 2027 Internship - Electrical Engineering",
+  "excerpt": "EXPORT CONTROL COMPLIANCE This position may require access to information or technology that is subject to U.S. export control laws, such as ITAR or EAR. Persons.'This status includes U.S. citizens, U.S. nationals, lawful permanent residents (green card holders), and asylees and refugees with such status granted, not pending.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "Persons.'This status includes U.S. citizens, U.S. nationals, lawful permanent residents (green card holders), and asylees and refugees"
+  },
+  "note": "excerpt truncated: \"may require\" ITAR/EAR access, then U.S. Persons definition; read as U.S. person required"
+ },
+ {
+  "id": 1060,
+  "company": "Rise8",
+  "title": "SkillBridge Intern - Growth",
+  "excerpt": "About SkillBridge Internship Program The Department of Defense (DoD) SkillBridge internship program is for military service members transitioning from federal service to commercial industry only. Qualifications Currently on active duty and eligible for SkillBridge . All of Rise8's work in this area is with Federal Government customers that require our employees involved with their projects be U.S. citizens. As such, this role requires U.S. citizenship.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "this role requires U.S. citizenship."
+  },
+  "note": "also SkillBridge (active-duty military only)"
+ },
+ {
+  "id": 1061,
+  "company": "Verkada",
+  "title": "Embedded Software Engineering Intern 2027",
+  "excerpt": "From team-building activities to mentorship opportunities, we're here to support your growth every step of the way Additional Information We do sponsor and take over sponsorship of employment visas for this role. If we make you an offer, we will make every reasonable effort to get you a visa. A Verkada employee may be eligible for additional forms of compensation, depending on their role, including sales incentives, discretionary bonuses, and/or equity in the company in the form of Restricted Stock Units (RSUs).",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "sponsors",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "sponsorship": "We do sponsor and take over sponsorship of employment visas for this role."
+  },
+  "note": ""
+ },
+ {
+  "id": 1062,
+  "company": "H3X Technologies",
+  "title": "Electromagnetics Engineering Intern (Spring)",
+  "excerpt": "Equal Opportunity Employer H3X is an equal opportunity-affirmative action employer and considers all qualified applicants for employment based on business needs, job requirements and individual qualifications, without regard to race, color, religion, sex, age, disability, sexual orientation, gender identity or expression, marital status, past or present military service or any other status protected by the laws or regulations in the locations where we operate.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1063,
+  "company": "Envita Solutions",
+  "title": "Data Scientist Intern, Applied AI",
+  "excerpt": "Preferred Bachelor's Degree and open to college sophomore, junior, senior, recent grad, or 1st or 2nd master's student majoring in Computer Science, Data Science, AI/ML, Statistics/Mathematics, or a related field in progress. Interns can expect to network with other students and professionals, gain useful skills, receive mentoring, and make their own contributions to the organization. Intern pay is non-negotiable and is calculated based on current academic class standing $18/hour (Freshman) - $21/hour (Senior), etc.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "1st or 2nd master's student"
+  },
+  "note": ""
+ },
+ {
+  "id": 1064,
+  "company": "Powertown",
+  "title": "Forward Deployed Engineer, Intern (Term-Time)",
+  "excerpt": "Ideal candidate - You are a technical student who likes real systems more than toy apps - You are careful, curious, and hard to overwhelm.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1065,
+  "company": "Brooks Running",
+  "title": "Run Perception Graduate Internship, R&D - Winter 2027",
+  "excerpt": "Your Opportunity: Our Run Perception Team is seeking a master's graduate intern to work at our Seattle HQ offices. Use your graduate-level research skills to conduct Run Perception studies that lead to innovative testing procedures and optimization of product for all who run. Project: As a part of your experience as a graduate intern at Brooks, you will have the opportunity to complete a project under the support and supervision of your manager. You will use your ever-growing analytical skillset as a graduate student to prepare a thoughtful and elevated project. Weave your learnings from your graduate courses into your work to challenge yourself and benefit Brooks. You will present your work and findings to senior leadership at Brooks at the end of your internship, to hone in on your research, recommendation, and presentation skills. Master's degree with a background in biomechanics, kinesiology, and/or exercise science or an equivalent analytical field. Run Perception Graduate Internship, R&D - Winter 2027 Who We Are: At Brooks, we believe movement is the key to feeling more alive. You will present your work and findings to senior leadership at Brooks at the end of your internship, to hone in on your research, recommendation, and presentation skills. https://jobs.lever.co/brooksrunning/af8e5a0b-0383-486d-9096-d029a6a83a48 https://jobs.lever.co/brooksrunning/af8e5a0b-0383-486d-9096-d029a6a83a48/apply",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "seeking a master's graduate intern"
+  },
+  "note": "field (biomechanics) mismatch"
+ },
+ {
+  "id": 1066,
+  "company": "Flagship Pioneering, Inc.",
+  "title": "Flagship Pioneering ML Internship",
+  "excerpt": "This role is a short-term engagement that is not eligible for health and welfare benefits. California residents have rights under the CCPA/CPRA including to know, delete, and opt out of the sharing of their personal information.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1067,
+  "company": "Varda Space Industries",
+  "title": "Avionics Engineering Internship - Summer 2027",
+  "excerpt": "All dates dependent upon the university schedule of the selected students. To be considered for this internship, candidates must be actively enrolled in an accredited undergraduate or graduate degree program. Internships at Varda are optimal for students looking to grow technically and professionally while working on impactful projects critical to the company's success. Additionally, our employees are exposed to and have access to certain export-controlled items. Because our employees are provided access to export-controlled items, our policy is to only hire “U.S. persons” who are permitted to have access to our technology without an export license. “US person” means: U.S. citizen, U.S. lawful permanent resident, or protected individual as defined by 8 U.S.C. 1324b(a)(3) (i.e., individual admitted to the U.S. as a refugee or granted asylum). The E-Verify program is an Internet-based employment eligibility verification system operated by the U.S. Citizenship and Immigration Services.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "our policy is to only hire “U.S. persons”",
+   "degree": "actively enrolled in an accredited undergraduate or graduate degree program"
+  },
+  "note": ""
+ },
+ {
+  "id": 1068,
+  "company": "Massachusetts School Building Authority",
+  "title": "Capital Planning Assistant (Co-Op) - Project Team",
+  "excerpt": "Interested students should possess basic knowledge of construction projects and/or previous experience in the construction/architectural field. Minimum Qualifications: Must be enrolled in a degree program leading to a bachelor's degree in building or construction related degree. Legally eligible to work in the U.S. Interested students should possess basic knowledge of construction projects and/or previous experience in the construction/architectural field. https://jobs.lever.co/massschoolbuildings/0e3af3e7-1343-43b3-88a5-8c7264c8c612 https://jobs.lever.co/massschoolbuildings/0e3af3e7-1343-43b3-88a5-8c7264c8c612/apply",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Must be enrolled in a degree program leading to a bachelor's degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1069,
+  "company": "FTI Consulting",
+  "title": "2027 IMPACT Leadership Program",
+  "excerpt": "What You Will Need To Succeed Basic Qualifications Actively pursuing a full-time bachelor's degree or completing a fifth-year master's program with a graduation date between December 202 8 – August 202 9 Minimum 3.0 Cumulative GPA Ability to fully attend both virtual days of programming in March 202 7 Applicants must be work authorized in the United States on a full time basis without the need for employer sponsorship now or in the future. FTI cannot offer employment to F-1 (student) visa holders who require employer sponsorship in the future or cannot work now on a full time basis. FTI Consulting is an equal opportunity employer and does not discriminate on the basis of race, color, national origin, ancestry, citizenship status, protected veteran status, religion, physical or mental disability, marital status, sex, sexual orientation, gender identity or expression, age, or any other basis protected by law, ordinance, or regulation.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "misses"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "cpt": "FTI cannot offer employment to F-1 (student) visa holders who require employer sponsorship in the future or cannot work now on a full time basis.",
+   "sponsorship": "without the need for employer sponsorship now or in the future",
+   "degree": "completing a fifth-year master's program",
+   "grad": "graduation date between December 202 8 – August 202 9"
+  },
+  "note": "master's only as fifth-year program"
+ },
+ {
+  "id": 1070,
+  "company": "MORSE Corp Co-op Opportunities ",
+  "title": "Aerospace Algorithms Engineer Graduate Co-op",
+  "excerpt": "US CITIZENSHIP REQUIRED or the ability to obtain a U.S. Security Clearance. Working towards a MS or PhD in Aerospace Engineering, Robotics, Physics or other relevant field Proficiency in Python algorithm and software development practices.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "US CITIZENSHIP REQUIRED or the ability to obtain a U.S. Security Clearance.",
+   "degree": "Working towards a MS or PhD"
+  },
+  "note": ""
+ },
+ {
+  "id": 1071,
+  "company": "Crest Industries",
+  "title": "Accounting Internship",
+  "excerpt": "Qualifications: Currently enrolled in a college or university, sophomore level or above. Qualifications: Currently enrolled in a college or university, sophomore level or above .",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1072,
+  "company": "Virtu Financial",
+  "title": "2027 Internship - Frontend Engineer (UI)",
+  "excerpt": "FRONTEND DEVELOPER INTERNSHIP Virtu's internship program offers students an extraordinary opportunity to learn about the firm and the world's financial markets. We have built a thoughtful and challenging curriculum that introduces students to all aspects of Virtu's business through a company-curated global training week, real world development projects to complete, and engaging social events to get to know our team and culture. Interns will work from a list of projects and have several senior mentors throughout the summer program. You'll work alongside our senior team to improve scalability, performance and efficiency of our cutting edge trading systems. This is a rare opportunity for students to learn first hand how to design and architect trading tools for scale and performance, and to support the massive amounts of data that flow through Virtu's trading systems daily. REQUIREMENTS Rising juniors, or students expected to be ready for full time employment between December 2027 - June 2028.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "grad": "students expected to be ready for full time employment between December 2027 - June 2028"
+  },
+  "note": ""
+ },
+ {
+  "id": 1073,
+  "company": "Bloomberg Philanthropies - MW",
+  "title": "2027 Bloomberg Philanthropies Summer Internship",
+  "excerpt": "The Position The Bloomberg Philanthropies Summer Internship Program is designed to attract students whose academic interests and career goals align with our mission, while helping them develop a broad range of professional skills and experiences. Interns also have the opportunity to network with peers at Bloomberg LP and engage with senior leaders across the Company. Qualifications of the Ideal Candidate: Currently enrolled in an undergraduate university Legally authorized to work in the US without visa sponsorship now or in the future Available to work in person, 40 hours per week, for the full 10-week program from Friday, June 4, through Friday, August 13, 2027, at our New York City offices.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "Legally authorized to work in the US without visa sponsorship now or in the future",
+   "degree": "Currently enrolled in an undergraduate university"
+  },
+  "note": ""
+ },
+ {
+  "id": 1074,
+  "company": "Etched",
+  "title": "Growth Ops Intern",
+  "excerpt": "- Identify exceptional students through universities, technical communities, and unconventional channels. - Events & Community: - Plan private events across the country for high-potential students. - Build relationships with university clubs, professors, and student leaders. - Marketing & Sourcing: - Develop campaigns that make Etched stand out to top students.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1075,
+  "company": "Semgrep",
+  "title": "Software Engineer Intern",
+  "excerpt": "You will learn from senior developers who bring experience and wisdom from Google, Facebook, and successful startups.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1076,
+  "company": "Divergent",
+  "title": "Summer 2027 Business Intelligence Intern",
+  "excerpt": "Duration: 12 weeks (summer 2027) Location : Torrance, CA (onsite) Purpose We're looking for an enthusiastic student to support our Data Team in creating analytics and enhancing our underlying data infrastructure to enable AI workflows and agents. Additionally, benefit from company-sponsored life insurance and short and long-term disability coverage for peace of mind. E-Verify is a program that electronically confirms a candidate's eligibility to work in the United States after completing the Employment Eligibility Verification (Form I-9). This helps employers verify the identity and employment eligibility of newly hired employees. Eligibility to Work Poster (English) | Eligibility to Work Poster (Spanish) Los Angeles Fair Chance Initiative for Hiring Ordinance (FCIHO) Pursuant to the Los Angeles Fair Chance Initiative for Hiring Ordinance (FCIHO), we will consider for employment qualified applicants with arrest and conviction records.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1077,
+  "company": "GenBio AI",
+  "title": "Research Scientist Intern, AI Molecular Design (Winter/Spring)",
+  "excerpt": "Department of Homeland Security's E-Verify program to confirm the employment eligibility of all newly hired employees. M.S. or Ph.D. student (or evidence of equivalent level of expertise) in Computer Science, Artificial Intelligence, Machine Learning, or a related technical field. Available for a 3-month, in-person internship in Palo Alto, CA, and authorized to work in the U.S. for the duration of the internship. Familiarity with software engineering best practices (version control, documentation, etc). 3 year PhD student and above.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "M.S. or Ph.D. student"
+  },
+  "note": "conflicting \"3 year PhD student and above\" line; M.S. allowed in main requirement"
+ },
+ {
+  "id": 1078,
+  "company": "The Voleon Group",
+  "title": "Software Engineer Intern - (Summer 2027)",
+  "excerpt": "REQUIREMENTS - Expected to graduate in 2028 - Hands-on experience writing code: You have built something significant. - Mastery of Computer Science fundamentals. Applicants are considered without regard to race, color, religion, creed, national origin, age, sex, gender, marital status, sexual orientation and identity, genetic information, veteran status, citizenship, or any other factors prohibited by local, state, or federal law.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "grad": "Expected to graduate in 2028"
+  },
+  "note": ""
+ },
+ {
+  "id": 1079,
+  "company": "Valstad",
+  "title": "Robotics Software Intern, Manipulation & Simulation",
+  "excerpt": "REQUIRED QUALIFICATIONS - Currently pursuing a bachelor's, master's or doctoral degree in robotics, computer science, mechanical engineering, electrical engineering, aerospace engineering or a related field. - Participation in a robotics laboratory, student robotics team, Formula SAE, combat robotics or relevant open-source project. Interns will not independently: - Modify safety systems - Authorize production releases - Commission energized equipment without supervision - Make uncontrolled changes to production robot or PLC programs - Bypass interlocks, protective devices or established review procedures Production-facing changes will be reviewed and approved by full-time engineers.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a bachelor's, master's or doctoral degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1080,
+  "company": "Lumbermen's",
+  "title": "Industrial Engineer Internship",
+  "excerpt": "SKILLS TO ATTAIN Effective communication skills and how to present to an audience How to facilitate successful outcomes through effective problem solving How to build and maintain strong relationships How to work effectively in a collaborative team environment How to manage multiple tasks/projects simultaneously How to develop 5S and lean manufacturing skills How to look at challenges and develop creative and viable solutions REQUIRED EDUCATION/EXPERIENCE Pursuing a degree in Supply Chain, Industrial Engineering, Manufacturing Engineering, or a related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1081,
+  "company": "Syska Hennessy Group",
+  "title": "Electrical Engineering Summer Interns",
+  "excerpt": "Additional job requirements: Pursing a bachelor's degree from an accredited university in Electrical engineering Must be at a minimum, completed your second year Previous engineering internship or co-op experience a huge plus Knowledge in the latest version of MEP AutoCAD and REVIT is a plus Basic knowledge in design and calculation software; MS Office Suite Benefits As an employee with Syska Hennessy Group, you will be part of a global firm with an amazing history! Once you graduate, jump start your career by joining Syska Hennessy Group and our EDT program. In keeping with that aim, interns that are hired for full-time employment upon graduation can take advantage of our Engineering Development Training (EDT) program; an accelerated, but thorough training curriculum. Our senior engineers will work closely with each participant to foster a strong mentor/apprentice relationship.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Pursing a bachelor's degree from an accredited university in Electrical engineering"
+  },
+  "note": ""
+ },
+ {
+  "id": 1082,
+  "company": "GenMD",
+  "title": "Member of Technical Staff Intern, Applied AI",
+  "excerpt": "WHAT WE'RE LOOKING FOR - Currently pursuing a B.S., M.S. or Ph.D. in CS, AI/ML, data science, biomedical informatics or a related field. COMPENSATION $45 – $60 per hour, depending on degree level and experience.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a B.S., M.S. or Ph.D."
+  },
+  "note": ""
+ },
+ {
+  "id": 1083,
+  "company": "Palantir",
+  "title": "Deployment Strategist, Internship - US Government",
+  "excerpt": "Active US Security clearance or eligibility and willingness to obtain a US Security clearance.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "Active US Security clearance or eligibility and willingness to obtain a US Security clearance."
+  },
+  "note": ""
+ },
+ {
+  "id": 1084,
+  "company": "GenMD",
+  "title": "MBA Intern",
+  "excerpt": "WHAT WE'RE LOOKING FOR - Currently enrolled in an MBA or similar graduate business program.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently enrolled in an MBA or similar graduate business program."
+  },
+  "note": "graduate level but MBA/business only; MS ECE applicant likely not a fit"
+ },
+ {
+  "id": 1085,
+  "company": "Garner Health",
+  "title": "Software Engineering Intern",
+  "excerpt": "Technologies we use Claude Code, Kubernetes, AWS, Airflow, dlt, dbt, Python, TypeScript, React, Go Please note: we are unable to sponsor or take over sponsorship of an employment visa at this time. In addition to base compensation, this role is eligible for a housing stipend.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "we are unable to sponsor or take over sponsorship of an employment visa at this time."
+  },
+  "note": ""
+ },
+ {
+  "id": 1086,
+  "company": "Astera Labs Early Career - North America 2027",
+  "title": "AI Product Management Intern",
+  "excerpt": "What we're looking for Currently pursuing a graduate degree in business, technology, engineering, information systems, or a related field; candidates with equivalent product-building experience are also encouraged to apply. Preferred qualifications MBA candidate or graduate student with relevant experience; an MBA is preferred, not required.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a graduate degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1087,
+  "company": "Dryft",
+  "title": "Founders Associate Intern - US (German speaking)",
+  "excerpt": "Our team includes graduates from Stanford, Berkeley, CDTM and TUM, winners of Stanford TreeHacks, recipients of Fulbright & Haniel scholarships, and people who have built everything from robots and race cars to software with millions of downloads.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1088,
+  "company": "Instead",
+  "title": "Software Engineering Intern",
+  "excerpt": "You'll ship production code that hundreds of accounting firms use, work alongside senior engineers, and get hands-on experience building with AI tools from day one.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1089,
+  "company": "Center for Strategic and International Studies, Inc.",
+  "title": "Intern - Energy Security and Climate Change Program",
+  "excerpt": "The hired candidate will be paid hourly, commensurate with experience ($18.40/hour for current undergraduate hires, $19.40/hour for hires with a bachelor's degree, and $20.40/hour for hires with a master's degree).",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "$20.40/hour for hires with a master's degree"
+  },
+  "note": "only from pay scale"
+ },
+ {
+  "id": 1090,
+  "company": "ISO New England, Inc Student Internships",
+  "title": "Student Internship - AI Assisted Modeling of Energy Storage",
+  "excerpt": "Internship Title – AI-assisted Modeling of Storage Department – Advanced Technology Solutions Minimum Education Level: PhD Preferred Majors: Power System Engineering or Electrical Engineering Use AI to help power the future of New England. Join ISO New England for a hands-on PhD internship where you'll apply machine learning and data analysis to improve how energy storage is modeled in power system studies—work that supports a more reliable, flexible, and innovative electric grid. Interns are eligible for some paid time off benefits and have access to our wellness program. To be eligible for the internship candidate must have completed at least the first year of college and be currently enrolled in a four year or graduate-level academic program. Candidates must have the authority to work in the US on a permanent basis, without requiring sponsorship. Applicants for employment are considered without regard to race, color, religion, creed, sex (including pregnancy, childbirth, and related medical conditions), gender identity or expression, sexual orientation, citizenship, national origin, age, ancestry, marital status, disability (including learning, mental, intellectual, and physical), service in the uniformed services, genetic information, or any other status protected by applicable law.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "cpt": "Candidates must have the authority to work in the US on a permanent basis",
+   "sponsorship": "without requiring sponsorship",
+   "degree": "Minimum Education Level: PhD"
+  },
+  "note": ""
+ },
+ {
+  "id": 1091,
+  "company": "Happyrobot",
+  "title": "Product Engineer Intern",
+  "excerpt": "Requirements - Currently enrolled in a bachelor's or master's program (or recently graduated) in Computer Science, Engineering, Data Science, or a related technical field. Talent Density and Meritocracy Hire only people who can raise the average; 'exceptional performance is the passing grade.' Ability trumps seniority.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently enrolled in a bachelor's or master's program"
+  },
+  "note": ""
+ },
+ {
+  "id": 1092,
+  "company": "Formulary Financial",
+  "title": "Software Engineering Intern",
+  "excerpt": "THE INTERNSHIP Our summer internship is an 8-week program for exceptional students who have learned to find answers in messy, real-world data and want to become outstanding software engineers. Students who come to engineering through data science, statistics, or quantitative research bring a rare instinct: they move quickly through ambiguous data to an answer. - How senior engineers think about correctness, design, and tradeoffs, by working alongside them every day. WHAT YOU NEED - Pursuing a bachelor's degree in data science, statistics, computer science, mathematics, economics, or another quantitative field, graduating in 2028 or 2029. - Applicants must already be authorized to work in the United States. We are unable to sponsor visas.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "fits"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "We are unable to sponsor visas.",
+   "degree": "Pursuing a bachelor's degree in data science",
+   "grad": "graduating in 2028 or 2029"
+  },
+  "note": ""
+ },
+ {
+  "id": 1093,
+  "company": "Verkada",
+  "title": "Backend Software Engineering Intern 2027",
+  "excerpt": "From team-building activities to mentorship opportunities, we're here to support your growth every step of the way Additional Information We do sponsor and take over sponsorship of employment visas for this role. If we make you an offer, we will make every reasonable effort to get you a visa. A Verkada employee may be eligible for additional forms of compensation, depending on their role, including sales incentives, discretionary bonuses, and/or equity in the company in the form of Restricted Stock Units (RSUs).",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "sponsors",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "sponsorship": "We do sponsor and take over sponsorship of employment visas for this role."
+  },
+  "note": ""
+ },
+ {
+  "id": 1094,
+  "company": "Center for Strategic and International Studies, Inc.",
+  "title": "Intern, Communications (Spring 2027)",
+  "excerpt": "The hired candidate will be paid hourly, commensurate with experience ($18.40/hour for current undergraduate hires, $19.40/hour for hires with a bachelor's degree, and $20.40/hour for hires with a master's degree). Completed or ongoing Bachelors' degree in a relevant field;",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "$20.40/hour for hires with a master's degree"
+  },
+  "note": "requirement is \"Completed or ongoing Bachelors' degree\", which a master's student meets; pay scale names master's hires"
+ },
+ {
+  "id": 1095,
+  "company": "Audax Group",
+  "title": "IT Operations Co-Op",
+  "excerpt": "REQUIREMENTS/QUALIFICATIONS: Currently enrolled in a BS/BA program. An employee may also be eligible for annual discretionary incentive compensation based on performance.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Currently enrolled in a BS/BA program."
+  },
+  "note": ""
+ },
+ {
+  "id": 1096,
+  "company": "Brooks Running",
+  "title": "Run Performance Graduate Internship, Run Research Team - Winter 2027",
+  "excerpt": "Our Run Research Lab is seeking a Master's graduate intern to work at our Seattle HQ offices. Use your graduate-level research skills to conduct human movement studies that lead to innovative testing procedures and optimization of products for all who run. Other duties as assigned Project: As a part of your experience as a graduate intern at Brooks, you will have the opportunity to complete a project under the support and supervision of your manager. You will use your ever-growing analytical skillset as a graduate student to prepare a thoughtful and elevated project. During the course of this project, you will weave your learnings from your graduate courses into your work to challenge yourself, and benefit Brooks. You will present your work and findings to senior leadership at Brooks at the end of your internship, to hone in on your research, recommendation, and presentation skills. Master's degree with a background in biomechanics, kinesiology, and/or exercise science or an equivalent analytical field. Run Performance Graduate Internship, Run Research Team - Winter 2027 Who We Are: At Brooks, we believe movement is the key to feeling more alive. You will present your work and findings to senior leadership at Brooks at the end of your internship, to hone in on your research, recommendation, and presentation skills. https://jobs.lever.co/brooksrunning/b4462155-4109-43ce-adfa-8e58bb429215 https://jobs.lever.co/brooksrunning/b4462155-4109-43ce-adfa-8e58bb429215/apply",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "seeking a Master's graduate intern"
+  },
+  "note": "field (biomechanics) mismatch"
+ },
+ {
+  "id": 1097,
+  "company": "Old Mission",
+  "title": "Software Engineer – 2027 Internship Program (June Start)",
+  "excerpt": "About the Position Our internship program is geared for current students who want to work alongside our talented software engineers creating impactful solutions to further the firm's market initiatives.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1098,
+  "company": "Astera Labs Early Career - North America 2027",
+  "title": "Advanced DV Engineer Intern",
+  "excerpt": "This internship is intended for a student who is ready to go beyond running existing tests and contribute to verification strategy, reusable infrastructure, and difficult debug problems. What you bring Enrollment in a bachelor's, master's, or Ph.D. program in electrical engineering, computer engineering, computer science, or a related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Enrollment in a bachelor's, master's, or Ph.D. program"
+  },
+  "note": ""
+ },
+ {
+  "id": 1099,
+  "company": "Hubs.is",
+  "title": "Product Intern - Fall",
+  "excerpt": "YOU MIGHT BE A FIT IF YOU - Are a student or recent grad in a product, analytical, or technical field interested in how AI is reshaping work.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1100,
+  "company": "Rise8",
+  "title": "SkillBridge Intern - Marketing",
+  "excerpt": "About SkillBridge Internship Program: The Department of Defense (DoD) SkillBridge internship program is for military service members transitioning from federal service to commercial industry only. You will be the force multiplier for our Marketing Leads, helping us move faster by mastering project management and pioneering the use of AI agents, workflows, and automations to scale our impact. Qualifications Currently on active duty and eligible for SkillBridge. We create masterclass-style content that moves the needle. All of Rise8's work in this area is with Federal Government customers that require our employees involved with their projects be U.S. citizens. As such, this role requires U.S. citizenship.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "this role requires U.S. citizenship."
+  },
+  "note": ""
+ },
+ {
+  "id": 1101,
+  "company": "Andersen Corporation",
+  "title": "Environmental Health & Safety Engineering Intern",
+  "excerpt": "QUALIFICATIONS AND SKILLS Currently pursuing a degree in Environmental Health & Safety, Occupational Safety, Industrial Hygiene, Environmental Science, or a related field. PROFIT SHARING: In 2026 Andersen has set a profit-sharing target of $3,600 per eligible employee, prorated as appropriate. Profit Sharing will be paid out in quarterly installments to provide eligible employees with payments throughout the year, with payment amounts tied to quarterly operating profit performance. EEOC EMPLOYER: Andersen is an equal opportunity employer and all qualified applicants will receive consideration for employment without regard to race, color, religion, sex, sexual orientation, gender identity or expression, pregnancy, age, disability, marital status, national origin, citizenship, genetic information, protected veteran status, or any other characteristic protected by law.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1102,
+  "company": "Brightstar.AI",
+  "title": "Applied AI Engineer Intern - Advancing Agent Quality",
+  "excerpt": "Currently enrolled in a Masters or PhD program — or serving as a postdoctoral or early-career academic researcher — in Artificial Intelligence, Machine Learning, Computer Science, Computational Linguistics, or a related field. Affiliated with a (South Florida) university and working under the supervision of a faculty member or professor, or recent graduate. Masters and PhD-level Applied AI Engineers are a critical part of that model, bringing academic depth, frontier perspective, and analytical rigor into the Think Tank's quarterly insights and longer-term point of view.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently enrolled in a Masters or PhD program"
+  },
+  "note": "must be affiliated with a South Florida university"
+ },
+ {
+  "id": 1103,
+  "company": "Winsupply",
+  "title": "Pricing Specialist Intern",
+  "excerpt": "Support service employees assist entrepreneurs in achieving their dreams through finance, accounting, IT, and other back-office operations. \"},\"jobDescription\":{\"title\":\"Job Description\",\"text\":\" Internship Summary Internship Summary The Winsupply Internship Program offers students a unique opportunity to build valuable skills through immersive classroom learning, off-site training, and a collaborative capstone project. One semester post-graduation \"},\"additionalInformation\":{\"title\":\"Additional Information\",\"text\":\" Physical Demands The physical demands here are representative of those that must be met to successfully perform the essential job functions with or without reasonable accommodations: Sitting for extended periods of time. We are committed to inclusion, diversity, and equal employment opportunity, regardless of race, color, ancestry, religion, sex, gender, national origin, sexual orientation, age, citizenship, marital status, disability, veteran status, or any other factor protected by applicable federal, state, or local laws. \"}}},\"company\":{\"name\":\"Winsupply\"},\"isApplyAvailable\":true,\"postedDate\":\"2026-09-04T12:31:55.681Z\"}",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1104,
+  "company": "Legend Biotech US",
+  "title": "Data Intern",
+  "excerpt": "This opportunity is well suited for a student interested in gaining practical experience in data analytics, data engineering, and business intelligence. Requirements Currently pursuing a Bachelor's or Master's degree in: Data Science Computer Science Information Systems Statistics Mathematics Engineering Bioinformatics Business Analytics Ability to break down problems and use data to develop insights. Interest in biotechnology, pharmaceuticals, healthcare, or life sciences is preferred #Li-CR1 #Li-Hybrid Please note: These benefits are offered exclusively to permanent full-time employees. Contractors are not eligible for benefits through Legend Biotech. Work Authorization & Employment Eligibility Applicants must be authorized to work in the United States. If you are selected for employment, you will be required to complete the Form I-9 process, and your employment eligibility will be verified through E-Verify in accordance with applicable federal law. EEO Statement It is the policy of Legend Biotech to provide equal employment opportunities without regard to actual or perceived race, color, creed, religion, national origin, ancestry, citizenship status, age, sex or gender (including pregnancy, childbirth, related medical conditions and lactation), gender identity or gender expression (including transgender status), sexual orientation, marital status, military service and veteran status, disability, genetic information, or any other protected characteristic under applicable federal, state or local laws or ordinances.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1105,
+  "company": "Bridge Neurotech",
+  "title": "Neuroscience Research Intern (PhD)",
+  "excerpt": "ABOUT THE ROLE We are looking for a PhD student in neuroscience or a related field to join Bridge for a six-month internship or co-op. WHO YOU ARE Required - Currently enrolled in a PhD program in neuroscience, biomedical engineering, electrical engineering, data science, or a closely related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Currently enrolled in a PhD program"
+  },
+  "note": ""
+ },
+ {
+  "id": 1106,
+  "company": "Pacific Fusion",
+  "title": "Summer 2027 Internship-Manufacturing Engineering",
+  "excerpt": "Pay Range: $30 — $48 USD TOTAL COMPENSATION AND BENEFITS FOR ELIGIBLE EMPLOYEES 💰 Industry-Competitive Salary 🚀 Equity Plan 🏦 6% Employer 401k Matching 🌴 Generous Paid Time Off (including sick leave, vacation, paid family leave) 🩺 Medical, Dental, and Vision insurance Actual base salary offered will be determined by: experience, skills, and work location. EXPORT CONTROL COMPLIANCE This position may require access to information or technology that is subject to U.S. export control laws, such as ITAR or EAR. Persons.'This status includes U.S. citizens, U.S. nationals, lawful permanent residents (green card holders), and asylees and refugees with such status granted, not pending.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "Persons.'This status includes U.S. citizens, U.S. nationals, lawful permanent residents (green card holders), and asylees and refugees"
+  },
+  "note": "same truncated export-control text as 1059"
+ },
+ {
+  "id": 1107,
+  "company": "Prysmian Cables & Systems",
+  "title": "Sedalia HSE Intern",
+  "excerpt": "Education and Experience Must currently be pursuing a degree in Occupational Safety and Health, Environmental Health and Safety, Environmental Science, Industrial Hygiene, Engineering, or related field . All persons will be considered for employment without regard to their race, ethnicity, religion, nationality, origin, citizenship status, socio-economic status, age, sex, gender identity or expression, sexual orientation, marital status, disability, military service or veteran status, pregnancy, parental leave, medical conditions, or any other characteristic protected by applicable federal, state or local laws.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1108,
+  "company": "CapTech Consulting",
+  "title": "Consulting Internship: Business Systems Analyst (Summer 2027)",
+  "excerpt": "CapTech is looking for undergraduate Juniors that are passionate about technology with a desire to solve complex business and technical problems to join our internship program, Elevate. At this time, CapTech cannot transfer nor sponsor a work visa for this position. Applicants must be authorized to work directly for any employer in the United States without visa sponsorship.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "sponsorship": "Applicants must be authorized to work directly for any employer in the United States without visa sponsorship.",
+   "degree": "CapTech is looking for undergraduate Juniors"
+  },
+  "note": ""
+ },
+ {
+  "id": 1109,
+  "company": "Dryft",
+  "title": "Member of Technical Staff Intern - US",
+  "excerpt": "Our team includes graduates from Stanford, Berkeley, CDTM and TUM, winners of Stanford TreeHacks, recipients of Fulbright & Haniel scholarships, and people who have built everything from robots and race cars to software with millions of downloads.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1110,
+  "company": "Clēnera, LLC",
+  "title": "Asset Management Intern (Summer 2027)",
+  "excerpt": "ABOUT THE ROLE The internship program at Clēnera is designed to give current undergraduates an opportunity to immerse themselves into the complex world of renewable energy. Students who will be successful in this program will bring a passion for the renewable energy industry, a strong work ethic centered around self-motivation, and a desire to learn and grow by working alongside some of the best and brightest in the industry. MINIMUM REQUIREMENTS Education: Undergraduate or graduate student, preferably entering their final year, pursuing a degree in business, economics, engineering, operations management, or related field.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Undergraduate or graduate student"
+  },
+  "note": "intro says undergraduates; requirement line includes graduate students"
+ },
+ {
+  "id": 1111,
+  "company": "Celonis",
+  "title": "Summernaut Program - AI & Management Consulting (Value Engineering) Summer Intern",
+  "excerpt": "Based in Raleigh for the duration of the internship Visa sponsorship is not offered for this role.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "Visa sponsorship is not offered for this role."
+  },
+  "note": ""
+ },
+ {
+  "id": 1112,
+  "company": "Bridge Neurotech",
+  "title": "Hardware Engineering Intern",
+  "excerpt": "WHO YOU ARE Required - Enrolled in a bachelor's program in mechanical engineering, electrical engineering, or a related discipline, in your junior year or later, or in a master's program.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "or in a master's program"
+  },
+  "note": ""
+ },
+ {
+  "id": 1113,
+  "company": "AXQ Capital",
+  "title": "Quantitative Research Intern (PhD, Summer 2027)",
+  "excerpt": "Job Duties We are growing quickly, and our interns are a core part of how we hire: you will work directly with senior researchers on research that is meant to trade, and strong performers receive full-time offers. We are targeting candidates graduating in 2027 or 2028. The internship concludes with a presentation to senior management and the opportunity to earn a full-time return offer.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "fits"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "grad": "We are targeting candidates graduating in 2027 or 2028."
+  },
+  "note": "title says PhD but excerpt states no degree level"
+ },
+ {
+  "id": 1114,
+  "company": "OpenArt AI",
+  "title": "Strategy & Market Intelligence Intern (MBA)",
+  "excerpt": "This role suits MBA students from consulting, investment banking or corporate strategy. WHAT WE'RE LOOKING FOR CORE REQUIREMENTS - Currently pursuing or recently completed an MBA. WORK SETUP - Bay Area required (hybrid allowed) - Visa sponsorship available COMPENSATION & BENEFITS The expected base salary range for this role is $40 to $50 per hour, plus the same in-office benefits as our full-time employees.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "sponsors",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "sponsorship": "Visa sponsorship available",
+   "degree": "Currently pursuing or recently completed an MBA."
+  },
+  "note": "MBA only; MS ECE applicant likely not a fit"
+ },
+ {
+  "id": 1115,
+  "company": "AiDASH, Inc.",
+  "title": "Software Engineering Intern, Backend",
+  "excerpt": "You'll own scoped backend work that ships to production, with day-to-day mentorship from a senior engineer who will review your code, pair with you on design, and help you grow fast.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1116,
+  "company": "Waabi",
+  "title": "Research Internship/Co-op",
+  "excerpt": "We seek applicants of all backgrounds and identities, across race, color, ethnicity, national origin or ancestry, age, citizenship, religion, sex, sexual orientation, gender identity or expression, military or veteran status, marital status, pregnancy or parental status, caregiver status, disability, or any other characteristic protected by law. Qualifications: Bachelors or MS/PhD degree in Computer Science, Engineering, AI, Machine Learning, Computer Vision, Robotics and/or similar technical field(s) of study.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "Bachelors or MS/PhD degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1117,
+  "company": "Integrate",
+  "title": "Software Engineering Intern (Summer 2027)",
+  "excerpt": "Morgan, and built software that operates across government and commercial environments, from unclassified work to Top Secret networks. We're looking for students with a strong technical foundation, curiosity, and a willingness to learn. - Currently a junior in an undergraduate program or pursuing a master's degree in Computer Science, Engineering, or a related field, with an expected graduation date within approximately 18 months. ITAR REQUIREMENT This position requires access to information protected under US export control laws, including the International Traffic in Arms Regulations and/or the Export Administration Regulations. As such, US person status (including US citizens, U.S. permanent residents, individuals granted U.S. asylum status, or individuals admitted in U.S. refugee status) is a required qualification for this position. All qualified applicants will receive consideration for employment without regard to race, color, religion, sex (including pregnancy), sexual orientation, gender identity and/or expression, national origin, protected veteran status, disability, genetics, or citizenship status (when otherwise legally authorized to work and access export-controlled data).",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "fits"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "US person status (including US citizens, U.S. permanent residents, individuals granted U.S. asylum status, or individuals admitted in U.S. refugee status) is a required qualification",
+   "degree": "pursuing a master's degree",
+   "grad": "with an expected graduation date within approximately 18 months"
+  },
+  "note": "grad window relative (~18 months from posting = ~May 2028)"
+ },
+ {
+  "id": 1118,
+  "company": "GuidePoint Security",
+  "title": "Cybersecurity Presales Intern - GPSU/Heartland (Tulsa)",
+  "excerpt": "You must be pursuing or have recently completed a Bachelor's degree in Cybersecurity, Computer Science, Information Technology, Information Systems, or a related field. We will also consider Associate's degree candidates who show self-study and lab work. Non-traditional backgrounds are welcome to apply, including career changers, military veterans, and self-taught candidates, as long as they show equivalent knowledge. You will work with the Heartland presales team, shadowing senior consultants on client engagements and attending internal presales and delivery meetings to learn the business. Candidates who show competence and cultural fit may receive a full-time offer, with a growth path to Pre-Sales Cybersecurity Technical Advisor and a long-term path toward CISSP-level certifications and senior advisory roles. If you choose the High Deductible / HSA plan, GPS will contribute in 4 equal quarterly installments: ($850 per EE annually / $1750 per family annually (includes spouse/children/family options) Group Dental Insurance: GuidePoint pays 100% of the premium for employees and 75% of family plans 12 corporate holidays and a Flexible Time Off (FTO) program Healthy mobile phone and home internet allowance Eligibility for retirement plan after 2 months at open enrollment Pet Benefit Option",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "You must be pursuing or have recently completed a Bachelor's degree"
+  },
+  "note": "\"recently completed\" bachelor's could arguably cover a master's student"
+ },
+ {
+  "id": 1119,
+  "company": "Zus Health",
+  "title": "Data Acquisition Software Engineering Co-op",
+  "excerpt": "WE WILL OFFER YOU… - Competitive compensation that reflects the value you bring to the team, and a combination of cash and equity - For full-time permanent roles, robust benefits that include health insurance, wellness benefits, 401k with a match, and unlimited PTO.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1120,
+  "company": "MegazoneCloud",
+  "title": "Visual Design Co-op 2027",
+  "excerpt": "Qualifications - Currently pursuing a Bachelor's degree in Graphic Design, Visual Communication Design, Digital Media, Fine Arts, or a related creative discipline. Megazone Cloud is an Equal Opportunity Employer and participates in E-Verify to confirm the employment eligibility of all new hires.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's degree in Graphic Design"
+  },
+  "note": ""
+ },
+ {
+  "id": 1121,
+  "company": "GCM Grosvenor",
+  "title": "2027 ARS Research Summer Intern",
+  "excerpt": "Internships in the Investments department are geared towards rising seniors pursuing a career in the investment management industry. EDUCATION, SKILLS, AND EXPERIENCE REQUIREMENTS The ideal experience and critical competencies for the role include the following: Qualified candidates will be Juniors/third years, pursuing BA/BS with a concentration in Finance, Economics, Accounting, or related field with superior academic performance. Excellent work ethic , high degree of professionalism and integrity, and commitment to team in a goal-oriented environment. Highly proficient with Excel, Word, and Outlook Intern positions are classified as short-term roles and therefore are not eligible for company-sponsored benefits, including health insurance, paid time off, or the 401(k) plan. This position is not eligible for employer visa sponsorship now or in the future (including, but not limited to, H-1B, TN, or other employment-based visas). Applicants must be currently authorized to work in the United States without the need for employer sponsorship now or in the future. Applicants requiring future sponsorship for continued work authorization (for example, following F-1 OPT/CPT, or J-1 status) are not eligible. Employees may be eligible for a discretionary bonus based on factors such as individual, team, and company performance as well as a comprehensive benefits package. Eligible employees can elect to participate in comprehensive healthcare coverage (including medical, dental, vision and life insurance), flexible spending accounts, and the employer sponsored retirement plan. Additionally, employees are eligible for paid time off, parental leave, short-term and long-term disability, as well as other care/wellness programs.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "sponsorship": "no_sponsorship",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "cpt": "Applicants requiring future sponsorship for continued work authorization (for example, following F-1 OPT/CPT, or J-1 status) are not eligible.",
+   "sponsorship": "This position is not eligible for employer visa sponsorship now or in the future",
+   "degree": "Qualified candidates will be Juniors/third years, pursuing BA/BS"
+  },
+  "note": ""
+ },
+ {
+  "id": 1122,
+  "company": "Old Mission",
+  "title": "Legal Intern - Summer 2027",
+  "excerpt": "This 2027 summer internship gives a law student real junior-attorney-level work inside a financial services legal department. This position is classified as non-exempt and is eligible for overtime pay in accordance with the Fair Labor Standards Act and Illinois state wage and hour law.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": "law student role (JD); not a level category"
+ },
+ {
+  "id": 1123,
+  "company": "Geneva Trading",
+  "title": "Python Developer Intern",
+  "excerpt": "Intern With Geneva Trading Geneva Trading is looking for ambitious, entrepreneurial students to join our DevOps team for a software engineering (Python) internship next summer. The summer internship program is a proven path to earn full-time opportunities at Geneva Trading after graduation. This role is a temporary position and therefore is not eligible for Geneva Trading's full-time employee benefits program.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1124,
+  "company": "Syska Hennessy Group",
+  "title": "Electrical Engineering Summer Intern",
+  "excerpt": "Additional job requirements: Pursing a bachelor's degree from accredited university in Electrical engineering Must be at a minimum, completed your second year Previous engineering internship or co-op experience a huge plus Knowledge in the latest version of MEP AutoCAD and REVIT is a plus Basic knowledge in design and calculation software; MS Office Suite Benefits As an employee with Syska Hennessy Group, you will be part of a global firm with an amazing history! Once you graduate, jump start your career by joining Syska Hennessy Group and our EDT program. In keeping with that aim, interns that are hired for full-time employment upon graduation can take advantage of our Engineering Development Training (EDT) program; an accelerated, but thorough training curriculum. Our senior engineers will work closely with each participant to foster a strong mentor/apprentice relationship.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "degree": "Pursing a bachelor's degree from accredited university in Electrical engineering"
+  },
+  "note": ""
+ },
+ {
+  "id": 1125,
+  "company": "Enova International",
+  "title": "Analytics Internship Summer 2027 (Hybrid)",
+  "excerpt": "We are interested in every qualified candidate who is eligible to work in the United States. However, we are not able to sponsor visas or take over sponsorship at this time. You'll be placed on one of our core teams, however, you'll also have opportunities to collaborate with other Analytics teams, giving you a broad view of our work and helping you discover where you might want to focus after graduation. This role is hybrid and eligible candidates must be able to work in the Chicago office 3 days per week. The budgeted hourly rate for this position is $33.00 per hour for students pursuing a Bachelor's degree and $35.00 per hour for students pursuing a Masters degree. Based employees only) PTO & paid holidays off Sabbatical program (for eligible roles) Summer hours (for eligible roles) Paid parental leave DEI groups (B.L.A.C.K. @ Enova, HOLA @ Enova, Women @ Enova, Pride @ Enova, South Asians @ Enova, APEX @ Enova, and Parents @ Enova) Employee recognition and rewards program Charitable matching and a paid volunteer day…Plus so much more!",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "check",
+  "quotes": {
+   "sponsorship": "we are not able to sponsor visas or take over sponsorship at this time.",
+   "degree": "$35.00 per hour for students pursuing a Masters degree"
+  },
+  "note": ""
+ },
+ {
+  "id": 1126,
+  "company": "Prysmian Cables & Systems",
+  "title": "Abbeville HSE Intern",
+  "excerpt": "Education and Experience Must currently be pursuing a degree in Occupational Safety and Health, Environmental Health and Safety, Environmental Science, Industrial Hygiene, Engineering, or related field . All persons will be considered for employment without regard to their race, ethnicity, religion, nationality, origin, citizenship status, socio-economic status, age, sex, gender identity or expression, sexual orientation, marital status, disability, military service or veteran status, pregnancy, parental leave, medical conditions, or any other characteristic protected by applicable federal, state or local laws.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1127,
+  "company": "Spacial AI",
+  "title": "Software Engineering Intern (Summer 2026)",
+  "excerpt": "This role is ideal for a student who is excited about building real product features, improving internal workflows, and working on applied AI initiatives.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1128,
+  "company": "Skyband Systems",
+  "title": "Spring 2027 Internship: Software Engineering",
+  "excerpt": "You'll work directly with senior engineers who will give you real ownership and expect real results.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {},
+  "note": ""
+ },
+ {
+  "id": 1129,
+  "company": "SCM",
+  "title": "Quantitative Research Analyst Internship",
+  "excerpt": "We're seeking exceptionally motivated students with a strong interest in the financial markets to contribute to our empirical research process. Opportunities, including full-time summer internships and part-time work throughout the school year, are available for qualified students at each of the undergraduate, masters and PhD levels. Requirements Substantial progress toward a degree (graduate level preferred) in a quantitative discipline (e.g. statistics, econometrics, mathematics, engineering, physics or computer science) or finance (with extensive coursework in quantitative disciplines).",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "degree": "at each of the undergraduate, masters and PhD levels"
+  },
+  "note": ""
+ },
+ {
+  "id": 1130,
+  "company": "Crown Innovations, Inc.",
+  "title": "NAMS-2 Intern",
+  "excerpt": "Compensation Undergraduate - $730/week → approx. $18.25/hour Crown complies with all applicable state and local pay transparency laws. As a government contractor, most positions require U.S. citizenship.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "unclear",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "As a government contractor, most positions require U.S. citizenship."
+  },
+  "note": "\"most positions\" not definitive"
+ }
+]

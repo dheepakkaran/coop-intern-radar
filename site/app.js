@@ -49,7 +49,8 @@
     if (st.places.length && !st.places.some((p) => j.places.includes(p))) return false;
     if (st.term && !j.terms.includes(st.term)) return false;
     if (st.hideDone && (marks[j.url] === "applied" || marks[j.url] === "skip")) return false;
-    if (st.hideCheck && j.elig && (j.elig.auth === "check" || j.elig.degree === "check")) return false;
+    if (st.hideCheck && j.elig && (j.elig.auth === "check" || j.elig.degree === "check" ||
+        (j.elig.disagree || []).length || !j.elig.labels)) return false;
     if (st.q) {
       const hay = `${j.company} ${j.title} ${j.locations.join(" ")}`.toLowerCase();
       if (!st.q.toLowerCase().split(/\s+/).every((w) => hay.includes(w))) return false;
@@ -57,18 +58,34 @@
     return true;
   }
 
+  // The standard checks, the same five for every job (C3-C7; C1 US and C2 tech already passed to be listed).
+  const CHECKS = [
+    ["citizenship", "Citizenship", { not_required: "ok" }],
+    ["cpt", "CPT/F-1", { welcome: "good", silent: "ok" }],
+    ["sponsorship", "Sponsorship", { sponsors: "good", silent: "ok", no_sponsorship: "warn" }],
+    ["degree", "MS student", { ms_ok: "good", unclear: "unk", ug_preferred: "warn" }],
+    ["grad", "Grad May 2028", { fits: "good", not_stated: "unk" }],
+  ];
+  const WORDS = { no_sponsorship: "no sponsorship", ug_preferred: "UG preferred", ms_ok: "ok", fits: "ok",
+                  welcome: "welcome", sponsors: "sponsors", unclear: "not stated", not_stated: "not stated",
+                  silent: "not mentioned", not_required: "not required" };
   function eligTags(e) {
     if (!e) return [];
-    const why = esc((e.notes || []).join(" · "));
-    const t = (cls, text) => `<span class="tag ${cls}" title="${why}">${text}</span>`;
-    const out = [];
-    if (e.auth === "cpt") out.push(t("good", "CPT ok"));
-    else if (e.auth === "check") out.push(t("warn", "No sponsorship: check"));
-    else if (e.auth === "unknown") out.push(t("unk", "Work auth: no JD"));
-    if (e.degree === "ok") out.push(t("good", "MS ok"));
-    else if (e.degree === "check") out.push(t("warn", "Degree: check"));
-    if (e.grad === "ok") out.push(t("good", "Grad date ok"));
-    return out;
+    if (!e.labels) {
+      return [`<span class="tag unk" title="No job description could be read for this job: check it yourself">Unverified: no JD</span>`];
+    }
+    const out = CHECKS.map(([k, name, map]) => {
+      const v = e.labels[k];
+      const cls = map[v] || "warn";
+      const sym = cls === "good" || cls === "ok" ? "✓" : cls === "unk" ? "?" : "⚠";
+      const quote = (e.quotes || {})[k] || "";
+      const dis = (e.disagree || []).includes(k) ? " (rules and AI read this differently)" : "";
+      const tip = esc(`${name}: ${WORDS[v] || v}${dis}${quote ? " — JD: " + quote : ""}`);
+      return `<span class="tag chk ${cls}${dis ? " dis" : ""}" title="${tip}">${sym} ${name}</span>`;
+    });
+    const ai = e.ai === "read" ? `<span class="tag ai" title="Read by the rules and by the AI reader; quotes checked against the JD">rules + AI</span>`
+      : `<span class="tag unk" title="Read by the rules; AI reader ${esc(e.ai || "off")}">rules only</span>`;
+    return [...out, ai];
   }
 
   function row(j) {

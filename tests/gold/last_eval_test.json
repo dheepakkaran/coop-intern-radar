@@ -1,0 +1,40 @@
+[
+ {
+  "reader": "rules",
+  "n": 130,
+  "verdict_acc": 0.823,
+  "false_show": 16,
+  "false_hide": 6,
+  "citizenship_acc": 0.946,
+  "cpt_acc": 1.0,
+  "sponsorship_acc": 0.969,
+  "degree_acc": 0.869,
+  "grad_acc": 0.931,
+  "false_show_ids": [
+   1026,
+   1028,
+   1033,
+   1038,
+   1054,
+   1059,
+   1067,
+   1068,
+   1073,
+   1081,
+   1083,
+   1095,
+   1106,
+   1108,
+   1118,
+   1124
+  ],
+  "false_hide_ids": [
+   1003,
+   1039,
+   1065,
+   1071,
+   1072,
+   1096
+  ]
+ }
+]

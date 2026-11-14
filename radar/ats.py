@@ -115,6 +115,7 @@ def _job(ats, company, title, url, locations, countries, posted, extra_intern=Fa
         "locations": locations, "countries": countries, "terms": classify.terms_from_title(title),
         "posted": posted, "field": None, "sponsorship": None,
         "jd_terms": tech.jd_terms(jd), "elig": eligibility.check(jd) if jd is not None else None,
+        "excerpt": eligibility.excerpt(jd),
         "_detail": detail,
     }
 
@@ -139,7 +140,7 @@ def enrich(jobs: list, now: int) -> list:
         fn = j.pop("_detail", None)
         cached = KNOWN.get(j["url"])
         if cached and cached.get("elig") is not None and j.get("elig") is None:
-            j["elig"], j["jd_terms"] = cached.get("elig"), cached.get("jd_terms")
+            j["elig"], j["jd_terms"], j["excerpt"] = cached.get("elig"), cached.get("jd_terms"), cached.get("excerpt")
             continue
         if (fn is None or j.get("elig") is not None or tech.TITLE_NOT.search(j["title"]) or n >= JD_MAX_PER_BOARD
                 or (j.get("posted") and j["posted"] < now - JD_DAYS * 86400)):
@@ -154,6 +155,7 @@ def enrich(jobs: list, now: int) -> list:
             continue
         j["jd_terms"] = tech.jd_terms(text or "")
         j["elig"] = eligibility.check(text or "")
+        j["excerpt"] = eligibility.excerpt(text or "")
         if exact:
             j["posted"] = exact
     for j in jobs:

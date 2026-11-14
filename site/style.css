@@ -58,6 +58,10 @@ select { padding: 5px 8px; border: 1px solid var(--line); border-radius: 8px; ba
 .tag.jd { border-style: dashed; }
 .tag.good { color: var(--new); border-color: var(--new); background: transparent; }
 .tag.warn { color: #a15c00; border-color: #d9a441; background: transparent; }
+.tag.chk { background: transparent; }
+.tag.chk.ok { color: var(--muted); }
+.tag.chk.dis { border-style: dashed; }
+.tag.ai { background: transparent; border-color: var(--fg); }
 .tag.unk { color: var(--muted); border-style: dotted; background: transparent; }
 .tag.coop { background: var(--accent); color: var(--on-accent); border-color: var(--accent); }
 .age { font-variant-numeric: tabular-nums; }

@@ -17,7 +17,7 @@ A job is hidden when any check says 'no'. 'check' jobs are shown with a tag (the
 import re
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
-RULES_VERSION = 5  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+RULES_VERSION = 7  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 
 TAG = re.compile(r"<[^>]+>")
 WS = re.compile(r"\s+")
@@ -50,21 +50,28 @@ CITIZEN = re.compile(
     r"(secret|top secret|ts/sci) (security )?clearance (is )?(required|needed)|"
     r"(ability|able|eligib\w*) to (obtain|get)( and maintain)? (an? )?(dod |government |u\.?s\.? )?(security |secret |top secret )?clearance|"
     r"(security|government|secret) clearance (is )?required|requires? (a|an) (active )?(security|secret) clearance|"
-    r"itar[^.]{0,120}u\.?s\.? (person|citizen)|export control[^.]{0,80}u\.?s\.? person", re.I)
+    r"itar[^.]{0,120}u\.?s\.? (person|citizen)|export control[^.]{0,80}u\.?s\.? person|"
+    r"obtain and maintain (an? )?(\w+ ){0,3}clearance|"
+    r"must (either )?be (\(\w\) )?an? (\(\w+\) )?u\.?s\.? (person|citizen)|u\.?s\.? person status|\bperson status required|"
+    r"(^|[.:;]\s*)citizenship (is )?required|proof of u\.?s\.? citizenship|restricted to u\.?s\.? citizens|"
+    r"(available|open) (only )?to citizens of|\b(eea|eu|european economic area|european union) citizens?(hip)?\b", re.I)
 F1_REJECT = re.compile(
-    r"(f-?1|\bcpt\b|\bopt\b|j-?1|student visa)[^.]{0,160}(not eligible|ineligible|will not be considered|cannot be considered|"
+    r"(f-?1|\bcpt\b|\bopt\b|j-?1|student visa)[^.]{0,200}(not eligible|ineligible|will not be considered|cannot be considered|"
     r"not able to|unable to|do(es)? not (accept|support|qualify|meet)|don'?t meet|not meet|not accepted|not be accepted|"
     r"excluded|not considered|disqualif)|"
     r"permanent(ly)? (authori[sz]ed|work authori[sz]ation|right to work)|"
-    r"(not eligible|ineligible|cannot|will not|do not|unable)[^.]{0,80}(f-?1|cpt|\bopt\b|student visa)|"
+    r"(not eligible|ineligible|cannot|will not|do not|does not|unable|no )[^.]{0,220}(f-?1|\bcpt\b|\bopt\b|student visa|"
+    r"curricular practical training|optional practical training)|"
+    r"(work|employment|authori[sz]ed to work)[^.]{0,40}(permanently|on a permanent basis)|"
     r"sponsorship \(for example,? [^)]*(f-?1|opt|cpt)", re.I)
 CPT_OK = re.compile(
     r"(including|incl\.|such as|welcome|accept\w*|support\w*|eligible|consider\w*)[^.]{0,60}(\bcpt\b|curricular practical training|f-?1 students?)|"
     r"(\bcpt\b|curricular practical training)[^.]{0,60}(welcome|accepted|eligible|supported|is fine|ok)|"
     r"(international students?|student visa holders?) (are )?(welcome|encouraged|eligible)", re.I)
 NO_SPONSOR = re.compile(
-    r"without (the )?(need for |requiring )?(current or future |future |any )?(employer |visa |immigration |work visa )?sponsorship(?! for an? export)|"
-    r"(will not|won't|cannot|can't|unable to|do not|does not|not able to) (provide |offer )?(visa |immigration |employment |work )?sponsor|"
+    r"without (the )?(need for |needing |requiring )?[^.]{0,40}sponsorship(?! for an? export)|"
+    r"(will not|won't|cannot|can't|unable to|do not|does not|not able to) (provide|offer|support)?[^.]{0,60}sponsor(?!ed benefit)|"
+    r"sponsorship\s*[:\-]\s*(not available|none|no\b|n/a)|"
     r"not (be )?eligible for (visa |immigration |work authorization |employment )?sponsorship|"
     r"(no|not offer(ing)?) (visa |immigration )?sponsorship|"
     r"(now or in the future|currently or in the future)[^.]{0,40}sponsor|sponsor[^.]{0,100}\bin the future\b|"
@@ -73,7 +80,7 @@ SPONSOR_YES = re.compile(r"(we|will|do|does|can) (sponsor|offer (visa )?sponsors
 
 # ---- degree ------------------------------------------------------------------------------------------------
 MS_OK = re.compile(
-    r"\bmaster'?s\b|\bm\.?s\.? (student|degree|candidate|program|in)\b|\bmsc\b|\bmeng\b|\bm\.s\.|"
+    r"\bgrad students?\b|\bmaster'?s\b|\bm\.?s\.? (student|degree|candidate|program|in)\b|\bmsc\b|\bmeng\b|\bm\.s\.|"
     r"(?<!under)\bgraduate[- ](level |degree |school )?(student|degree|program|candidate)s?|graduate[- ]level|"
     r"\bms\b(?=\s*(,|/|\)|or\b|and\b|degree|in\b|program|student|candidate))|\b(bs|b\.s\.)\s*(,|/|or)\s*(ms|m\.s\.)|"
     r"(bachelor'?s?|b\.?s\.?|undergraduate)( degree)?,? or (higher|above)|at least (a|an) (bachelor|undergraduate)|"
@@ -85,7 +92,20 @@ UG_ONLY = re.compile(
     r"(pursuing|working toward[s]?) (a |an )?(bachelor'?s?|b\.?s\.?|b\.?a\.?)(?![\w.]*\s*(or|/|and)\b)(?!/)|"
     r"\brising (sophomore|junior|senior)s?|\b(sophomore|junior|senior)s? (or|and) (junior|senior)s?\b|"
     r"(entering|completed) (your )?(sophomore|junior|senior) year|junior (or|and) senior (standing|year)|"
-    r"undergraduate students? only|only (open to )?undergraduate", re.I)
+    r"undergraduate students? only|only (open to )?undergraduate|"
+    r"in pursuit of an? (bachelor|undergraduate)|(current )?enrollment in an? (four-year |4-year )?(undergraduate|bachelor)|"
+    r"pursuing an? undergraduate'?s? degree|\ban undergraduate student\b|undergraduate students (currently )?enrolled|"
+    r"\b(freshman|sophomore)s?( or (sophomore|junior))?( year)?\b|\bjuniors?,? (or |and )?seniors?\b|"
+    r"enrolled in an? bachelor of (science|arts|engineering)", re.I)
+# A requirement line ("must be pursuing a Bachelor's", "enrolled in a PhD program") beats a softer mention elsewhere
+# (an intro that says "undergraduate and graduate programs", a pay table that lists Masters).
+UG_MUST = re.compile(r"(must|should|required to) (be )?(currently )?(pursuing|enrolled in|working toward\w*) (a |an )?"
+                     r"(bachelor|undergraduate|b\.?s\.?\b)", re.I)
+PHD_MUST = re.compile(r"(currently )?enrolled in a ph\.?d\.? program|\bcurrent ph\.?d\.? students|pursuing a doctorate|"
+                      r"ph\.?d\.? students? only|must be (a |currently )?(pursuing a |enrolled in a )?ph\.?d", re.I)
+
+
+GRADWORD = re.compile(r"master|graduate student|\bms\b|m\.s\.|grad student|or higher|or above", re.I)
 UG_PREF = re.compile(r"(undergraduate|bachelor'?s?)[^.]{0,40}preferred|prefer\w* (an? )?(undergraduate|bachelor)", re.I)
 PHD_ONLY = re.compile(r"(currently )?(enrolled in|pursuing|candidate in|working towards) (a )?ph\.?d\.?(?! or)(?!/)(?!,)|ph\.?d\.? (students?|candidates?) only", re.I)
 
@@ -160,42 +180,117 @@ def grad_check(text: str) -> tuple[str | None, str | None]:
     return None, None
 
 
-def check(jd: str | None) -> dict:
-    """Eligibility of one job from its JD. Returns {'auth','degree','grad','notes'}."""
-    if jd is None:
-        return {"auth": "unknown", "degree": "unknown", "grad": None, "notes": []}
-    t = _clean(jd)
-    notes = []
+# ---- the standard checks ---------------------------------------------------------------------------------
+# Every reader (these rules, the AI reader, the hand-labeled gold set) answers the same five questions with the
+# same values, so they can be compared and combined:
+LABELS = {
+    "citizenship": ("required", "not_required"),               # C3 citizenship / green card / clearance / ITAR
+    "cpt": ("rejected", "welcome", "silent"),                  # C4 F-1 / CPT / OPT students
+    "sponsorship": ("no_sponsorship", "sponsors", "silent"),   # C5 visa sponsorship
+    "degree": ("ms_ok", "ug_only", "phd_only", "ug_preferred", "unclear"),  # C6 degree level
+    "grad": ("fits", "misses", "not_stated"),                  # C7 graduation date vs GRAD
+}
+NEUTRAL = {"citizenship": "not_required", "cpt": "silent", "sponsorship": "silent", "degree": "unclear",
+           "grad": "not_stated"}
 
-    # auth
-    if (p := _find(CITIZEN, t)):
-        auth = "no"; notes.append(p)
-    elif (p := _find(F1_REJECT, t)):
-        auth = "no"; notes.append(p)
-    elif (p := _find(CPT_OK, t)):
-        auth = "cpt"; notes.append(p)
-    elif (p := _find(NO_SPONSOR, t)) and not SPONSOR_YES.search(t):
-        auth = "check"; notes.append(p)
+
+def _quote(rx, text: str, limit: int = 220) -> str | None:
+    """The sentence around the first match (the evidence shown on the page)."""
+    m = rx.search(text)
+    if not m:
+        return None
+    a = max(text.rfind(". ", 0, m.start()), text.rfind("! ", 0, m.start()), text.rfind("? ", 0, m.start()))
+    a = a + 2 if a >= 0 else 0
+    b = text.find(". ", m.end())
+    b = b + 1 if b >= 0 else len(text)
+    q = text[a:b].strip()
+    if len(q) > limit:
+        q = text[max(0, m.start() - 60):m.end() + 120].strip()
+    return q
+
+
+def labels(jd: str) -> tuple[dict, dict]:
+    """The rules' answers to the five checks, with the JD sentence behind each non-neutral answer."""
+    t = _clean(jd)
+    lab, quo = dict(NEUTRAL), {}
+
+    if (q := _quote(CITIZEN, t)):
+        lab["citizenship"], quo["citizenship"] = "required", q
+    if (q := _quote(F1_REJECT, t)):
+        lab["cpt"], quo["cpt"] = "rejected", q
+    elif (q := _quote(CPT_OK, t)):
+        lab["cpt"], quo["cpt"] = "welcome", q
+    if (q := _quote(NO_SPONSOR, t)) and not SPONSOR_YES.search(t):
+        lab["sponsorship"], quo["sponsorship"] = "no_sponsorship", q
+    elif (q := _quote(SPONSOR_YES, t)):
+        lab["sponsorship"], quo["sponsorship"] = "sponsors", q
+
+    ug_must, phd_must = _quote(UG_MUST, t), _quote(PHD_MUST, t)
+    if ug_must and not GRADWORD.search(ug_must):
+        lab["degree"], quo["degree"] = "ug_only", ug_must
+    elif phd_must and not GRADWORD.search(phd_must):
+        lab["degree"], quo["degree"] = "phd_only", phd_must
+    elif (q := _quote(MS_OK, t)):
+        lab["degree"], quo["degree"] = "ms_ok", q
+    elif (q := _quote(UG_ONLY, t)):
+        lab["degree"], quo["degree"] = "ug_only", q
+    elif (q := _quote(PHD_ONLY, t)):
+        lab["degree"], quo["degree"] = "phd_only", q
+    elif (q := _quote(UG_PREF, t)):
+        lab["degree"], quo["degree"] = "ug_preferred", q
+
+    g, q = grad_check(t)
+    if g == "ok":
+        lab["grad"], quo["grad"] = "fits", q
+    elif g == "no":
+        lab["grad"], quo["grad"] = "misses", q
+    return lab, quo
+
+
+def from_labels(lab: dict, quo: dict, source: str = "rules") -> dict:
+    """Turn the five answers into the verdict the page and the filter use."""
+    if lab["citizenship"] == "required" or lab["cpt"] == "rejected":
+        auth = "no"
+    elif lab["cpt"] == "welcome":
+        auth = "cpt"
+    elif lab["sponsorship"] == "no_sponsorship":
+        auth = "check"
     else:
         auth = "ok"
+    degree = {"ms_ok": "ok", "ug_only": "no", "phd_only": "no", "ug_preferred": "check"}.get(lab["degree"], "unknown")
+    grad = {"fits": "ok", "misses": "no"}.get(lab["grad"])
+    notes = [quo[k] for k in ("citizenship", "cpt", "degree", "grad", "sponsorship")
+             if k in quo and lab[k] in ("required", "rejected", "ug_only", "phd_only", "misses", "no_sponsorship", "ug_preferred")]
+    return {"auth": auth, "degree": degree, "grad": grad, "notes": notes[:3],
+            "labels": lab, "quotes": quo, "source": source}
 
-    # degree
-    ms = MS_OK.search(t)
-    if ms:
-        degree = "ok"
-    elif (p := _find(UG_ONLY, t)):
-        degree = "no"; notes.append(p)
-    elif (p := _find(PHD_ONLY, t)):
-        degree = "no"; notes.append(p)
-    elif (p := _find(UG_PREF, t)):
-        degree = "check"; notes.append(p)
-    else:
-        degree = "unknown"
 
-    grad, p = grad_check(t)
-    if p and grad == "no":
-        notes.append(p)
-    return {"auth": auth, "degree": degree, "grad": grad, "notes": notes[:3]}
+def check(jd: str | None) -> dict:
+    """Eligibility of one job from its JD (the rules' reading)."""
+    if jd is None:
+        return {"auth": "unknown", "degree": "unknown", "grad": None, "notes": [], "labels": None, "quotes": {},
+                "source": "none"}
+    return from_labels(*labels(jd))
+
+
+# ---- excerpt: the eligibility sentences of a JD (what the AI reader and the gold set read) ------------------
+EXCERPT_KEY = re.compile(
+    r"citizen|clearance|secret|itar|export|u\.s\. person|green card|permanent|sponsor|visa|\bcpt\b|\bopt\b|f-1|"
+    r"authori[sz]|eligib|bachelor|master|undergrad|graduate|enrolled|enrollment|pursuing|ph\.?d|degree|graduat|"
+    r"class of|rising|junior|senior|sophomore|freshman|return(ing)? to school|semester|student|b\.s\.|m\.s\.", re.I)
+
+
+def excerpt(jd: str | None, limit: int = 3500) -> str | None:
+    if jd is None:
+        return None
+    t = _clean(jd)
+    out, seen = [], set()
+    for s in re.split(r"(?<=[.!?])\s+(?=[A-Z•\-])|\s[•·]\s", t):
+        s = s.strip()
+        if EXCERPT_KEY.search(s) and 12 < len(s) < 600 and s not in seen:
+            seen.add(s)
+            out.append(s)
+    return " ".join(out)[:limit]
 
 
 def from_list(sponsorship: str | None, degrees: list | None) -> dict:

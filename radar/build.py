@@ -10,12 +10,13 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from . import ats, classify, eligibility, jdfetch, sources, store, tech
+from . import ats, classify, eligibility, jdfetch, llm, sources, store, tech
 
 WINDOW_DAYS = 2          # the page shows 24 h or 2 days
 POLL_EVERY = 170 * 60    # 'auto' polls the boards about every 3 hours
 MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest next run; results are cached)
 JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
+MAX_AI_PER_RUN = int(os.environ.get("RADAR_AI_PER_RUN", "12"))  # AI reader calls per run (free-tier friendly)
 ATS_SOURCES = set(ats.ATS_NAMES.values())
 
 
@@ -68,14 +69,16 @@ def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
 
 
 def apply_jd(j: dict, c: dict) -> None:
-    j["elig"], j["jd_terms"] = c.get("elig"), c.get("jd_terms")
+    j["elig"], j["jd_terms"], j["excerpt"] = c.get("elig"), c.get("jd_terms"), c.get("excerpt")
     if c.get("country") and not classify.is_us([], [c["country"]]):
         j["non_us"] = True
 
 
 def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources.resolve_shortlink,
-        poll: str = "auto", poll_fn=ats.poll, now: int | None = None, jd_fetch=None, audit: str | None = None) -> dict:
+        poll: str = "auto", poll_fn=ats.poll, now: int | None = None, jd_fetch=None, audit: str | None = None,
+        ai=None) -> dict:
     jd_fetch = jd_fetch or jdfetch.fetch
+    ai = ai or llm.ask
     now = now or int(time.time())
     state = store.load(state_path)
     state.setdefault("boards", {})
@@ -128,7 +131,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         got = got + [j for j in (last.get("jobs") or []) if j.get("board") in failed]
         for j in got:
             if j.get("elig") is not None and j["url"] not in jd_cache:
-                jd_cache[j["url"]] = {"t": now, "v": eligibility.RULES_VERSION, "elig": j["elig"], "jd_terms": j.get("jd_terms")}
+                jd_cache[j["url"]] = {"t": now, "v": eligibility.RULES_VERSION, "elig": j["elig"],
+                                      "jd_terms": j.get("jd_terms"), "excerpt": j.get("excerpt")}
 
         # Keep only jobs that can still be "new": undated ones (dated by first_seen) or dated inside the window.
         keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
@@ -176,7 +180,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         for j, r in zip(todo, pool.map(safe, todo)):
             if r and r.get("text"):
                 c = {"t": now, "v": eligibility.RULES_VERSION, "elig": eligibility.check(r["text"]),
-                     "jd_terms": tech.jd_terms(r["text"]), "country": r.get("country"), "via": r.get("via")}
+                     "jd_terms": tech.jd_terms(r["text"]), "excerpt": eligibility.excerpt(r["text"]),
+                     "country": r.get("country"), "via": r.get("via")}
                 jd_stats["fetched"] += 1
                 apply_jd(j, c)
             else:
@@ -185,7 +190,10 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             jd_cache[j["url"]] = c
     state["jd_cache"] = {u: v for u, v in jd_cache.items() if v["t"] >= now - 10 * 86400}
 
-    # 6. The same checks for every job: US, tech role, eligibility.
+    # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
+    ai_cache = state.setdefault("ai_cache", {})
+    ai_stats = {"calls": 0, "failed": 0, "unverified": 0}
+    ai_on = ai is not llm.ask or bool(os.environ.get("GROQ_API_KEY"))  # tests pass a fake reader
     picked, decisions = [], []
     skipped_not_tech = skipped_inelig = skipped_non_us = 0
     for j, t in in_window:
@@ -202,7 +210,25 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             d["result"] = "hidden: not tech"
             continue
         lst = eligibility.from_list(j.get("sponsorship"), j.get("degrees")) if "Simplify" in j["sources"] else None
-        e = eligibility.with_list(j.get("elig"), lst)
+        rules = j.get("elig")
+        if rules and rules.get("labels") and not eligibility.hidden(rules):
+            # second reader: the AI reads the same excerpt (cached per URL; capped per run)
+            c = ai_cache.get(j["url"])
+            need = not (c and c.get("v") == llm.LLM_VERSION) and bool(j.get("excerpt"))
+            if ai_on and need and ai_stats["calls"] < MAX_AI_PER_RUN:
+                ai_stats["calls"] += 1
+                res = ai(j["excerpt"])
+                if res:
+                    c = ai_cache[j["url"]] = {"t": now, "v": llm.LLM_VERSION, **res}
+                    ai_stats["unverified"] += len(res.get("unverified") or [])
+                else:
+                    ai_stats["failed"] += 1
+            if c and c.get("v") == llm.LLM_VERSION:
+                lab, quo, dis = llm.merge(rules, c)
+                rules = {**eligibility.from_labels(lab, quo, source="rules+ai"), "disagree": dis, "ai": "read"}
+            else:
+                rules = {**rules, "ai": "pending" if j.get("excerpt") else "no excerpt"}
+        e = eligibility.with_list(rules, lst)
         d["elig"], d["field"] = e, tc
         if eligibility.hidden(e):
             skipped_inelig += 1
@@ -231,10 +257,13 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "sponsorship": j.get("sponsorship") if j.get("sponsorship") not in (None, "Other") else None,
             "sources": j["sources"],
             "posted": t,
-            "elig": {"auth": e["auth"], "degree": e["degree"], "grad": e.get("grad"), "notes": e.get("notes") or []},
+            "elig": {"auth": e["auth"], "degree": e["degree"], "grad": e.get("grad"), "notes": e.get("notes") or [],
+                     "labels": e.get("labels"), "quotes": e.get("quotes") or {}, "disagree": e.get("disagree") or [],
+                     "ai": e.get("ai") or ("no JD" if e["auth"] == "unknown" else "off")},
         })
 
     rows.sort(key=lambda r: r["posted"], reverse=True)
+    state["ai_cache"] = {u: v for u, v in ai_cache.items() if v["t"] >= now - 10 * 86400}
     store.prune(state, now)
     if len(state["links"]) > 8000:
         state["links"] = dict(list(state["links"].items())[-8000:])
@@ -252,6 +281,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "ineligible_skipped": skipped_inelig,
         "non_us_skipped": skipped_non_us,
         "jd": jd_stats,
+        "ai": {**ai_stats, "model": llm.MODEL, "on": ai_on},
         "check_count": sum(1 for r in rows if eligibility.needs_check(r["elig"])),
         "bootstrap": boot,
     }
