@@ -10,10 +10,12 @@ import sys
 import time
 from concurrent.futures import ThreadPoolExecutor
 
-from . import ats, classify, eligibility, sources, store, tech
+from . import ats, classify, eligibility, jdfetch, sources, store, tech
 
 WINDOW_DAYS = 2          # the page shows 24 h or 2 days
 POLL_EVERY = 170 * 60    # 'auto' polls the boards about every 3 hours
+MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest next run; results are cached)
+JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
 ATS_SOURCES = set(ats.ATS_NAMES.values())
 
 
@@ -65,8 +67,15 @@ def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
     return merged
 
 
+def apply_jd(j: dict, c: dict) -> None:
+    j["elig"], j["jd_terms"] = c.get("elig"), c.get("jd_terms")
+    if c.get("country") and not classify.is_us([], [c["country"]]):
+        j["non_us"] = True
+
+
 def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources.resolve_shortlink,
-        poll: str = "auto", poll_fn=ats.poll, now: int | None = None) -> dict:
+        poll: str = "auto", poll_fn=ats.poll, now: int | None = None, jd_fetch=None) -> dict:
+    jd_fetch = jd_fetch or jdfetch.fetch
     now = now or int(time.time())
     state = store.load(state_path)
     state.setdefault("boards", {})
@@ -110,7 +119,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     new_types: set[str] = set()
     do_poll = poll == "yes" or (poll == "auto" and now - last.get("at", 0) >= POLL_EVERY)
     if do_poll and state["boards"]:
-        jd_cache = state.setdefault("jd_cache", {})
+        state["jd_cache"] = jd_cache = {u: v for u, v in state.get("jd_cache", {}).items()
+                                        if v.get("v") == eligibility.RULES_VERSION or v.get("miss")}
         takes_known = "known" in inspect.signature(poll_fn).parameters  # test stubs take only the boards
         got, ats_health = poll_fn(state["boards"], known=jd_cache) if takes_known else poll_fn(state["boards"])
         # A board that failed this time (outage, 429...) keeps the jobs it had last poll.
@@ -118,8 +128,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         got = got + [j for j in (last.get("jobs") or []) if j.get("board") in failed]
         for j in got:
             if j.get("elig") is not None and j["url"] not in jd_cache:
-                jd_cache[j["url"]] = {"t": now, "elig": j["elig"], "jd_terms": j.get("jd_terms")}
-        state["jd_cache"] = {u: v for u, v in jd_cache.items() if v["t"] >= now - 10 * 86400}
+                jd_cache[j["url"]] = {"t": now, "v": eligibility.RULES_VERSION, "elig": j["elig"], "jd_terms": j.get("jd_terms")}
+
         # Keep only jobs that can still be "new": undated ones (dated by first_seen) or dated inside the window.
         keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
         last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries" and not k.startswith("_")} for j in keep], "health": ats_health}
@@ -133,13 +143,54 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     # 4. Merge, date, keep the last WINDOW_DAYS.
     merged = merge(by_source)
-    picked = []
-    skipped_not_tech = skipped_inelig = 0
+    in_window = []
     for k, j in merged.items():
         from_new_type = bool(new_types) and set(j["sources"]) <= new_types
         rec = store.mark_seen(state, k, now, boot or from_new_type)
         t = posted_at(j, rec)
-        if not t or t < cut:
+        if t and t >= cut:
+            in_window.append((j, t))
+
+    # 5. Jobs we only know from a list have no JD yet: fetch it from the apply page (cached per URL),
+    #    so every job, whatever its source, goes through the same tech + eligibility checks.
+    jd_cache = state.setdefault("jd_cache", {})
+    todo = []
+    for j, _ in in_window:
+        if j.get("elig") is not None or tech.TITLE_NOT.search(j["title"]):
+            continue
+        c = jd_cache.get(j["url"])
+        if c and c.get("v") != eligibility.RULES_VERSION and not c.get("miss"):
+            c = None  # verdict from older rules: fetch the JD again
+        if c and c.get("elig") is not None:
+            apply_jd(j, c)
+        elif not (c and c.get("miss") and now - c["t"] < JD_RETRY):
+            todo.append(j)
+    todo = todo[:MAX_JD_FETCH]
+    jd_stats = {"fetched": 0, "missed": 0, "cached": sum(1 for v in jd_cache.values() if v.get("elig") is not None)}
+    with ThreadPoolExecutor(max_workers=8) as pool:
+        def safe(x):
+            try:
+                return jd_fetch(x["url"])
+            except Exception:
+                return None
+        for j, r in zip(todo, pool.map(safe, todo)):
+            if r and r.get("text"):
+                c = {"t": now, "v": eligibility.RULES_VERSION, "elig": eligibility.check(r["text"]),
+                     "jd_terms": tech.jd_terms(r["text"]), "country": r.get("country"), "via": r.get("via")}
+                jd_stats["fetched"] += 1
+                apply_jd(j, c)
+            else:
+                c = {"t": now, "miss": True}
+                jd_stats["missed"] += 1
+            jd_cache[j["url"]] = c
+    state["jd_cache"] = {u: v for u, v in jd_cache.items() if v["t"] >= now - 10 * 86400}
+
+    # 6. The same checks for every job: US, tech role, eligibility.
+    picked = []
+    skipped_not_tech = skipped_inelig = skipped_non_us = 0
+    for j, t in in_window:
+        if j.get("non_us"):
+            skipped_non_us += 1
             continue
         tc = tech.classify(j["title"], j.get("field"), j.get("jd_terms"))
         if not tc:
@@ -188,6 +239,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "polled": last.get("at"),
         "not_tech_skipped": skipped_not_tech,
         "ineligible_skipped": skipped_inelig,
+        "non_us_skipped": skipped_non_us,
+        "jd": jd_stats,
         "check_count": sum(1 for r in rows if eligibility.needs_check(r["elig"])),
         "bootstrap": boot,
     }

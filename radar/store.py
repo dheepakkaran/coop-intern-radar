@@ -9,13 +9,14 @@ import os
 import re
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
-TRACKING = re.compile(r"^(utm_|ref$|refs$|source$|src$|gh_src$|lever-source|iis$|iisn$|jobboard$|codes$)", re.I)
+TRACKING = re.compile(r"^(utm_|ref$|refs$|source$|src$|gh_src$|lever-source|iis$|iisn$|jobboard$|codes$|embed$)", re.I)
 
 
 def norm_url(url: str) -> str:
     p = urlsplit(url.strip())
     q = [(k, v) for k, v in parse_qsl(p.query, keep_blank_values=True) if not TRACKING.match(k)]
-    path = p.path.rstrip("/")
+    path = re.sub(r"/(application|apply)$", "", p.path.rstrip("/"))  # Ashby/Lever/Workable apply pages
+    path = re.sub(r"^/[a-z]{2}-[A-Z]{2}(?=/)", "", path)             # Workday locale: /en-US/site/... = /site/...
     return urlunsplit((p.scheme.lower(), p.netloc.lower(), path, urlencode(sorted(q)), ""))
 
 

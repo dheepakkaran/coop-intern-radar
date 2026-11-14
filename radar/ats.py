@@ -138,7 +138,7 @@ def enrich(jobs: list, now: int) -> list:
             continue
         fn = j.pop("_detail", None)
         cached = KNOWN.get(j["url"])
-        if cached and j.get("elig") is None:
+        if cached and cached.get("elig") is not None and j.get("elig") is None:
             j["elig"], j["jd_terms"] = cached.get("elig"), cached.get("jd_terms")
             continue
         if (fn is None or j.get("elig") is not None or tech.TITLE_NOT.search(j["title"]) or n >= JD_MAX_PER_BOARD

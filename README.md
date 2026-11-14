@@ -41,6 +41,11 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   "authorized for any employer" or "no sponsorship now or in the future" stay, tagged **No sponsorship: check**
   (a page toggle hides them); "CPT ok", "MS ok" and "Grad date ok" tags show what the JD says. Rules in
   `radar/eligibility.py`, written from ~1,300 real JD sentences and tested on them.
+- **Every job gets the same checks, whatever its source.** Jobs that only the lists know (company sites, iCIMS,
+  UltiPro, Workable, BambooHR, Eightfold, Paylocity …) get their job description from the apply page: a known ATS
+  API when there is one (`radar/jdfetch.py`), else the page's schema.org JobPosting (JSON-LD), else the page text.
+  Results are cached per URL (and redone when the rules change), so each JD is fetched once. Then US → tech →
+  eligibility, exactly like the board jobs. Pages that block robots (e.g. Meta) stay "Work auth: no JD".
 - **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).

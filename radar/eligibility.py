@@ -17,6 +17,7 @@ A job is hidden when any check says 'no'. 'check' jobs are shown with a tag (the
 import re
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
+RULES_VERSION = 2  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 
 TAG = re.compile(r"<[^>]+>")
 WS = re.compile(r"\s+")
@@ -91,7 +92,25 @@ MONTHS = {m: i for i, m in enumerate(
 SEASONS = {"spring": 5, "summer": 8, "fall": 12, "autumn": 12, "winter": 12}
 DATE = re.compile(r"\b(spring|summer|fall|autumn|winter|jan\w*|feb\w*|mar\w*|apr\w*|may|jun\w*|jul\w*|aug\w*|sep\w*|oct\w*|nov\w*|dec\w*)?"
                   r"[\s,/-]*((?:20)\d\d)\b", re.I)
-GRAD_SENT = re.compile(r"[^.;:]*\bgraduat\w*[^.;:]*", re.I)
+GRAD_WORD = re.compile(r"\bgraduat\w*", re.I)
+
+
+def _grad_snippets(text: str) -> list[str]:
+    """The words right around each 'graduat…' (same sentence, at most ~60 chars before / 140 after).
+
+    Not the whole 'sentence': page text without punctuation (menus, other job titles) would otherwise
+    hand us years that have nothing to do with graduating."""
+    out = []
+    for m in GRAD_WORD.finditer(text):
+        left = text[max(0, m.start() - 60):m.start()]
+        right = text[m.start():m.end() + 140]
+        cut = max(left.rfind("."), left.rfind(";"), left.rfind(":"))
+        left = left[cut + 1:] if cut >= 0 else left
+        end = re.search(r"(?<!\b[A-Z])[.;](\s|$)", right[m.end() - m.start():])
+        if end:
+            right = right[:m.end() - m.start() + end.start()]
+        out.append((left + right).strip())
+    return out
 
 
 def _dates(s: str) -> list[tuple[int, int]]:
@@ -111,7 +130,7 @@ def grad_check(text: str) -> tuple[str | None, str | None]:
     """('ok'|'no'|None, phrase). Looks at sentences that mention graduating and a year."""
     g = _months(GRAD)
     verdict, why = None, None
-    for s in GRAD_SENT.findall(text):
+    for s in _grad_snippets(text):
         if re.search(r"after graduation|upon graduation|post[- ]graduation|full[- ]time", s, re.I):
             continue
         ds = _dates(s)

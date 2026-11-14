@@ -2,9 +2,19 @@ import re
 import json
 import os
 
-from radar import ats, build, classify, sources, store, tech
+import pytest
+
+from radar import ats, build, classify, jdfetch, sources, store, tech
 
 HERE = os.path.dirname(__file__)
+
+
+@pytest.fixture(autouse=True)
+def no_network(monkeypatch):
+    """Tests never touch the internet: any JD page fetch fails unless a test passes its own fake."""
+    def offline(url, body=None, timeout=20):
+        raise jdfetch.urllib.error.URLError("offline in tests")
+    monkeypatch.setattr(jdfetch, "http", offline)
 
 
 def fixture(name):
@@ -476,6 +486,11 @@ def test_elig_grad_window():
     for s in no:
         assert _e(s)["grad"] == "no", s
     assert _e("Opportunity to transition into a full-time role upon graduation in 2027.")["grad"] is None
+    # real page text (menu, no punctuation): the 2027 in the job title is not a graduation date
+    menu = ("Molex Product Management Internship 2027 - Aerospace Solutions - Georgetown, Texas - Koch Skip to content "
+            "Home Search Jobs Life at Koch Early Careers Recruiting Events Candidate Portal Join our Talent Community "
+            "Employee Login Benefits Our Culture Students and recent graduates explore roles")
+    assert _e(menu)["grad"] is None
 
 
 def test_elig_list_and_combine():
@@ -553,3 +568,105 @@ def test_failed_board_keeps_last_jobs(tmp_path, monkeypatch):
     meta = build.run(st, out, fetch=_fake_fetch(now, old, []), poll="yes", poll_fn=ats.poll, now=now + 600)
     titles = [j["title"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]]
     assert "Data Science Intern" in titles and meta["sources"]["Greenhouse"]["errors"] == {"HTTP 521": 1}
+
+
+# ---- Phase 7: JD for list-only jobs -------------------------------------------------------------------------
+def test_norm_url_apply_pages_and_locale():
+    assert store.norm_url("https://jobs.ashbyhq.com/acme/1234/application?embed=true") == "https://jobs.ashbyhq.com/acme/1234"
+    assert store.norm_url("https://acme.wd1.myworkdayjobs.com/en-US/Ext/job/X_1") == \
+        store.norm_url("https://acme.wd1.myworkdayjobs.com/Ext/job/X_1")
+
+
+def test_jdfetch_adapters_and_json_ld():
+    pages = {
+        "apply.workable.com/api/v2/accounts/acme/jobs/AB12": json.dumps(
+            {"title": "x", "description": "<p>" + "Build machine learning systems in Python and PyTorch. " * 5 + "</p>",
+             "location": {"countryCode": "US"}, "published": "2026-11-13T10:00:00Z"}),
+        "bamboohr.com/careers/71/detail": json.dumps({"result": {"jobOpening": {"description": "Data pipelines in SQL. " * 20}}}),
+        "careers.example.com/job/9": '<html><script type="application/ld+json">' + json.dumps(
+            {"@type": "JobPosting", "description": "<p>" + "US citizenship is required. Software engineering in Java. " * 5 + "</p>",
+             "datePosted": "2026-11-12", "jobLocation": {"address": {"addressCountry": "US"}}}) + "</script></html>",
+        "plain.example.com/j/1": "<html><body>" + "We build backend services in Go and Python for our platform. " * 30 + "</body></html>",
+        "tiny.example.com/j/1": "<html><body>Apply now</body></html>",
+    }
+
+    def get(url, body=None):
+        return next(v for k, v in pages.items() if k in url)
+    w = jdfetch.fetch("https://apply.workable.com/acme/j/AB12/apply", get=get)
+    assert w["via"] == "workable" and w["country"] == "US" and "machine learning" in w["text"]
+    assert jdfetch.fetch("https://acme.bamboohr.com/careers/71", get=get)["via"] == "bamboohr"
+    ld = jdfetch.fetch("https://careers.example.com/job/9", get=get)
+    assert ld["via"] == "json-ld" and "citizenship" in ld["text"] and ld["posted"]
+    assert jdfetch.fetch("https://plain.example.com/j/1", get=get)["via"] == "page"
+    assert jdfetch.fetch("https://tiny.example.com/j/1", get=get) is None
+    assert jdfetch.fetch("https://go.vansh.nyc/abc", get=get) is None
+    assert jdfetch.fetch("https://careers.example.com/job/9") is None  # offline -> None, no crash
+
+    def broken(url, body=None):
+        import http.client
+        raise http.client.IncompleteRead(b"")
+    assert jdfetch.fetch("https://lifeattiktok.com/search/1", get=broken) is None  # real crash seen on TikTok
+
+
+def test_every_list_only_job_goes_through_all_checks(tmp_path):
+    """End to end: jobs that only the lists know get their JD fetched and pass the same US + tech + eligibility checks."""
+    now = 2_000_000_000
+    def row(company, title, url, locs=("Boston, MA",)):
+        r = _row(company, title, now - 3600, url=url)
+        r["locations"] = list(locs)
+        return r
+    rows = [
+        row("A", "Research Intern", "https://a.example.com/1"),            # non-tech title, ML JD      -> shown (JD)
+        row("B", "Software Engineer Intern", "https://b.example.com/1"),   # citizenship in JD          -> hidden
+        row("C", "Data Science Intern", "https://c.example.com/1"),        # undergrad-only JD          -> hidden
+        row("D", "Machine Learning Intern", "https://d.example.com/1"),    # no JD anywhere             -> shown, unknown
+        row("E", "Finance Intern", "https://e.example.com/1"),             # non-tech title, finance JD -> hidden
+        row("F", "AI Engineer Intern", "https://f.example.com/1"),         # JD says country GB         -> hidden
+        row("G", "Data Engineer Intern", "https://g.example.com/1", ("Toronto, ON, Canada",)),  # non-US list -> dropped
+        row("H", "SWE Intern", "https://h.example.com/1"),                 # CPT welcome, MS ok         -> shown, tags
+    ]
+    jds = {
+        "a.example": {"text": "Train deep learning models with PyTorch, Python and SQL for machine learning research."},
+        "b.example": {"text": "US Citizenship is required. Python, Java, software engineering."},
+        "c.example": {"text": "Currently pursuing a Bachelor's degree in Statistics. Python, SQL, data science."},
+        "e.example": {"text": "Excel, financial models, accounting."},
+        "f.example": {"text": "Build LLM agents in Python.", "country": "GB"},
+        "h.example": {"text": "Pursuing a BS or MS in CS. F-1 students using CPT are welcome. Python, backend."},
+    }
+    calls = []
+
+    def fake_jd(url):
+        calls.append(url)
+        for k, v in jds.items():
+            if k in url:
+                return {"via": "test", "posted": None, "country": None, **v}
+        return None
+    st, out = str(tmp_path / "s"), str(tmp_path / "o")
+    meta = build.run(st, out, fetch=_fake_fetch(now, rows, []), poll="no", jd_fetch=fake_jd, now=now)
+    jobs = {j["company"]: j for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]}
+    assert set(jobs) == {"A", "D", "H"}, set(jobs)
+    assert jobs["A"]["why"] == "JD" and jobs["A"]["field"] == "AI/ML"
+    assert jobs["D"]["elig"]["auth"] == "unknown"
+    assert jobs["H"]["elig"]["auth"] == "cpt" and jobs["H"]["elig"]["degree"] == "ok"
+    assert meta["ineligible_skipped"] == 2 and meta["non_us_skipped"] == 1 and meta["not_tech_skipped"] == 1
+    assert meta["jd"]["fetched"] == 6 and meta["jd"]["missed"] == 1
+    assert "https://g.example.com/1" not in calls  # dropped as non-US before any fetch
+
+    # Next run (30 min later): every JD comes from the cache; the miss is not retried yet.
+    calls.clear()
+    build.run(st, out, fetch=_fake_fetch(now, rows, []), poll="no", jd_fetch=fake_jd, now=now + 1800)
+    assert calls == []
+    assert set(j["company"] for j in json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]) == {"A", "D", "H"}
+
+
+def test_poll_jd_results_are_cached_in_state(tmp_path, monkeypatch):
+    now = 2_000_000_000
+    old = [_row("Acme", "Old Intern", now - 60 * 86400, url="https://boards.greenhouse.io/acme/jobs/0")]
+    job = {"source": "Greenhouse", "company": "Acme", "title": "Data Science Intern", "url": "https://g/1",
+           "locations": ["Boston, MA"], "terms": [], "posted": now - 3600, "field": None, "sponsorship": None,
+           "jd_terms": ["python"], "elig": elig.check("Pursuing a BS or MS.")}
+    st = str(tmp_path / "s")
+    build.run(st, str(tmp_path / "o"), fetch=_fake_fetch(now, old, []), poll="yes",
+              poll_fn=lambda b, known=None: ([dict(job)], {"Greenhouse": {"ok": True}}), now=now)
+    saved = store.load(st)["jd_cache"]["https://g/1"]
+    assert saved["v"] == elig.RULES_VERSION and saved["elig"]["degree"] == "ok"
