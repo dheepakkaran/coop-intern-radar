@@ -138,6 +138,13 @@ def agent_verdict(a: dict) -> tuple[bool, str | None]:
     return True, None
 
 
+def claude_env() -> dict:
+    """Dheepak (2026-11-14): Claude Code only, never an Anthropic API key. Without these variables `claude -p` uses
+    the Claude Code login (subscription); with one set it would bill that key instead."""
+    return {k: v for k, v in os.environ.items()
+            if k not in ("ANTHROPIC_API_KEY", "ANTHROPIC_AUTH_TOKEN", "ANTHROPIC_BASE_URL")}
+
+
 def ask_claude(items: list[dict]) -> list[dict]:
     """items: [{id, company, title, locations, text}] -> the agent's answers (unchecked)."""
     blocks = [f"### id {it['id']}\nCompany: {it['company']}\nTitle: {it['title']}\nLocations: "
@@ -145,7 +152,7 @@ def ask_claude(items: list[dict]) -> list[dict]:
     prompt = "Check these postings.\n\n" + "\n\n".join(blocks)
     cmd = ["claude", "-p", "--model", MODEL, "--tools", "", "--setting-sources", "", "--no-session-persistence",
            "--output-format", "json", "--system-prompt", SYSTEM]
-    p = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=900, cwd=DIR)
+    p = subprocess.run(cmd, input=prompt, capture_output=True, text=True, timeout=900, cwd=DIR, env=claude_env())
     if p.returncode != 0:
         raise RuntimeError(f"claude exited {p.returncode}: {(p.stderr or p.stdout)[-300:]}")
     out = json.loads(p.stdout)

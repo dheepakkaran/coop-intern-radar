@@ -1203,3 +1203,11 @@ def test_push_file_commits_onto_the_newest_main_from_a_private_worktree(tmp_path
     log = subprocess.run(["git", "log", "--format=%s", "main"], cwd=origin, capture_output=True, text=True).stdout.split()
     assert log[:2] == ["agent:", "test"] and "b" in log                  # on top of the other push
     assert (work / "dirty.txt").read_text() == "my uncommitted work"      # working checkout untouched
+
+
+def test_review_agent_uses_claude_code_login_never_an_api_key(monkeypatch):
+    from scripts import agent_audit as A
+    monkeypatch.setenv("ANTHROPIC_API_KEY", "sk-should-not-pass")
+    monkeypatch.setenv("ANTHROPIC_AUTH_TOKEN", "x")
+    env = A.claude_env()
+    assert "ANTHROPIC_API_KEY" not in env and "ANTHROPIC_AUTH_TOKEN" not in env and "PATH" in env
