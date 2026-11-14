@@ -1,1 +1,330 @@
-{}
+{
+ "https://amat.wd1.myworkdayjobs.com/External/job/Santa-ClaraCA/Summer-2027-Software-Engineer-Intern--Bachelor-s-Master-s--Santa-Clara--CA-_R2630003": {
+  "company": "Applied Materials",
+  "confidence": 88,
+  "jd_hash": "b234e9f8b018768d",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Education: Bachelor's or Master's Degree in Computer Engineering, Computer Science or related field GPA of 3.0 or above preferred"
+  },
+  "read_at": 1794677665,
+  "tech": "Software",
+  "title": "Summer 2027 Software Engineer Intern- Bachelor's/Master's (Santa Clara, CA)",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://apply.workable.com/bask-health-1/j/71AEBBCADE": {
+  "company": "Bask Health",
+  "confidence": 88,
+  "jd_hash": "dcf3511a7f9cf01f",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing, recently completed, or independently developing skills equivalent to a degree in Computer Science, Machine Learning, Artificial Intelligence, Data Science, Software Engineering, Mathematics, Statistics, or a related technical field."
+  },
+  "read_at": 1794676647,
+  "tech": "AI/ML",
+  "title": "Machine Learning Engineer Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://apply.workable.com/bask-health-1/j/F0E122E877": {
+  "company": "Bask Health",
+  "confidence": 90,
+  "jd_hash": "b18656c7e5dbe83b",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing, recently completed, or independently developing skills equivalent to a degree in Computer Science, Software Engineering, Artificial Intelligence, Machine Learning, or a related technical field."
+  },
+  "read_at": 1794676647,
+  "tech": "AI/ML",
+  "title": "AI Engineering Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://ats.rippling.com/fieldpulse/jobs/bfade8ef-2509-4042-b400-019fe3a84a7d": {
+  "company": "FieldPulse",
+  "confidence": 92,
+  "jd_hash": "a79630b46685c793",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Current student pursuing a degree in Computer Science, Information Systems, Business, or a related field."
+  },
+  "read_at": 1794690324,
+  "tech": "AI/ML",
+  "title": "AI Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://cboe.wd1.myworkdayjobs.com/external_career_cboe/job/Overland-Park-OPX/Trade-Desk-Intern_R-4659": {
+  "company": "Cboe Global Markets",
+  "confidence": 88,
+  "jd_hash": "337874bc0005acfd",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "To be eligible for this internship, applicants must be enrolled in a university or college program and should not be scheduled to graduate before December of the internship year.",
+   "grad": "To be eligible for this internship, applicants must be enrolled in a university or college program and should not be scheduled to graduate before December of the internship year.",
+   "sponsorship": "This position is not eligible for visa sponsorship."
+  },
+  "read_at": 1794690324,
+  "tech": "Software",
+  "title": "DevOps Intern",
+  "us": true,
+  "was": "needs review: cpt"
+ },
+ "https://eedu.fa.em3.oraclecloud.com/hcmUI/CandidateExperience/en/sites/CX_1003/job/202607277": {
+  "company": "WTW",
+  "confidence": 90,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "fails: cpt",
+  "quotes": {
+   "cpt": "Please note student visas, CPT, OPT, H-1B, TN, and other temporary work authorizations are considered restricted forms of employment eligibility.",
+   "degree": "Bachelors or Master's degree with a minimum overall GPA of 3.0",
+   "grad": "Accepting applications from candidates that graduate with a Bachelor's or Master's degree between December 2027 through June 2029",
+   "sponsorship": "Employment-based non-immigrant visa sponsorship and/or assistance is not offered for this specific job opportunity."
+  },
+  "read_at": 1794688831,
+  "tech": "Data",
+  "title": "Data Analyst Intern",
+  "us": true,
+  "was": "match"
+ },
+ "https://jobs.ashbyhq.com/ramp/b87e898f-8d8b-447d-b3d5-9073ccf7d109": {
+  "company": "Ramp",
+  "confidence": 85,
+  "jd_hash": "bf8633ce469b0cfe",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a B.S. or higher in Computer Science or a related technical field, graduating December 2027 or later, with coursework or project experience in data science, business analytics, machine learning, or AI.",
+   "grad": "Currently pursuing a B.S. or higher in Computer Science or a related technical field, graduating December 2027 or later, with coursework or project experience in data science, business analytics, machine learning, or AI."
+  },
+  "read_at": 1794676647,
+  "tech": "Data",
+  "title": "Risk Strategy Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://jobs.smartrecruiters.com/ServiceNow/744000161548289": {
+  "company": "ServiceNow",
+  "confidence": 85,
+  "jd_hash": "0533e13822d95f9c",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later."
+  },
+  "read_at": 1794676647,
+  "tech": "AI/ML",
+  "title": "AI Security Engineer Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://jobs.smartrecruiters.com/ServiceNow/744000161548528": {
+  "company": "ServiceNow",
+  "confidence": 88,
+  "jd_hash": "cd68d9d4d22e6c6e",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Master's degree in Computer Science or a related field, and graduating in December 2027 or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Master's degree in Computer Science or a related field, and graduating in December 2027 or later."
+  },
+  "read_at": 1794676647,
+  "tech": "Software",
+  "title": "Security Engineering & Automation Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://jobs.smartrecruiters.com/ServiceNow/744000161592679": {
+  "company": "ServiceNow",
+  "confidence": 88,
+  "jd_hash": "9e540d608c5fb444",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later.",
+   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later."
+  },
+  "read_at": 1794676647,
+  "tech": "Software",
+  "title": "Security Engineer Intern",
+  "us": true,
+  "was": "needs review: degree, grad"
+ },
+ "https://netapp.eightfold.ai/careers/job/45497201": {
+  "company": "NetApp",
+  "confidence": 85,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Software Engineering, or a related technical field are encouraged to apply.",
+   "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
+  },
+  "read_at": 1794676647,
+  "tech": "Software",
+  "title": "Software Engineer Intern, Cloud",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://netapp.eightfold.ai/careers/job/45498081": {
+  "company": "NetApp",
+  "confidence": 85,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Electrical Engineering, Software Engineering, or a related technical field are encouraged to apply.",
+   "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
+  },
+  "read_at": 1794676647,
+  "tech": "Software",
+  "title": "Software Engineer Intern, Systems",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://uscareers-idemia.icims.com/jobs/8642/software-engineering-internship---enrollment-and-credentialing-services/job": {
+  "company": "IDEMIA North America",
+  "confidence": 92,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Software Engineering, or a related technical field"
+  },
+  "read_at": 1794676647,
+  "tech": "Software",
+  "title": "Software Engineering Intern, Enrollment and Credentialing Services",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "https://xboxgaming.wd1.myworkdayjobs.com/External/job/Middleton/Activision-2027-Summer-Internships---Audio-Engineering_R028105-1": {
+  "company": "Activision Blizzard",
+  "confidence": 88,
+  "jd_hash": "2b2772b4e19270d4",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
+   "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
+  },
+  "read_at": 1794677665,
+  "tech": "Software",
+  "title": "Activision 2027 Summer Internships - Audio Engineering",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
+ "https://xboxgaming.wd1.myworkdayjobs.com/External/job/Middleton/Activision-2027-Summer-Internships---Game-Systems-Engineering_R028106": {
+  "company": "Activision Blizzard",
+  "confidence": 93,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
+   "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
+  },
+  "read_at": 1794676647,
+  "tech": "Software",
+  "title": "Game Systems Engineering Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ }
+}
