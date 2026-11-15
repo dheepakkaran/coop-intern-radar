@@ -64,6 +64,8 @@
     if (!e || !e.labels) return { label, s: "none", word: "No description read", quote: "" };
     const v = e.labels[k];
     const quote = (e.quotes || {})[k] || "";
+    const res = e.residency;   // "US residency 3 yrs: you have <1" says more than "Required"
+    if (k === "citizenship" && v === "required" && res && res.block) return { label: "Citizenship / residency", s: "bad", word: res.word, quote: res.quote };
     if (FAILS[v]) return { label, s: "bad", word: FAILS[v], quote };
     const [s, word] = map[v] || ["warn", v];
     const dis = (e.disagree || []).includes(k);
@@ -79,7 +81,10 @@
     const where = { label: "Places", s: "ok", word: (j.locations.join(" · ") || "Not listed") + (j.more_locations ? ` +${j.more_locations} more` : ""), quote: "" };
     const role = { label: "Field", s: tech ? "ok" : "bad", word: tech ? `${j.field} (${how})` : `${j.field}: not an AI/ML, Data or Software role`, quote: "" };
     const kind = { label: "Type", s: "ok", word: (j.kind === "co-op" ? "Co-op" : "Internship") + (j.terms.length ? ` · ${j.terms.join(", ")}` : ""), quote: "" };
-    const auth = ["citizenship", "cpt", "sponsorship"].map((k) => sub(e, k));
+    // tags = worth a look, never a block on their own (federal credential, residency without a number, summer-only)
+    const tag = (t) => ({ label: t.tag.split(":")[0], s: "warn", word: t.tag, quote: t.quote || "" });
+    const tags = (e && e.tags) || [];
+    const auth = ["citizenship", "cpt", "sponsorship"].map((k) => sub(e, k)).concat(tags.filter((t) => !/^Term/.test(t.tag)).map(tag));
     const edu = ["degree", "grad"].map((k) => sub(e, k));
     if (e && e.labels && e.auth === "check" && !auth.some((x) => x.s === "bad")) auth[1].s = auth[1].s === "ok" ? "warn" : auth[1].s;
     const short = (xs, okWord) => {
@@ -90,7 +95,7 @@
     };
     return [
       { name: "Location", s: "ok", short: remote ? "US · remote" : "US", rows: [loc, where] },
-      { name: "Role", s: role.s, short: tech ? j.field : "Not tech", rows: [role, kind] },
+      { name: "Role", s: role.s, short: tech ? j.field : "Not tech", rows: [role, kind].concat(tags.filter((t) => /^Term/.test(t.tag)).map(tag)) },
       { name: "Work authorization", s: worst(auth), short: short(auth, "Clear"), rows: auth },
       { name: "Education", s: worst(edu), short: short(edu, "MS OK"), rows: edu },
     ];

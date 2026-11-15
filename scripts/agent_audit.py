@@ -38,10 +38,11 @@ DIR = os.path.join(ROOT, ".cache", "agent")
 REVIEWS = os.path.join(DIR, "reviews.json")      # every job the agent read (local)
 LAST = os.path.join(DIR, "last.json")            # last run summary (the Pet bot shows it)
 REPORT = os.path.join(ROOT, "docs", "agent-report.md")
+NOTES_MARK = "<!-- notes below this line are written by hand and kept across agent runs -->"
 UNSURE = os.path.join(DIR, "unsure.json")        # unsure list with stable ids (scripts/decide.py uses the ids)
 WT = os.path.join(DIR, "wt")                     # private worktree of origin/main, used only to push
 WT_LOCK = os.path.join(DIR, "wt.lock")           # agent and decide.py never use the worktree at the same time
-AGENT_VERSION = 1   # bump when SYSTEM / the verdict policy changes: every job is read again, most important first
+AGENT_VERSION = 2   # bump when SYSTEM / the verdict policy changes: every job is read again, most important first
 STATUS_BRANCH = "agent-status"
 NO_JD_RETRY = 6 * 3600   # a job whose description could not be read is tried again after this x tries so far
 NO_JD_MAX_TRIES = 4      # then it stays "blocked" (shown on the page as such) until the job leaves the window
@@ -59,10 +60,11 @@ SYSTEM = """You check internship / co-op job postings for one applicant. Read ea
 
 Applicant: MS in Electrical & Computer Engineering student (Northeastern, Boston). F-1 student visa: can work through
 CPT/OPT, is NOT a US citizen, has no green card, cannot get a security clearance, is not a "U.S. person" under ITAR/EAR.
-Graduates May 2028. These are internships / co-ops: the university authorizes the work through CPT, so the employer
+Graduates May 2028. """ + E.residency_fact() + """ These are internships / co-ops: the university authorizes the work through CPT, so the employer
 never has to sponsor a visa. "No sponsorship now or in future" is therefore FINE and must not lower your confidence.
 The only work-authorization question is whether the employer accepts a CPT/OPT (F-1) student at all: a citizenship /
-green card / clearance / U.S. person requirement, or an explicit "F-1 / CPT / OPT not eligible", blocks the job.
+green card / clearance / U.S. person requirement, a US-residency length he does not have, or an explicit
+"F-1 / CPT / OPT not eligible", blocks the job.
 
 For each job answer:
 - us: true if the job is in the United States (remote-US counts), false if it is only outside the US.
@@ -71,8 +73,10 @@ For each job answer:
   engineering; "Borderline" for cybersecurity / SOC / GRC, firmware / FPGA / embedded / hardware design, and GIS
   roles (Dheepak has not decided on these yet); null for anything else (marketing, finance, mechanical, sales,
   operations, HR, ...).
-- citizenship: "required" if US citizenship, permanent residency / green card, "U.S. person" status, or an active or
-  obtainable security clearance is REQUIRED; "not_required" otherwise. A company that only says it MAY decline or
+- citizenship: "required" if US citizenship, permanent residency / green card, "U.S. person" status, an active or
+  obtainable security clearance, or N years of (continuous) US residency that he does not have (e.g. "three years of
+  continuous residency in the U.S." for a government credential) is REQUIRED; quote that sentence. "not_required"
+  otherwise. A PIV badge, public trust, national agency check or background check alone is "not_required". A company that only says it MAY decline or
   that export rules MAY apply, without requiring it, is "not_required".
 - cpt: "rejected" if F-1 / CPT / OPT students cannot apply, or "do not meet" the authorization requirement, or
   permanent (unrestricted, no-time-limit) work authorization is required; "welcome" if CPT/OPT/F-1 students are
@@ -522,8 +526,14 @@ def write_report(overrides, unsure, live, queue, reviews, stats, now):
         lines.append(f"| {u['id']} | [{u['company']} · {u['title']}]({u['url']}) | {u['was']} | {u['now']} | "
                      f"{u['confidence']} | {u['note']} |")
     os.makedirs(os.path.dirname(REPORT), exist_ok=True)
+    try:   # hand-written notes (root-cause write-ups ...) live under the mark and survive every run
+        with open(REPORT) as f:
+            old = f.read()
+        notes = old[old.index(NOTES_MARK):] if NOTES_MARK in old else NOTES_MARK + "\n"
+    except OSError:
+        notes = NOTES_MARK + "\n"
     with open(REPORT, "w") as f:
-        f.write("\n".join(lines) + "\n")
+        f.write("\n".join(lines) + "\n\n" + notes)
 
 
 def gold_candidates() -> str:

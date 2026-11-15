@@ -156,8 +156,8 @@ def enrich(jobs: list, now: int) -> list:
         j["jd_terms"] = tech.jd_terms(text or "")
         j["elig"] = eligibility.check(text or "")
         j["excerpt"] = eligibility.excerpt(text or "")
-        if exact:
-            j["posted"] = exact
+        if exact:   # never newer than what the listing said ("Posted 30+ Days Ago" vs a later startDate)
+            j["posted"] = min(exact, j["posted"]) if j.get("posted") else exact
     for j in jobs:
         if j:
             j.pop("_detail", None)
@@ -313,7 +313,7 @@ def _wd_intern_facet(facets: list[dict]) -> tuple[str, list[str], bool] | None:
 def _wd_detail(api_base, path):
     def fn():
         info = get_json(api_base + path).get("jobPostingInfo") or {}
-        return info.get("jobDescription") or "", None, (info.get("country") or {}).get("descriptor")
+        return info.get("jobDescription") or "", iso(info.get("startDate")), (info.get("country") or {}).get("descriptor")
     return fn
 
 

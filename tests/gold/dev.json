@@ -2976,5 +2976,24 @@
    "degree": "Currently pursuing a Ph.D."
   },
   "note": ""
+ },
+ {
+  "id": 171,
+  "company": "KBR Wyle Services",
+  "title": "Image Processing Software Engineer Intern",
+  "excerpt": "Position Overview This summer-based internship is open to juniors, seniors, and graduate students pursuing a career in software development. Candidate must have three years of continuous residency in the U.S. for issuance of a Government Security credential. change requests in accordance with CM processes Participate in code reviews Education & Skills Working towards a Bachelor's degree in Computer Science, Math, Engineering, or equivalent Required Skills Excellent interpersonal, organizational, and communication skills Ability to work independently as well as part of a Artificial Intelligence for software code generation and documentation Special Requirements Three years of continuous residency in the U.S. for issuance of a Government Security credential Ability to obtain and maintain a national agency check and background investigation for facility access KBR Benefits:​ KBR offers a",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "Candidate must have three years of continuous residency in the U.S. for issuance of a Government Security credential.",
+   "degree": "Position Overview This summer-based internship is open to juniors, seniors, and graduate students pursuing a career in software development."
+  },
+  "note": "Workday R2130067 (2026-11-15 RCA): 3 years of continuous US residency for a federal credential; applicant in the US since 2026-01. Also says 'national agency check' (federal credential tag)."
  }
 ]

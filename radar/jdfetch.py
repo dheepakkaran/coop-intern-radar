@@ -1,6 +1,8 @@
 """Get the job description for a job we only know from a list (apply URL, no JD).
 
 `fetch(url)` -> {"text": str, "posted": int|None, "country": str|None, "via": str} or None.
+`posted` is the job's own date (Workday startDate / "Posted N Days Ago", JSON-LD datePosted, the page's "Posted N
+Days Ago"): a list's date is only when the list added the job, so the build takes the earlier of the two.
 Order: a known ATS API for that URL (Workday, Greenhouse, Lever, Ashby, Workable, BambooHR, iCIMS, UltiPro),
 else the page's schema.org JSON-LD JobPosting (most career sites add it for Google Jobs), else the page's
 visible text when it is long enough to be a job description.
@@ -10,9 +12,10 @@ import json
 import re
 import urllib.error
 import urllib.parse
+import time
 import urllib.request
 
-from .ats import iso
+from .ats import iso, workday_posted
 
 UA = "Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/130.0 Safari/537.36"
 MIN_WORDS = 150
@@ -66,11 +69,31 @@ def _json_ld(page: str) -> dict | None:
     return None
 
 
+# JSON-LD / page dates come from page templates, and some are fake: IDEMIA's iCIMS page says datePosted = now - 2 years
+# (to the second) for a live 2027 internship. An internship posted more than MAX_PAGE_AGE ago is unlikely, so such a
+# date is treated as unknown (the list date then stands, as before). Structured ATS APIs (Workday...) are trusted.
+MAX_PAGE_AGE = 180 * 86400
+
+
+def _plausible(t: int | None) -> int | None:
+    return t if t and t >= _NOW[0] - MAX_PAGE_AGE else None
+
+
+POSTED_TEXT = re.compile(r"\bposted\s*:?\s*(today|yesterday|\d+\+?\s*days?\s+ago)", re.I)
+_NOW = [0]   # the run's clock for relative dates ("Posted 3 Days Ago"), set by fetch()
+
+
+def page_posted(text: str) -> int | None:
+    m = POSTED_TEXT.search(text or "")
+    return _plausible(workday_posted(m.group(1), _NOW[0])) if m else None
+
+
 # ---- per-ATS adapters (url regex -> function(match) -> result) ------------------------------------------
 def _workday(m, get):
     host, tenant, site, path = m.group("host"), m.group("tenant"), m.group("site"), m.group("path")
     info = json.loads(get(f"https://{host}/wday/cxs/{tenant}/{site}{path}")).get("jobPostingInfo") or {}
-    return {"text": _text(info.get("jobDescription") or ""), "posted": iso(info.get("startDate")),
+    dates = [d for d in (iso(info.get("startDate")), workday_posted(info.get("postedOn"), _NOW[0])) if d]
+    return {"text": _text(info.get("jobDescription") or ""), "posted": min(dates) if dates else None,
             "country": (info.get("country") or {}).get("descriptor"), "via": "workday"}
 
 
@@ -109,7 +132,7 @@ def _icims(m, get):
     page = get(f"https://{m.group(1)}/jobs/{m.group(2)}/job?in_iframe=1")
     r = _json_ld(page)
     if r:
-        r["via"] = "icims"
+        r["via"], r["posted"] = "icims", _plausible(r["posted"])
         return r
     return {"text": _text(page), "posted": None, "country": None, "via": "icims"}
 
@@ -137,9 +160,10 @@ ADAPTERS = [
 ]
 
 
-def fetch(url: str, get=None) -> dict | None:
+def fetch(url: str, get=None, now: int | None = None) -> dict | None:
     """Job description for an apply URL, or None if we can't get one."""
     get = get or http
+    _NOW[0] = int(now or time.time())
     if not url or "go.vansh.nyc" in url:
         return None
     try:
@@ -152,11 +176,13 @@ def fetch(url: str, get=None) -> dict | None:
                 break
         page = get(url)
         r = _json_ld(page)
-        if r and len(r["text"].split()) >= 30:
-            return r
         text = _text(page)
+        if r and len(r["text"].split()) >= 30:
+            dates = [d for d in (_plausible(r["posted"]), page_posted(text)) if d]
+            r["posted"] = min(dates) if dates else None
+            return r
         if len(text.split()) >= MIN_WORDS:
-            return {"text": text, "posted": None, "country": None, "via": "page"}
+            return {"text": text, "posted": page_posted(text), "country": None, "via": "page"}
     except Exception:  # any broken page (cut-off download, odd JSON, ...) just means "no JD this time"
         return None
     return None

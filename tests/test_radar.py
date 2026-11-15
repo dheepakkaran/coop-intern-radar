@@ -1050,7 +1050,8 @@ def _q(key, base_match, h="h1", **kw):
 
 def _rv(agent_match, conf, h="h1"):
     a = {"us": True, "tech": "Software", **elig.NEUTRAL, "quotes": {}, "confidence": conf}
-    return {"t": NOW, "jd": True, "jd_hash": h, "agent_match": agent_match,
+    from scripts import agent_audit as A
+    return {"t": NOW, "jd": True, "jd_hash": h, "agent_match": agent_match, "v": A.AGENT_VERSION,
             "agent_reason": None if agent_match else "fails: citizenship", "answer": a, "note": ""}
 
 
@@ -1211,3 +1212,174 @@ def test_review_agent_uses_claude_code_login_never_an_api_key(monkeypatch):
     monkeypatch.setenv("ANTHROPIC_AUTH_TOKEN", "x")
     env = A.claude_env()
     assert "ANTHROPIC_API_KEY" not in env and "ANTHROPIC_AUTH_TOKEN" not in env and "PATH" in env
+
+
+# ---- KBR / Trinzic R2130067 (2026-11-15): US residency + federal credential, and a list date that was too new ------
+def _kbr():
+    info = fixture("workday_kbr_r2130067.json")["jobPostingInfo"]
+    return info, jdfetch._text(info["jobDescription"])
+
+
+@pytest.fixture
+def in_us_under_a_year(monkeypatch):
+    monkeypatch.setattr(elig, "years_in_us", lambda now=None: 0.87)   # Dheepak in Nov 2026 (in the US since 2026-01)
+
+
+def test_kbr_residency_blocks_with_quote(in_us_under_a_year):
+    _, jd = _kbr()
+    e = elig.check(jd)
+    assert e["auth"] == "no" and elig.hidden(e)
+    assert e["labels"]["citizenship"] == "required"
+    assert "three years of continuous residency in the U.S." in e["quotes"]["citizenship"]
+    assert e["residency"]["years"] == 3 and e["residency"]["block"] is True
+    assert e["notes"][0].startswith("US residency 3 yrs: you have <1")
+    # the excerpt (what the AI reader and the gold set read) now carries the residency + credential lines
+    ex = elig.excerpt(jd)
+    assert "continuous residency in the U.S." in ex and "national agency check" in ex
+
+
+def test_kbr_federal_credential_tag(in_us_under_a_year):
+    _, jd = _kbr()
+    tags = {t["tag"]: t for t in elig.check(jd)["tags"]}
+    assert "Federal credential: check" in tags and "Government Security credential" in tags["Federal credential: check"]["quote"]
+
+
+@pytest.mark.parametrize("line", [
+    "Selected candidates must be able to obtain a PIV card (HSPD-12) to access the facility.",
+    "This position requires a public trust suitability determination and a national agency check with inquiries (NACI).",
+])
+def test_federal_credential_alone_is_a_tag_not_a_block(line, in_us_under_a_year):
+    e = elig.check("Pursuing a BS or MS in Computer Science. " + line)
+    assert e["auth"] == "ok" and not elig.hidden(e)
+    assert [t["tag"] for t in e["tags"]] == ["Federal credential: check"]
+
+
+@pytest.mark.parametrize("line", [
+    "Candidates must be authorized to work in the US.",
+    "A background check is required for all hires.",
+    "You will work with physicians in our internal medicine residency program.",
+    "Applicants must have two years of residency in Ireland.",
+    "Must reside in the United States during the internship.",
+])
+def test_residency_negatives_do_not_block(line, in_us_under_a_year):
+    e = elig.check("Pursuing a master's degree in Computer Science. " + line)
+    assert e["auth"] == "ok" and not elig.hidden(e), e
+    assert "residency" not in e or e["residency"] is None
+
+
+@pytest.mark.parametrize("line,years", [
+    ("Must have resided in the United States for at least 5 years.", 5),
+    ("Applicants must have lived in the U.S. for the past two (2) years.", 2),
+    ("U.S. residency of at least 1 year is required for the credential.", 1),
+    ("Candidates must have 3+ years of U.S. residency.", 3),
+])
+def test_residency_variants_block(line, years, in_us_under_a_year):
+    e = elig.check("Pursuing a master's degree. " + line)
+    assert e["auth"] == "no" and e["residency"]["years"] == years
+
+
+def test_residency_needs_more_years_than_you_have(monkeypatch):
+    monkeypatch.setattr(elig, "years_in_us", lambda now=None: 1.1)   # from 2027-02 on, "1 year" is met
+    e = elig.check("Pursuing a master's degree. U.S. residency of at least 1 year is required.")
+    assert e["auth"] == "ok" and e["residency"]["block"] is False
+
+
+def test_summer_only_term_tag_is_off_by_default(monkeypatch, in_us_under_a_year):
+    _, jd = _kbr()
+    assert all(t["tag"] != "Term: summer" for t in elig.check(jd)["tags"])
+    monkeypatch.setattr(elig, "TERM_TAG", True)
+    e = elig.check(jd)
+    assert "Term: summer" in [t["tag"] for t in e["tags"]] and e["auth"] == "no"   # tag only, never the reason
+    co = elig.check("Pursuing an MS. Summer or Fall 2027 co-op, Python.")
+    assert all(t["tag"] != "Term: summer" for t in co["tags"]) and not elig.hidden(co)
+    assert not elig.hidden(elig.check("Pursuing an MS. This summer internship uses Python."))
+
+
+def test_profile_has_the_residency_fact():
+    from radar import llm
+    from scripts import agent_audit as A
+    assert "In the US since 2026-01" in llm.SYSTEM_V1 and "In the US since 2026-01" in A.SYSTEM
+    assert llm.LLM_VERSION >= 3 and A.AGENT_VERSION >= 2 and elig.RULES_VERSION >= 10
+
+
+def test_ai_reader_cannot_overrule_a_residency_block(in_us_under_a_year):
+    _, jd = _kbr()
+    rules = elig.check(jd)
+    ai = {"labels": dict(elig.NEUTRAL, degree="ms_ok"), "quotes": {}}
+    e = build._elig_base({"sources": ["vanshb03"], "elig": rules}, ai, True)
+    assert e["auth"] == "no" and e["labels"]["citizenship"] == "required" and e["residency"]["years"] == 3
+
+
+def test_workday_detail_gives_the_real_posted_date():
+    info, _ = _kbr()
+    now = ats.iso("2026-11-15T12:00:00Z")
+    url = "https://trinzic.wd115.myworkdayjobs.com/trinzic_careers/job/Sioux-Falls-South-Dakota/Image-Processing-Software-Engineer-Intern_R2130067"
+    r = jdfetch.fetch(url, get=lambda u, body=None: json.dumps({"jobPostingInfo": info}), now=now)
+    assert r["via"] == "workday" and r["posted"] <= now - 30 * 86400
+    assert r["posted"] == min(ats.iso("2026-10-08"), now - 31 * 86400)
+
+
+def test_page_text_and_json_ld_dates():
+    now = 2_000_000_000
+    words = " ".join(["python"] * 200)
+    r = jdfetch.fetch("https://x.example.com/j/1", get=lambda u, body=None: f"<p>Posted 30+ Days Ago</p><p>{words}</p>", now=now)
+    assert r["via"] == "page" and r["posted"] == now - 31 * 86400
+    ld = ('<script type="application/ld+json">{"@type":"JobPosting","datePosted":"2026-10-01",'
+          f'"description":"{words}"}}</script>')
+    assert jdfetch.fetch("https://x.example.com/j/2", get=lambda u, body=None: ld, now=now - 0)["posted"] is None  # 2026 < now-180d
+    now2 = ats.iso("2026-11-15T12:00:00Z")
+    assert jdfetch.fetch("https://x.example.com/j/2", get=lambda u, body=None: ld, now=now2)["posted"] == ats.iso("2026-10-01")
+
+
+def test_fake_template_dates_are_ignored():
+    """IDEMIA's iCIMS page (2026-11-15) says datePosted = now - 2 years, to the second, for a live 2027 internship."""
+    now = ats.iso("2026-11-15T20:24:35Z")
+    words = " ".join(["python"] * 200)
+    ld = ('<script type="application/ld+json">{"@type":"JobPosting","datePosted":"2024-11-15T20:24:35.662Z",'
+          f'"validThrough":"2027-11-15T20:24:35.662Z","description":"{words}"}}</script>')
+    r = jdfetch.fetch("https://uscareers-idemia.icims.com/jobs/8708/full-stack/job", get=lambda u, body=None: ld, now=now)
+    assert r["via"] == "icims" and r["posted"] is None
+
+
+KBR_URL = "https://trinzic.wd115.myworkdayjobs.com/trinzic_careers/job/Sioux-Falls-South-Dakota/Image-Processing-Software-Engineer-Intern_R2130067"
+
+
+def _vansh_kbr(now):
+    return {"company_name": "KBR Wyle Services", "title": "Image Processing Software Engineer Intern",
+            "date_posted": now - 2 * 86400 + 600, "url": "https://go.vansh.nyc/1zx", "locations": ["Sioux Falls, SD"],
+            "season": "Summer", "active": True, "is_visible": True}
+
+
+def _shown(out):
+    d = json.load(open(os.path.join(str(out), "jobs.json")))
+    return [j for j in d["jobs"] if "Image Processing" in j["title"]], d["meta"]
+
+
+def test_list_date_is_only_an_upper_bound_board_date_wins(tmp_path):
+    """The board copy is 30+ days old (outside the window); the list added it 2 days ago -> not new, now and later."""
+    now = 2_000_000_000
+    board = [{"source": "Workday", "company": "KBR Wyle Services", "title": "Image Processing Software Engineer Intern",
+              "url": KBR_URL, "locations": ["Sioux Falls, South Dakota"], "terms": [], "posted": now - 31 * 86400,
+              "field": None, "sponsorship": None, "board": "wd:trinzic"}]
+    st, out = str(tmp_path / "s"), tmp_path / "o"
+    build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)   # not a bootstrap run
+    build.run(st, str(out), fetch=_fake_fetch(now, [], [_vansh_kbr(now)]), resolve=lambda u: KBR_URL,
+              poll="yes", poll_fn=lambda b: (list(board), {"Workday": {"ok": True}}), now=now)
+    rows, meta = _shown(out)
+    assert rows == [] and meta["count_all_24h"] == 0
+    # between polls the old date is still known
+    build.run(st, str(out), fetch=_fake_fetch(now, [], [_vansh_kbr(now)]), resolve=lambda u: KBR_URL,
+              poll="auto", poll_fn=lambda b: ([], {}), now=now + 1800)
+    assert _shown(out)[0] == []
+
+
+def test_list_only_job_gets_its_real_date_from_the_jd_fetch(tmp_path):
+    now = 2_000_000_000
+    st, out = str(tmp_path / "s"), tmp_path / "o"
+    build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
+    fake_jd = lambda url: {"text": "Pursuing an MS in CS. Python, C++, software development.", "via": "workday",
+                           "posted": now - 38 * 86400, "country": "United States of America"}
+    for t in (now, now + 1800):          # first run fetches, the next one reads the cache
+        build.run(st, str(out), fetch=_fake_fetch(now, [], [_vansh_kbr(now)]), resolve=lambda u: KBR_URL,
+                  poll="no", jd_fetch=fake_jd, now=t)
+        assert _shown(out)[0] == []

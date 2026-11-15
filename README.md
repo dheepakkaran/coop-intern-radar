@@ -36,10 +36,12 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   and Ashby; for Workday, SmartRecruiters and Oracle the radar fetches the JD only for recent non-tech titles.
   Rows that pass only through the JD are tagged "JD" with the terms found.
 - **Eligibility (master's student on CPT, graduating May 2028):** from each job description, hide jobs that need
-  US citizenship / a green card / a security clearance / ITAR "U.S. person", that say F-1/CPT/OPT students are not
+  US citizenship / a green card / a security clearance / ITAR "U.S. person" / more years of US residency than I have
+  (in the US since January 2026; e.g. "three years of continuous residency in the U.S."), that say F-1/CPT/OPT students are not
   eligible, that are undergraduate-only or PhD-only, or whose graduation window leaves out May 2028. "No sponsorship
   now or in the future" is fine: an internship is authorized through CPT, so only an explicit F-1/CPT/OPT rejection
-  blocks a job. The page groups the results into four checks (Location, Role, Work authorization, Education), each
+  blocks a job. A federal facility credential on its own (PIV / HSPD-12, national agency check, public trust) is a
+  "Federal credential: check" tag, not a block. The page groups the results into four checks (Location, Role, Work authorization, Education), each
   with the posting's own sentence behind it. Rules in `radar/eligibility.py`, written from ~1,300 real JD sentences
   and tested on them.
 - **Every job gets the same checks, whatever its source.** Jobs that only the lists know (company sites, iCIMS,
@@ -65,7 +67,9 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   The agent derives the corrections from scratch on every run (a pure function of the queue and what it has read),
   so a crash or a reboot mid-run can never leave a stale or missing correction. `scripts/agent_audit.py gold` turns
   its corrections into gold-set candidates, so the rules learn from them.
-- **"New"** = the earlier of the list's posted date and the first time this radar saw the job.
+- **"New"** = the earliest of the job's own date (its company board, or the posting page: Workday startDate /
+  "Posted N Days Ago", JSON-LD datePosted), the list's posted date and the first time this radar saw the job. A list's
+  date is when the *list* added the job, so it only ever caps the age; a job the board says is 30+ days old never shows as new.
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).
 - **Seen store** = `seen.json.gz` on the `data` branch, kept as a single force-pushed commit so the repo does not grow.

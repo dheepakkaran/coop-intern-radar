@@ -25,13 +25,15 @@ import time
 import urllib.error
 import urllib.request
 
-from .eligibility import LABELS, NEUTRAL
+from .eligibility import LABELS, NEUTRAL, residency_fact
 
 API = "https://api.groq.com/openai/v1/chat/completions"
 MODEL = os.environ.get("RADAR_LLM_MODEL") or "openai/gpt-oss-120b"  # empty env var (unset GitHub var) -> default
-LLM_VERSION = 2       # bump when the prompt, model settings or excerpt trimming change: cached answers are redone
+LLM_VERSION = 3       # bump when the prompt, model settings or excerpt trimming change: cached answers are redone
 # PROFILE "v1" = the exact setup measured on the held-out test set (one excerpt per call, full excerpt, the v1
 # prompt, the model's default reasoning): gpt-oss-120b 95.4% verdict accuracy, 0 / 35 not-eligible shown.
+# LLM_VERSION 3 (2026-11-15): the applicant profile also says how long he has lived in the US, and a US-residency
+# length he can't meet counts as citizenship "required" (KBR R2130067: "three years of continuous residency").
 # PROFILE "v2" = batched + trimmed + low reasoning: fewer tokens but 85% on dev, so not used live.
 PROFILE = os.environ.get("RADAR_LLM_PROFILE") or "v1"
 BATCH = 1 if PROFILE == "v1" else int(os.environ.get("RADAR_LLM_BATCH") or 5)  # excerpts per request
@@ -42,10 +44,10 @@ OUT_BASE = 220
 
 SYSTEM = """You check if ONE applicant may apply to US internships/co-ops, from job-description excerpts.
 Applicant: master's student (MS Electrical & Computer Engineering), F-1 visa, needs CPT to work, graduates May 2028.
-Not a US citizen, no green card, no clearance.
+Not a US citizen, no green card, no clearance. """ + residency_fact() + """
 
 For each excerpt answer 5 questions (exact values):
-citizenship: "required" = must be US citizen / green card / "U.S. person" (ITAR/EAR) / have or get a security clearance / hold another country's citizenship. A company that only MAY decline non-U.S. persons is "not_required".
+citizenship: "required" = must be US citizen / green card / "U.S. person" (ITAR/EAR) / have or get a security clearance / hold another country's citizenship / have lived in the US longer than the applicant has (e.g. "3 years of continuous U.S. residency"). A PIV / public trust / background check alone is NOT "required". A company that only MAY decline non-U.S. persons is "not_required".
 cpt: "rejected" = F-1/CPT/OPT/student-visa holders not eligible or "do not meet" requirements, or PERMANENT work authorization required. "welcome" = says CPT/F-1 students can apply. Else "silent".
 sponsorship: "no_sponsorship" = won't sponsor / must not need sponsorship now or in future / authorized for any employer. "sponsors" = will sponsor. Else "silent".
 degree: "ms_ok" = master's or graduate students can apply (BS/MS, "BS or higher", graduate internship, all levels). "ug_only" = only undergraduates (pursuing a Bachelor's, rising junior/senior, undergraduate program). "phd_only" = only PhD students. "ug_preferred" = undergrad only preferred. Else "unclear". A requirement line beats a softer mention (intro text, pay table).
@@ -57,11 +59,13 @@ Reply JSON only: {"r":[{"id":<id>,"citizenship":..,"cpt":..,"sponsorship":..,"de
 SYSTEM_V1 = """You check whether one applicant may apply to a US internship/co-op, using only the job-description \
 excerpt you are given. The applicant: a master's student (MS, Electrical & Computer Engineering) on an F-1 student \
 visa who needs CPT (Curricular Practical Training) to work; expected graduation May 2028; not a US citizen, no \
-green card, no security clearance.
+green card, no security clearance. """ + residency_fact() + """
 
 Answer five questions with exactly these values:
 - citizenship: "required" if the excerpt requires US citizenship, a green card / permanent residency, "U.S. person" \
-status (ITAR/EAR), or an active or obtainable security clearance; else "not_required".
+status (ITAR/EAR), an active or obtainable security clearance, or a number of years of (continuous) US residency \
+that the applicant does not have (e.g. "three years of continuous residency in the U.S."); else "not_required". A \
+PIV badge, public trust, national agency check or background check alone is "not_required".
 - cpt: "rejected" if it says F-1 / CPT / OPT / student-visa holders are not eligible or do not meet requirements, \
 or it requires PERMANENT work authorization; "welcome" if it explicitly says CPT / F-1 students can apply; else "silent".
 - sponsorship: "no_sponsorship" if it will not sponsor, or candidates must not need sponsorship now or in the future, \
@@ -82,7 +86,7 @@ Reply with JSON only: {"citizenship": ..., "cpt": ..., "sponsorship": ..., "degr
 
 # ---- excerpt: trimmed, most important sentences first --------------------------------------------------------
 PRIORITY = [re.compile(p, re.I) for p in (
-    r"citizen|clearance|itar|export|u\.s\. person|green card|permanent",
+    r"citizen|clearance|itar|export|u\.s\. person|green card|permanent|residen",
     r"sponsor|visa|\bcpt\b|\bopt\b|f-1|authori[sz]",
     r"bachelor|master|undergrad|graduate|ph\.?d|degree|pursuing|enrolled|junior|senior|sophomore|freshman",
     r"graduat|class of|semester",

@@ -33,13 +33,18 @@ def _elig_base(j: dict, c: dict | None, ai_on: bool) -> dict:
     """The verdict from the rules, the list hint and the AI reader: everything except the agent and Dheepak."""
     lst = eligibility.from_list(j.get("sponsorship"), j.get("degrees")) if "Simplify" in j["sources"] else None
     rules = j.get("elig")
+    extra = {k: rules[k] for k in ("residency", "tags") if rules and k in rules}
     if rules and rules.get("labels") and c:
         lab, quo, dis = llm.merge(rules, c)
-        rules = {**eligibility.from_labels(lab, quo, source="ai+rules"), "disagree": dis, "ai": "read"}
+        rules = {**eligibility.from_labels(lab, quo, source="ai+rules"), **extra, "disagree": dis, "ai": "read"}
     elif rules and rules.get("labels"):
         # re-derive the verdict from the five answers with today's policy (cached verdicts may be older)
         rules = {**rules, **eligibility.from_labels(rules["labels"], rules.get("quotes") or {}),
                  "ai": "pending" if ai_on else "off"}
+    if rules and (rules.get("residency") or {}).get("block"):
+        # US-residency length is arithmetic on a quoted sentence: final whatever the AI reader saw in its excerpt
+        rules = eligibility.with_residency(rules)
+        rules["disagree"] = [k for k in rules.get("disagree") or [] if k != "citizenship"]
     return eligibility.with_list(rules, lst)
 
 
@@ -179,7 +184,12 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
         # Keep only jobs that can still be "new": undated ones (dated by first_seen) or dated inside the window.
         keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
-        last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries" and not k.startswith("_")} for j in keep], "health": ats_health}
+        # The older ones still matter: a list may add the same job today (its date_posted = when the LIST added it).
+        # Their own dates are kept by URL so the merge can date that list row correctly (KBR R2130067, 2026-11-15).
+        old_dates = {store.norm_url(j["url"]): j["posted"] for j in got
+                     if j.get("posted") and j["posted"] < now - WINDOW_DAYS * 86400}
+        last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries" and not k.startswith("_")} for j in keep],
+                "health": ats_health, "old_dates": old_dates}
         state["ats"] = last
         new_types = set(ats_health) - polled_before
         state["ats_polled"] = sorted(polled_before | set(ats_health))
@@ -190,18 +200,24 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     # 4. Merge, date, keep the last WINDOW_DAYS.
     merged = merge(by_source)
+    old_dates = last.get("old_dates") or {}
+    jd_cache = state.setdefault("jd_cache", {})
     in_window = []
     for k, j in merged.items():
         j["_key"] = k   # the merge key (company + title): survives URL changes between runs
         from_new_type = bool(new_types) and set(j["sources"]) <= new_types
         rec = store.mark_seen(state, k, now, boot or from_new_type)
+        # A list's date is when the list added the job: only an upper bound. The job's own date (its board, or
+        # the posting page read for its JD) wins when it is earlier.
+        own = [d for d in (old_dates.get(store.norm_url(j["url"])), (jd_cache.get(j["url"]) or {}).get("posted")) if d]
+        if own and (not j.get("posted") or min(own) < j["posted"]):
+            j["posted"] = min(own)
         t = posted_at(j, rec)
         if t and t >= cut:
             in_window.append((j, t))
 
     # 5. Jobs we only know from a list have no JD yet: fetch it from the apply page (cached per URL),
     #    so every job, whatever its source, goes through the same tech + eligibility checks.
-    jd_cache = state.setdefault("jd_cache", {})
     todo = []
     for j, _ in in_window:
         if j.get("elig") is not None or tech.TITLE_NOT.search(j["title"]):
@@ -225,7 +241,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             if r and r.get("text"):
                 c = {"t": now, "v": eligibility.RULES_VERSION, "elig": eligibility.check(r["text"]),
                      "jd_terms": tech.jd_terms(r["text"]), "excerpt": eligibility.excerpt(r["text"]),
-                     "country": r.get("country"), "via": r.get("via")}
+                     "country": r.get("country"), "via": r.get("via"), "posted": r.get("posted")}
                 jd_stats["fetched"] += 1
                 apply_jd(j, c)
             else:
@@ -233,6 +249,15 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
                 jd_stats["missed"] += 1
             jd_cache[j["url"]] = c
     state["jd_cache"] = {u: v for u, v in jd_cache.items() if v["t"] >= now - 10 * 86400}
+    # The posting itself may say it is older than the list's date: re-date, and drop what left the window.
+    kept = []
+    for j, t in in_window:
+        p = (jd_cache.get(j["url"]) or {}).get("posted")
+        if p and p < t:
+            j["posted"] = t = p
+        if t >= cut:
+            kept.append((j, t))
+    in_window = kept
 
     # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
     #    6a: US + tech, and the rules' reading.
@@ -401,7 +426,9 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "posted": t,
             "elig": {"auth": e["auth"], "degree": e["degree"], "grad": e.get("grad"), "notes": e.get("notes") or [],
                      "labels": e.get("labels"), "quotes": e.get("quotes") or {}, "disagree": e.get("disagree") or [],
-                     "ai": e.get("ai") or ("no JD" if e["auth"] == "unknown" else "off")},
+                     "ai": e.get("ai") or ("no JD" if e["auth"] == "unknown" else "off"),
+                     "residency": e.get("residency") or (j.get("elig") or {}).get("residency"),
+                     "tags": e.get("tags") or (j.get("elig") or {}).get("tags") or []},
         })
 
     rows.sort(key=lambda r: r["posted"], reverse=True)

@@ -14,10 +14,15 @@ Three checks, each 'ok' / 'check' / 'no' (+ 'unknown' when there is no JD):
 Rules were written from ~1,300 eligibility sentences in real intern JDs (notes: docs/eligibility.md, local).
 A job is hidden when any check says 'no'. 'check' jobs are shown with a tag (the page can hide them).
 """
+import math
 import re
+import time
+from datetime import datetime, timezone
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
-RULES_VERSION = 9  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+US_SINCE = (2026, 1)  # in the US since January 2026 (MS started Spring 2026): "N years of US residency" needs N <= this
+RULES_VERSION = 10  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+TERM_TAG = False  # Dheepak decides later: True -> a JD that offers only a summer term gets the tag "Term: summer"
 
 TAG = re.compile(r"<[^>]+>")
 WS = re.compile(r"\s+")
@@ -78,6 +83,94 @@ NO_SPONSOR = re.compile(
     r"(now or in the future|currently or in the future)[^.]{0,40}sponsor|sponsor[^.]{0,100}\bin the future\b|"
     r"authori[sz]ed to work (in the (u\.?s\.?|united states) )?for any employer", re.I)
 SPONSOR_YES = re.compile(r"(we|will|do|does|can) (sponsor|offer (visa )?sponsorship|provide (visa )?sponsorship)(?! benefits)", re.I)
+
+# ---- US residency length (2026-11-15, KBR R2130067: "three years of continuous residency in the U.S.") ------------
+# A federal facility credential (PIV / HSPD-12) needs ~3 years of US residency, and some postings say so. An F-1
+# student in the US since 2026-01 can't meet "N years" until N years have passed, so it blocks like citizenship.
+def years_in_us(now: float | None = None) -> float:
+    y, m = US_SINCE
+    start = datetime(y, m, 1, tzinfo=timezone.utc).timestamp()
+    return max(0.0, ((now or time.time()) - start) / (365.25 * 86400))
+
+
+def residency_fact(now: float | None = None) -> str:
+    """The sentence every reader's applicant profile carries (rules, Groq, Claude Code)."""
+    n = math.floor(years_in_us(now)) + 1
+    return (f"In the US since {US_SINCE[0]}-{US_SINCE[1]:02d}; any requirement of \u2265{n} year"
+            f"{'s' if n > 1 else ''} continuous US residency fails.")
+
+
+_NUM = r"(\d+|one|two|three|four|five|six|seven|eight|nine|ten)"
+_US = r"(?:u\.\s?s\.?(?:\s?a\.?)?|(?-i:US|USA)\b|united states(?: of america)?)"
+WORDNUM = {w: i for i, w in enumerate("zero one two three four five six seven eight nine ten".split())}
+RESIDENCY = re.compile(
+    # "three years of continuous residency in the U.S." / "3+ years of U.S. residency"
+    rf"\b{_NUM}\+?\s*(?:\(\d+\)\s*)?(?:or more |consecutive |continuous |full )*years?,? (?:of )?"
+    rf"(?:continuous |consecutive |physical |legal )*(?:{_US} residen(?:cy|ce)|residen(?:cy|ce)\s+(?:with)?in (?:the )?{_US})|"
+    # "resided in the United States for at least 5 years" / "lived in the U.S. for the past two (2) years"
+    rf"\b(?:resided|lived|reside|residing|living|residence|residency) (?:continuously )?(?:with)?in (?:the )?{_US}"
+    rf"(?: continuously)? for (?:at least |a minimum of |the (?:past|last|previous|preceding) |more than )*{_NUM}\+?"
+    rf"\s*(?:\(\d+\)\s*)?(?:consecutive |continuous )?years?|"
+    # "U.S. residency of at least 1 year"
+    rf"{_US} residen(?:cy|ce)\b[^.;]{{0,40}}?\b{_NUM}\+?\s*(?:\(\d+\)\s*)?(?:consecutive |continuous )?years?|"
+    # "continuously resided in the U.S." (the number, if any, is looked for in the same sentence)
+    rf"\bcontinuous(?:ly)? (?:reside|residency|resided|residence)\b[^.;]{{0,40}}?{_US}", re.I)
+RES_US = re.compile(rf"residen\w*[^.;]{{0,40}}{_US}|{_US}[^.;]{{0,12}}residen", re.I)
+YEARS = re.compile(rf"\b{_NUM}\+?\s*(?:\(\d+\)\s*)?(?:or more |consecutive |continuous )*years?\b", re.I)
+FED_CREDENTIAL = re.compile(
+    r"government security credential|\bPIV\b|personal identity verification|HSPD[- ]?12|national agency check|"
+    r"\bNACI\b|background investigation for facility access|\bpublic trust\b|suitability determination", re.I)
+SUMMER_ONLY = re.compile(r"\bsummer\b", re.I)
+OTHER_TERM = re.compile(r"\b(spring|fall|autumn|winter)\b(?! (?:within|into|under|short|behind))|co-?op\b|\bcoop\b|"
+                        r"year[- ]round|flexible (start|term|dates|timing)|any term|multiple terms|\bsemester\b", re.I)
+
+
+def _sentence(text: str, a: int, b: int, limit: int = 240) -> str:
+    """The sentence around text[a:b]; a period after a lone capital (U.S., e.g. "U.") does not end it."""
+    end = re.compile(r"(?<!\b[A-Z])[.!?](?=\s|$)")
+    starts = [m.end() for m in end.finditer(text, 0, a)]
+    s = starts[-1] if starts else 0
+    m = end.search(text, b)
+    e = m.end() if m else len(text)
+    q = text[s:e].strip()
+    return q if len(q) <= limit else text[max(0, a - 60):b + 120].strip()
+
+
+def _num(w: str) -> int:
+    return int(w) if w.isdigit() else WORDNUM[w.lower()]
+
+
+def residency(text: str, now: float | None = None) -> dict | None:
+    """{years, have, block, quote, word} for a US-residency-length requirement, else None."""
+    for m in RESIDENCY.finditer(text):
+        q = _sentence(text, m.start(), m.end())
+        n = next((g for g in m.groups() if g), None)
+        if n is None:   # "continuously resided in the U.S.": take a number of years from the same sentence
+            y = YEARS.search(q)
+            n = y.group(1) if y else None
+        have = years_in_us(now)
+        h = "<1" if have < 1 else str(math.floor(have))
+        if n is None:
+            return {"years": None, "have": round(have, 2), "block": False, "quote": q,
+                    "word": f"US residency required (years not stated): you have {h}"}
+        yrs = _num(n)
+        return {"years": yrs, "have": round(have, 2), "block": yrs > have, "quote": q,
+                "word": f"US residency {yrs} yr{'s' if yrs != 1 else ''}: you have {h}"}
+    return None
+
+
+def tags(text: str, now: float | None = None) -> list[dict]:
+    """Things to look at that are not blocks on their own: [{tag, quote}]."""
+    out = []
+    if (m := FED_CREDENTIAL.search(text)):
+        out.append({"tag": "Federal credential: check", "quote": _sentence(text, m.start(), m.end())})
+    r = residency(text, now)
+    if r and not r["block"]:
+        out.append({"tag": "US residency: check", "quote": r["quote"]})
+    if TERM_TAG and (m := SUMMER_ONLY.search(text)) and not OTHER_TERM.search(text):
+        out.append({"tag": "Term: summer", "quote": _sentence(text, m.start(), m.end())})
+    return out
+
 
 # ---- degree ------------------------------------------------------------------------------------------------
 MS_OK = re.compile(
@@ -218,6 +311,8 @@ def labels(jd: str) -> tuple[dict, dict]:
 
     if (q := _quote(CITIZEN, t)):
         lab["citizenship"], quo["citizenship"] = "required", q
+    elif (r := residency(t)) and r["block"]:
+        lab["citizenship"], quo["citizenship"] = "required", r["quote"]
     if (q := _quote(F1_REJECT, t)):
         lab["cpt"], quo["cpt"] = "rejected", q
     elif (q := _quote(CPT_OK, t)):
@@ -271,15 +366,34 @@ def check(jd: str | None) -> dict:
     """Eligibility of one job from its JD (the rules' reading)."""
     if jd is None:
         return {"auth": "unknown", "degree": "unknown", "grad": None, "notes": [], "labels": None, "quotes": {},
-                "source": "none"}
-    return from_labels(*labels(jd))
+                "source": "none", "tags": []}
+    t = _clean(jd)
+    e = from_labels(*labels(t))
+    e["residency"], e["tags"] = residency(t), tags(t)
+    return with_residency(e)
+
+
+def with_residency(e: dict) -> dict:
+    """A US-residency block is a hard rule: no other reader can turn it back into 'not required' (the AI reader
+    only sees an excerpt, and the length rule is plain arithmetic). The page shows why: 'US residency 3 yrs: you have <1'."""
+    r = e.get("residency")
+    if not r or not r.get("block") or not e.get("labels"):
+        return e
+    lab, quo = dict(e["labels"]), dict(e.get("quotes") or {})
+    if lab["citizenship"] != "required":
+        lab["citizenship"], quo["citizenship"] = "required", r["quote"]
+    out = {**e, **from_labels(lab, quo, source=e.get("source", "rules"))}
+    out["notes"] = [r["word"] + ": " + r["quote"]] + [n for n in out["notes"] if n != r["quote"]][:2]
+    return out
 
 
 # ---- excerpt: the eligibility sentences of a JD (what the AI reader and the gold set read) ------------------
 EXCERPT_KEY = re.compile(
     r"citizen|clearance|secret|itar|export|u\.s\. person|green card|permanent|sponsor|visa|\bcpt\b|\bopt\b|f-1|"
     r"authori[sz]|eligib|bachelor|master|undergrad|graduate|enrolled|enrollment|pursuing|ph\.?d|degree|graduat|"
-    r"class of|rising|junior|senior|sophomore|freshman|return(ing)? to school|semester|student|b\.s\.|m\.s\.", re.I)
+    r"class of|rising|junior|senior|sophomore|freshman|return(ing)? to school|semester|student|b\.s\.|m\.s\.|"
+    r"residen|credential|\bpiv\b|hspd|national agency check|\bnaci\b|background investigation|public trust|"
+    r"suitability", re.I)
 
 
 def excerpt(jd: str | None, limit: int = 3500) -> str | None:
@@ -287,11 +401,23 @@ def excerpt(jd: str | None, limit: int = 3500) -> str | None:
         return None
     t = _clean(jd)
     out, seen = [], set()
-    for s in re.split(r"(?<=[.!?])\s+(?=[A-Z•\-])|\s[•·]\s", t):
+    for s in re.split(r"(?<![A-Z][.])(?<=[.!?])\s+(?=[A-Z•\-])|\s[•·]\s", t):
         s = s.strip()
-        if EXCERPT_KEY.search(s) and 12 < len(s) < 600 and s not in seen:
-            seen.add(s)
-            out.append(s)
+        if len(s) >= 600:   # a run-on list with no periods (bullets flattened): keep a window around each key word
+            parts, end = [], -1
+            for m in EXCERPT_KEY.finditer(s):
+                if m.start() > end and len(parts) < 3:
+                    a, end = max(0, m.start() - 120), m.end() + 200
+                    a = s.find(" ", a) + 1 if a else 0               # whole words only
+                    end = s.rfind(" ", 0, end) if end < len(s) else len(s)
+                    parts.append(s[a:end].strip())
+            s_list = parts
+        else:
+            s_list = [s] if EXCERPT_KEY.search(s) and len(s) > 12 else []
+        for s in s_list:
+            if s not in seen:
+                seen.add(s)
+                out.append(s)
     return " ".join(out)[:limit]
 
 
@@ -333,6 +459,9 @@ def combine(a: dict | None, b: dict | None) -> dict | None:
         else:
             out[k] = x if RANK[x] >= RANK[y] else y
     out["notes"] = (a.get("notes") or []) + [n for n in (b.get("notes") or []) if n not in (a.get("notes") or [])]
+    out["residency"] = a.get("residency") or b.get("residency")
+    seen_tags = {t["tag"] for t in a.get("tags") or []}
+    out["tags"] = (a.get("tags") or []) + [t for t in b.get("tags") or [] if t["tag"] not in seen_tags]
     return out
 
 
