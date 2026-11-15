@@ -15,7 +15,7 @@
    "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
    "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
   },
-  "read_at": 1794756634,
+  "read_at": 1794775784,
   "tech": "Software",
   "title": "Game Systems Engineering Intern",
   "us": true,
@@ -23,7 +23,7 @@
  },
  "fieldpulse|ai intern": {
   "company": "FieldPulse",
-  "confidence": 92,
+  "confidence": 88,
   "jd_hash": "a79630b46685c793",
   "labels": {
    "citizenship": "not_required",
@@ -36,15 +36,37 @@
   "quotes": {
    "degree": "Current student pursuing a degree in Computer Science, Information Systems, Business, or a related field."
   },
-  "read_at": 1794690324,
+  "read_at": 1794775784,
   "tech": "AI/ML",
   "title": "AI Intern",
   "us": true,
   "was": "needs review: degree"
  },
+ "kbr wyle services|image processing software engineer intern": {
+  "company": "KBR Wyle Services",
+  "confidence": 88,
+  "jd_hash": "e0edbf6e3ff50f72",
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "fails: citizenship",
+  "quotes": {
+   "citizenship": "Candidate must have three years of continuous residency in the U.S. for issuance of a Government Security credential.",
+   "degree": "This summer-based internship is open to juniors, seniors, and graduate students pursuing a career in software development."
+  },
+  "read_at": 1794775784,
+  "tech": "Software",
+  "title": "Image Processing Software Engineer Intern",
+  "us": true,
+  "was": "match"
+ },
  "netapp|software engineer intern cloud": {
   "company": "NetApp",
-  "confidence": 85,
+  "confidence": 88,
   "jd_hash": null,
   "labels": {
    "citizenship": "not_required",
@@ -58,7 +80,7 @@
    "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Software Engineering, or a related technical field are encouraged to apply.",
    "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
   },
-  "read_at": 1794676647,
+  "read_at": 1794775784,
   "tech": "Software",
   "title": "Software Engineer Intern, Cloud",
   "us": true,
@@ -66,7 +88,7 @@
  },
  "netapp|software engineer intern systems": {
   "company": "NetApp",
-  "confidence": 85,
+  "confidence": 88,
   "jd_hash": null,
   "labels": {
    "citizenship": "not_required",
@@ -80,55 +102,11 @@
    "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Electrical Engineering, Software Engineering, or a related technical field are encouraged to apply.",
    "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
   },
-  "read_at": 1794676647,
+  "read_at": 1794775784,
   "tech": "Software",
   "title": "Software Engineer Intern, Systems",
   "us": true,
   "was": "needs review: degree"
- },
- "ramp|risk strategy intern": {
-  "company": "Ramp",
-  "confidence": 85,
-  "jd_hash": "bf8633ce469b0cfe",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a B.S. or higher in Computer Science or a related technical field, graduating December 2027 or later, with coursework or project experience in data science, business analytics, machine learning, or AI.",
-   "grad": "Currently pursuing a B.S. or higher in Computer Science or a related technical field, graduating December 2027 or later, with coursework or project experience in data science, business analytics, machine learning, or AI."
-  },
-  "read_at": 1794676647,
-  "tech": "Data",
-  "title": "Risk Strategy Intern",
-  "us": true,
-  "was": "needs review: degree, grad"
- },
- "servicenow|ai security engineer intern": {
-  "company": "ServiceNow",
-  "confidence": 85,
-  "jd_hash": "0533e13822d95f9c",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later.",
-   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Mathematics, Statistics, Computer Science or related field and graduating December 2027 or later."
-  },
-  "read_at": 1794676647,
-  "tech": "AI/ML",
-  "title": "AI Security Engineer Intern",
-  "us": true,
-  "was": "needs review: degree, grad"
  },
  "servicenow|security engineer intern": {
   "company": "ServiceNow",
@@ -146,7 +124,7 @@
    "degree": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later.",
    "grad": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later."
   },
-  "read_at": 1794676647,
+  "read_at": 1794775784,
   "tech": "Software",
   "title": "Security Engineer Intern",
   "us": true,
@@ -168,7 +146,7 @@
    "degree": "Currently enrolled in an accredited university, working on a Master's degree in Computer Science or a related field, and graduating in December 2027 or later.",
    "grad": "Currently enrolled in an accredited university, working on a Master's degree in Computer Science or a related field, and graduating in December 2027 or later."
   },
-  "read_at": 1794676647,
+  "read_at": 1794775784,
   "tech": "Software",
   "title": "Security Engineering & Automation Intern",
   "us": true,
