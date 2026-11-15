@@ -13,7 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from . import ats, classify, eligibility, jdfetch, llm, review, sources, store, tech
 
 WINDOW_DAYS = 2          # the page shows 24 h or 2 days
-POLL_EVERY = 170 * 60    # 'auto' polls the boards about every 3 hours
+# Boards are polled every run: each board has its own schedule (ats.next_check), unchanged boards answer 304.
 STRICT = True           # show only jobs that pass every check (no unverified, no "needs review")
 MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest next run; results are cached)
 JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
@@ -65,16 +65,34 @@ def _reason(e: dict) -> str | None:
     return None
 
 
+LIST_SOURCES = {"Simplify", "vanshb03"}
+DAY_SLACK = 32 * 3600    # a day-only date (start of the day, US Pacific) covers up to this long after it
+
+
 def posted_at(job: dict, rec: dict) -> int | None:
     """When the job became public, as far as we can tell.
 
     Native date if the source gives one; else our first_seen, unless that came from a bootstrap run.
     The earlier of the two wins, so a job a source dates in the past is never called new.
+    One exception: a day-only date ("November 14") is the start of that day. If we first saw the job inside
+    that day, our sighting is the tighter estimate (boards are polled every ~30 min), so it wins.
     """
+    return dated(job, rec)[0]
+
+
+def dated(job: dict, rec: dict) -> tuple[int | None, str | None]:
+    """(posted, basis). basis = how we know: "board" (the company's job board gave the exact time),
+    "day" (the board gave only the day), "list" (when a community list added it: an upper bound),
+    "seen" (when the radar first saw it)."""
     native = job.get("posted")
     seen = None if rec.get("boot") else rec["first"]
-    dates = [d for d in (native, seen) if d]
-    return min(dates) if dates else None
+    if native and job.get("posted_day") and seen and native <= seen <= native + DAY_SLACK:
+        return seen, "seen"
+    if native and (not seen or native <= seen):
+        return native, job.get("posted_src") or ("day" if job.get("posted_day") else "board")
+    if seen:
+        return seen, "seen"
+    return None, None
 
 
 def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
@@ -86,6 +104,8 @@ def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
             k = store.job_key(j["company"], j["title"])
             u = store.norm_url(j["url"]) if "go.vansh.nyc" not in j["url"] else None
             k = by_url.get(u, k) if u else k
+            if j.get("posted") and not j.get("posted_src"):
+                j["posted_src"] = "list" if src in LIST_SOURCES else ("day" if j.get("posted_day") else "board")
             if k not in merged:
                 merged[k] = {**j, "sources": [src]}
                 if u:
@@ -97,7 +117,7 @@ def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
             m["locations"] = sorted(set(m["locations"]) | set(j["locations"]))
             m["terms"] = sorted(set(m["terms"]) | set(j["terms"]))
             if j.get("posted") and (not m.get("posted") or j["posted"] < m["posted"]):
-                m["posted"] = j["posted"]
+                m["posted"], m["posted_src"], m["posted_day"] = j["posted"], j.get("posted_src"), j.get("posted_day")
             if "go.vansh.nyc" in m["url"] and "go.vansh.nyc" not in j["url"]:
                 m["url"] = j["url"]
             m["field"] = m.get("field") or j.get("field")
@@ -161,22 +181,26 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     pairs += [(x.get("company_name", ""), state["links"].get(x.get("url", ""), "")) for x in raw.get("vanshb03", [])]
     for bid, b in ats.discover(pairs).items():
         state["boards"].setdefault(bid, b)
+    for bid, b in ats.FIXED_BOARDS.items():
+        state["boards"].setdefault(bid, dict(b))
 
-    # 3. Poll the boards (every ~3 h); between polls reuse the last result.
+    # 3. Poll the boards that are due (each board has its own schedule); the rest answer from their cache.
     last = state.get("ats") or {}
     # Which board types have been polled before? A type's first poll only learns what exists (undated jobs
     # it finds are not "new"), the same way the very first run treats the lists.
     polled_before = set(state.get("ats_polled") or (last.get("health") or {}).keys())
     new_types: set[str] = set()
-    do_poll = poll == "yes" or (poll == "auto" and now - last.get("at", 0) >= POLL_EVERY)
+    do_poll = poll in ("yes", "auto")
     if do_poll and state["boards"]:
         state["jd_cache"] = jd_cache = {u: v for u, v in state.get("jd_cache", {}).items()
                                         if v.get("v") == eligibility.RULES_VERSION or v.get("miss")}
-        takes_known = "known" in inspect.signature(poll_fn).parameters  # test stubs take only the boards
-        got, ats_health = poll_fn(state["boards"], known=jd_cache) if takes_known else poll_fn(state["boards"])
-        # A board that failed this time (outage, 429...) keeps the jobs it had last poll.
-        failed = ats.FAILED if poll_fn is ats.poll else set()
-        got = got + [j for j in (last.get("jobs") or []) if j.get("board") in failed]
+        params = inspect.signature(poll_fn).parameters  # test stubs take only the boards
+        kw = {k: v for k, v in (("known", jd_cache), ("now", now), ("force", poll == "yes"),
+                                ("window_start", now - WINDOW_DAYS * 86400)) if k in params}
+        # A board that fails this time (outage, 429...) answers from its cached result inside ats.poll.
+        got, ats_health = poll_fn(state["boards"], **kw)
+        old_rows = [j for j in got if j.get("_old")]
+        got = [j for j in got if not j.get("_old")]
         for j in got:
             if j.get("elig") is not None and j["url"] not in jd_cache:
                 jd_cache[j["url"]] = {"t": now, "v": eligibility.RULES_VERSION, "elig": j["elig"],
@@ -186,7 +210,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
         # The older ones still matter: a list may add the same job today (its date_posted = when the LIST added it).
         # Their own dates are kept by URL so the merge can date that list row correctly (KBR R2130067, 2026-11-15).
-        old_dates = {store.norm_url(j["url"]): j["posted"] for j in got
+        old_dates = {store.norm_url(j["url"]): j["posted"] for j in got + old_rows
                      if j.get("posted") and j["posted"] < now - WINDOW_DAYS * 86400}
         last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries" and not k.startswith("_")} for j in keep],
                 "health": ats_health, "old_dates": old_dates}
@@ -209,10 +233,19 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         rec = store.mark_seen(state, k, now, boot or from_new_type)
         # A list's date is when the list added the job: only an upper bound. The job's own date (its board, or
         # the posting page read for its JD) wins when it is earlier.
-        own = [d for d in (old_dates.get(store.norm_url(j["url"])), (jd_cache.get(j["url"]) or {}).get("posted")) if d]
-        if own and (not j.get("posted") or min(own) < j["posted"]):
-            j["posted"] = min(own)
-        t = posted_at(j, rec)
+        own = [(d, src) for d, src in ((old_dates.get(store.norm_url(j["url"])), "board"),
+                                       ((jd_cache.get(j["url"]) or {}).get("posted"), "page")) if d]
+        if own and (not j.get("posted") or min(own)[0] < j["posted"]):
+            j["posted"], j["posted_src"] = min(own)
+            j["posted_day"] = False
+        new_rec = rec["first"] == now and not rec.get("boot")
+        t, basis = dated(j, rec)
+        j["_basis"] = basis
+        if new_rec and j.get("posted") and j.get("posted_src") == "board" and 0 <= now - j["posted"] <= 3 * 86400:
+            # how long after the board published it did the radar first see it (exact board times only)
+            rec["lag"] = now - j["posted"]
+        if new_rec:
+            rec["via"] = sorted(j["sources"])
         if t and t >= cut:
             in_window.append((j, t))
 
@@ -255,6 +288,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         p = (jd_cache.get(j["url"]) or {}).get("posted")
         if p and p < t:
             j["posted"] = t = p
+            j["_basis"] = "page"
         if t >= cut:
             kept.append((j, t))
     in_window = kept
@@ -424,6 +458,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "sponsorship": j.get("sponsorship") if j.get("sponsorship") not in (None, "Other") else None,
             "sources": j["sources"],
             "posted": t,
+            "posted_basis": j.get("_basis"),
             "elig": {"auth": e["auth"], "degree": e["degree"], "grad": e.get("grad"), "notes": e.get("notes") or [],
                      "labels": e.get("labels"), "quotes": e.get("quotes") or {}, "disagree": e.get("disagree") or [],
                      "ai": e.get("ai") or ("no JD" if e["auth"] == "unknown" else "off"),
@@ -451,6 +486,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "sources": health,
         "boards": {ats.ATS_NAMES[a]: sum(1 for b in live if b["ats"] == a) for a in ats.ATS_NAMES},
         "polled": last.get("at"),
+        "speed": speed(state, now),
         "not_tech_skipped": skipped_not_tech,
         "ineligible_skipped": skipped_inelig,
         "unverified_skipped": skipped_unverified,
@@ -472,6 +508,23 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
                             "overrides_sha": review.overrides_sha(overrides)}, "jobs": queue}, f, separators=(",", ":"))
     store.save(state, state_path)
     return meta
+
+
+def speed(state: dict, now: int, days: int = 7) -> dict:
+    """How fast the radar sees new jobs, over jobs it first saw in the last `days`:
+    lag = first seen - the board's exact publish time; found_by = which sources had each new job first."""
+    lags, by = [], {}
+    for rec in state["jobs"].values():
+        if rec.get("boot") or rec["first"] < now - days * 86400:
+            continue
+        if rec.get("lag") is not None:
+            lags.append(rec["lag"])
+        for s in rec.get("via") or []:
+            by[s] = by.get(s, 0) + 1
+    lags.sort()
+    pct = lambda q: lags[min(len(lags) - 1, int(q * len(lags)))] if lags else None
+    return {"days": days, "n": len(lags), "median_min": round(pct(0.5) / 60) if lags else None,
+            "p90_min": round(pct(0.9) / 60) if lags else None, "found_by": by}
 
 
 def main() -> None:

@@ -141,7 +141,19 @@
         x.quote ? `<q>${esc(x.quote)}</q>` : ""}</span></div>`).join("")}</div>`).join("");
     const readers = steps.map((x) => `<div class="reader"><b><i class="dot ${x.on ? "ok" : x.tried || x.warn ? "warn" : "none"}"></i>${esc(x.text)}</b>${esc(x.tip)}</div>`).join("");
     return `<div class="detail"><div class="dgrid">${secs}</div><div class="readers">${readers}</div>
-      <p class="dfoot">Found via ${esc(j.sources.join(", "))} · first seen ${ago(j.posted)}</p></div>`;
+      <p class="dfoot">Found via ${esc(j.sources.join(", "))} · ${esc(postedText(j))}</p></div>`;
+  }
+
+  // How the date was known (build.dated): be honest about how sure it is.
+  function postedText(j) {
+    switch (j.posted_basis) {
+      case "board": return `posted ${ago(j.posted)} (time from the company's job board)`;
+      case "page": return `posted ${ago(j.posted)} (date on the job posting)`;
+      case "day": return `posted ${ago(j.posted)} (the board gives only the day)`;
+      case "list": return `added to a list ${ago(j.posted)} (the job itself may be a little older)`;
+      case "seen": return `first seen by the radar ${ago(j.posted)}`;
+      default: return `first seen ${ago(j.posted)}`;
+    }
   }
 
   function row(j) {
@@ -288,6 +300,7 @@
       if (v.boards !== undefined) return `${k}: ${v.boards - v.failed}/${v.boards} boards`;
       return `${k}: ${v.rows} rows`;
     }).join(" · ") + (m.polled ? ` · boards checked ${ago(m.polled)}` : "") +
+      (m.speed && m.speed.n ? ` · speed: new board jobs seen a median ${m.speed.median_min} min after posting (90% within ${m.speed.p90_min} min, ${m.speed.n} jobs, last ${m.speed.days} days)` : "") +
       (m.ineligible_skipped !== undefined ? ` · not matches: ${m.not_tech_skipped} non-tech, ${m.ineligible_skipped} failed a check, ${m.review_skipped} need review, ${m.unverified_skipped} unverified` : "") +
       (a.last_run ? ` · review agent: ran ${ago(a.last_run)}, agrees on ${a.checked}/${a.total}, ${a.applied} corrections live` +
         (a.ok === false ? ` · last agent run had errors: ${(a.errors || []).join("; ")}` : "") : " · review agent: not seen yet");

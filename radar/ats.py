@@ -8,19 +8,38 @@ import html
 import json
 import re
 import sys
+import threading
 import time
+import zlib
 import urllib.error
 import urllib.parse
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
-from datetime import datetime
+from datetime import datetime, timezone
 
 from . import classify, eligibility, tech
 from .sources import UA
 
 ATS_NAMES = {"gh": "Greenhouse", "lever": "Lever", "ashby": "Ashby", "sr": "SmartRecruiters",
-             "wd": "Workday", "oracle": "Oracle Cloud"}
-WORKERS = {"gh": 8, "lever": 6, "ashby": 6, "sr": 6, "wd": 10, "oracle": 6}  # a few requests at a time per ATS
+             "wd": "Workday", "oracle": "Oracle Cloud", "amazon": "Amazon", "google": "Google", "apple": "Apple"}
+WORKERS = {"gh": 8, "lever": 6, "ashby": 6, "sr": 6, "wd": 10, "oracle": 6,
+           "amazon": 1, "google": 1, "apple": 1}  # a few requests at a time per ATS
+# Big employers with their own career sites (not an ATS the lists' URLs reveal): always watched.
+FIXED_BOARDS = {
+    "amazon:us": {"ats": "amazon", "token": "us", "company": "Amazon"},
+    "google:us": {"ats": "google", "token": "us", "company": "Google"},
+    "apple:us": {"ats": "apple", "token": "us", "company": "Apple"},
+}
+
+# ---- How often each board is polled (idea from github.com/hemnaath04/job-os: per-board next_check_after) ----
+# Boards that answer ETag / 304 (Greenhouse, Lever, Ashby) are checked every run: an unchanged board costs
+# one empty 304 reply. The others are checked every run while "hot" (a recent intern job), else every ~3 h.
+ETAG_ATS = {"gh", "lever", "ashby"}
+HOT_EVERY = 20 * 60          # a little under the 30-min run interval, so a hot board is due every run
+COLD_EVERY = 170 * 60
+HOT_DAYS = 14                # a board with an intern job posted in the last 14 days is hot
+ETAG_MAX_AGE = 24 * 3600     # re-read a full board at least daily (and when the parser changes), 304 or not
+PARSE_VERSION = 1            # bump when a fetcher's output changes: cached board results are then re-read
 # Workday and Oracle boards live on each company's own host, so more parallel boards still means few requests per host.
 
 BOARD_PATTERNS = [
@@ -67,9 +86,19 @@ class Gone(Exception):
     """The board does not exist (404): count it and stop polling it after a few misses."""
 
 
-def get_json(url: str, timeout: int = 25, tries: int = 3, body: dict | None = None):
+class NotModified(Exception):
+    """304: the board is unchanged since our last read (conditional GET with the ETag we kept)."""
+
+
+# The ETag of the board being polled in this thread: poll() sets it, the board's main request uses it.
+_CTX = threading.local()
+
+
+def get_json(url: str, timeout: int = 25, tries: int = 3, body: dict | None = None, conditional: bool = False):
     for i in range(tries):
         headers = {"User-Agent": UA, "Accept": "application/json"}
+        if conditional and getattr(_CTX, "etag", None):
+            headers["If-None-Match"] = _CTX.etag
         data = None
         if body is not None:
             data = json.dumps(body).encode()
@@ -77,8 +106,12 @@ def get_json(url: str, timeout: int = 25, tries: int = 3, body: dict | None = No
         req = urllib.request.Request(url, data=data, headers=headers)
         try:
             with urllib.request.urlopen(req, timeout=timeout) as r:
+                if conditional:
+                    _CTX.new_etag = r.headers.get("ETag")
                 return json.load(r)
         except urllib.error.HTTPError as e:
+            if e.code == 304 and conditional:
+                raise NotModified(url) from None
             if e.code == 404:
                 raise Gone(url) from None
             if e.code in (429, 500, 502, 503, 504) and i < tries - 1:
@@ -165,7 +198,8 @@ def enrich(jobs: list, now: int) -> list:
 
 
 def fetch_greenhouse(token, company):
-    d = get_json(f"https://boards-api.greenhouse.io/v1/boards/{urllib.parse.quote(token)}/jobs?content=true")
+    d = get_json(f"https://boards-api.greenhouse.io/v1/boards/{urllib.parse.quote(token)}/jobs?content=true",
+                 conditional=True)
     out = []
     for j in d.get("jobs", []):
         loc = (j.get("location") or {}).get("name") or ""
@@ -177,7 +211,7 @@ def fetch_greenhouse(token, company):
 
 
 def fetch_lever(token, company):
-    d = get_json(f"https://api.lever.co/v0/postings/{urllib.parse.quote(token)}?mode=json")
+    d = get_json(f"https://api.lever.co/v0/postings/{urllib.parse.quote(token)}?mode=json", conditional=True)
     out = []
     for j in d if isinstance(d, list) else []:
         cat = j.get("categories") or {}
@@ -193,7 +227,7 @@ def fetch_lever(token, company):
 
 
 def fetch_ashby(token, company):
-    d = get_json(f"https://api.ashbyhq.com/posting-api/job-board/{urllib.parse.quote(token)}")
+    d = get_json(f"https://api.ashbyhq.com/posting-api/job-board/{urllib.parse.quote(token)}", conditional=True)
     out = []
     for j in d.get("jobs", []):
         if j.get("isListed") is False:
@@ -400,50 +434,257 @@ def fetch_oracle(token, company, now=None):
     return enrich(out, now)
 
 
+# ---- Big employers' own career sites ---------------------------------------------------------------------
+BIGTECH_DAYS = 10    # page back until jobs are this old (older dates still matter: see build.py old_dates)
+HTML_UA = "Mozilla/5.0 (X11; Linux x86_64) coop-intern-radar (+https://github.com/dheepakkaran/coop-intern-radar)"
+
+
+def get_text(url: str, timeout: int = 25) -> str:
+    req = urllib.request.Request(url, headers={"User-Agent": HTML_UA, "Accept": "text/html"})
+    try:
+        with urllib.request.urlopen(req, timeout=timeout) as r:
+            return r.read().decode("utf-8", "replace")
+    except urllib.error.HTTPError as e:
+        if e.code == 404:
+            raise Gone(url) from None
+        raise
+
+
+def _strip_html(s: str) -> str:
+    return re.sub(r"\s+", " ", html.unescape(re.sub(r"<[^>]+>", " ", s or ""))).strip()
+
+
+def day_start_pt(text: str | None) -> int | None:
+    """"November 14, 2026" (a whole day, US Pacific) -> the earliest moment of that day, 08:00 UTC.
+    The earliest moment is the safe choice: a day-only date never makes a job look newer than it is
+    (build.posted_at swaps in our own first sighting when it falls inside that day)."""
+    if not text:
+        return None
+    try:
+        d = datetime.strptime(re.sub(r"\s+", " ", text.strip()), "%B %d, %Y")
+    except ValueError:
+        return None
+    return int(d.replace(tzinfo=timezone.utc).timestamp()) + 8 * 3600
+
+
+def fetch_amazon(token, company, now=None):
+    """amazon.jobs search.json: public JSON behind the search page, newest first, day-only dates."""
+    now = now or int(time.time())
+    out = []
+    for page in range(5):
+        d = get_json(f"https://www.amazon.jobs/en/search.json?base_query=intern&country=USA&sort=recent"
+                     f"&result_limit=100&offset={page * 100}")
+        rows = d.get("jobs") or []
+        oldest = now
+        for j in rows:
+            posted = day_start_pt(j.get("posted_date"))
+            oldest = min(oldest, posted or now)
+            if j.get("country_code") not in (None, "USA"):
+                continue
+            jd = _strip_html(" ".join(j.get(k) or "" for k in ("description", "basic_qualifications",
+                                                               "preferred_qualifications")))
+            row = _job("amazon", j.get("company_name") or company, j.get("title"),
+                       "https://www.amazon.jobs" + (j.get("job_path") or ""),
+                       [j.get("normalized_location") or j.get("location") or ""], ["US"], posted,
+                       extra_intern="internship" in (j.get("primary_search_label") or ""), jd=jd or None)
+            if row:
+                row["posted_day"] = True
+            out.append(row)
+        if len(rows) < 100 or oldest < now - BIGTECH_DAYS * 86400:
+            break
+    return out
+
+
+GOOGLE_DATA = re.compile(r"AF_initDataCallback\(\{key: 'ds:1', hash: '\d+', data:(.*?), sideChannel: \{\}\}\);</script>", re.S)
+
+
+def fetch_google(token, company, now=None):
+    """Google Careers search page, first page only (robots.txt disallows `page=`). The jobs are embedded as
+    JSON. Google re-dates jobs when it edits them and sorts by that edit date, so we use the creation date
+    (field 12): the conservative one."""
+    s = get_text("https://www.google.com/about/careers/applications/jobs/results"
+                 "?q=intern&location=United%20States&sort_by=date")
+    m = GOOGLE_DATA.search(s)
+    if not m:
+        raise ValueError("google: no ds:1 data (page layout changed?)")
+    out = []
+    for j in (json.loads(m.group(1)) or [[]])[0] or []:
+        try:
+            jid, title, places = j[0], j[1], j[9] or []
+            created = (j[12] or [None])[0]
+        except (IndexError, TypeError):
+            continue
+        slug = re.sub(r"[^a-z0-9]+", "-", (title or "").lower()).strip("-")
+        jd = _strip_html(" ".join((x[1] if isinstance(x, list) and len(x) > 1 else "") or ""
+                                  for x in (j[3], j[4], j[10], j[15] if len(j) > 15 else None,
+                                            j[19] if len(j) > 19 else None)))
+        out.append(_job("google", company, title,
+                        f"https://www.google.com/about/careers/applications/jobs/results/{jid}-{slug}",
+                        [p[0] for p in places if p], [p[5] for p in places if p and len(p) > 5] or None,
+                        int(created) if created else None, jd=jd or None))
+    return out
+
+
+APPLE_DATA = re.compile(r'__staticRouterHydrationData = JSON\.parse\((".*?")\);', re.S)
+
+
+def fetch_apple(token, company, now=None):
+    """jobs.apple.com Students team (internships) in the US, newest first; data embedded in the page."""
+    out = []
+    for page in (1, 2, 3):
+        s = get_text("https://jobs.apple.com/en-us/search?sort=newest&location=united-states-USA"
+                     f"&team=internships-STDNT-INTRN&page={page}")
+        m = APPLE_DATA.search(s)
+        if not m:
+            raise ValueError("apple: no hydration data (page layout changed?)")
+        sr = (json.loads(json.loads(m.group(1))).get("loaderData") or {}).get("search") or {}
+        rows = sr.get("searchResults") or []
+        for j in rows:
+            locs = j.get("locations") or []
+            countries = ["US" if "USA" in (l.get("countryID") or "") else (l.get("countryName") or "") for l in locs]
+            places = [", ".join(x for x in (l.get("city"), l.get("stateProvince")) if x) or (l.get("name") or "")
+                      for l in locs]
+            out.append(_job("apple", company, j.get("postingTitle"),
+                            f"https://jobs.apple.com/en-us/details/{j.get('id')}/{j.get('transformedPostingTitle') or ''}",
+                            places or ["United States"], [c for c in countries if c] or ["US"],
+                            iso(j.get("postDateInGMT")), extra_intern=True, jd=j.get("jobSummary") or None))
+        if len(rows) < 20 or page * 20 >= (sr.get("totalRecords") or 0):
+            break
+    return out
+
+
 FETCHERS = {"gh": fetch_greenhouse, "lever": fetch_lever, "ashby": fetch_ashby, "sr": fetch_smartrecruiters,
-            "wd": fetch_workday, "oracle": fetch_oracle}
+            "wd": fetch_workday, "oracle": fetch_oracle, "amazon": fetch_amazon, "google": fetch_google,
+            "apple": fetch_apple}
 
 
-def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None) -> tuple[list[dict], dict]:
-    """Poll every live board. Updates each board's `fails` counter in place. Returns (jobs, health).
+def _spread(bid: str, every: int) -> int:
+    """A stable offset in [0, every) per board, so first polls of many new boards spread over the interval."""
+    return zlib.crc32(bid.encode()) % max(every, 1)
 
+
+def _parse_key() -> str:
+    return f"{PARSE_VERSION}|{eligibility.RULES_VERSION}"
+
+
+def _slim(jobs: list[dict], since: int) -> dict:
+    """What a board's result is cached as: jobs that can still be new in full, older ones as url -> date."""
+    keep, old = [], {}
+    for j in jobs:
+        if j.get("posted") and j["posted"] < since:
+            old[j["url"]] = j["posted"]
+        else:
+            keep.append({k: v for k, v in j.items() if k != "countries" and not k.startswith("_")})
+    return {"jobs": keep, "old": old}
+
+
+def _expand(cache: dict | None, bid: str) -> list[dict]:
+    """Cached board result -> job rows: the full ones, plus slim {url, posted} rows for the older dates."""
+    if not cache:
+        return []
+    rows = [{**j, "board": bid} for j in cache.get("jobs") or []]
+    rows += [{"url": u, "posted": p, "board": bid, "_old": True} for u, p in (cache.get("old") or {}).items()]
+    return rows
+
+
+def is_hot(b: dict, now: int) -> bool:
+    c = b.get("cache") or {}
+    if c.get("jobs"):
+        return True
+    return any(p >= now - HOT_DAYS * 86400 for p in (c.get("old") or {}).values())
+
+
+def next_check(bid: str, b: dict, now: int) -> int:
+    if b["ats"] in ETAG_ATS or b["ats"] in ("amazon", "google", "apple") or is_hot(b, now):
+        return now + HOT_EVERY
+    return now + COLD_EVERY
+
+
+def retry_soon(err: str) -> bool:
+    """Rate limits, server trouble and network errors pass: try next run. Other 4xx (403, 410, 422: a board
+    that refuses or moved) will not fix itself in 30 min: wait the cold interval."""
+    if err == "gone":   # 404: 3 misses drop a board, so space them out (~9 h, as when boards were polled every 3 h)
+        return False
+    m = re.match(r"HTTP (\d+)", err or "")
+    return not m or int(m.group(1)) in (408, 425, 429) or int(m.group(1)) >= 500
+
+
+def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None, now: int | None = None,
+         force: bool = False, window_start: int | None = None) -> tuple[list[dict], dict]:
+    """Poll the boards that are due (all of them with force=True); every other live board answers from its
+    cached result. Updates each board's `fails`, `next`, `etag` and `cache` in place. Returns (jobs, health).
+
+    Rows for jobs too old to be new carry only url + posted (+ `_old`): build.py keeps them as old dates.
     `known` = JD results from earlier polls (url -> elig/jd_terms), so each JD is fetched once."""
     global KNOWN, FAILED
     KNOWN = known or {}
     FAILED = set()
+    now = now or int(time.time())
+    since = window_start or now - 2 * 86400
+    pkey = _parse_key()
     jobs, health = [], {}
     for ats, fetch in FETCHERS.items():
-        todo = [(bid, b) for bid, b in boards.items() if b["ats"] == ats and b.get("fails", 0) < max_fails]
-        h = {"ok": True, "boards": len(todo), "failed": 0, "rows": 0, "errors": {}}
+        live = [(bid, b) for bid, b in boards.items() if b["ats"] == ats and b.get("fails", 0) < max_fails]
+        for bid, b in live:
+            if "next" not in b:   # never scheduled: spread first polls over the interval (due now if never read)
+                b["next"] = 0 if not b.get("cache") else now + _spread(bid, COLD_EVERY)
+        todo = [(bid, b) for bid, b in live if force or b.get("next", 0) <= now]
+        h = {"ok": True, "boards": len(live), "checked": len(todo), "unchanged": 0, "failed": 0, "rows": 0,
+             "errors": {}}
         t0 = time.time()
 
         def one(item):
             bid, b = item
+            fresh_etag = (b.get("etag") and b.get("pkey") == pkey and now - b.get("etag_t", 0) < ETAG_MAX_AGE
+                          and b.get("cache") is not None)
+            _CTX.etag = b.get("etag") if fresh_etag else None
+            _CTX.new_etag = None
             try:
-                return bid, [j for j in fetch(b["token"], b["company"]) if j], None
+                takes_now = fetch in (fetch_smartrecruiters, fetch_workday, fetch_oracle, fetch_amazon)
+                got = fetch(b["token"], b["company"], now=now) if takes_now else fetch(b["token"], b["company"])
+                return bid, [j for j in got if j], None, _CTX.new_etag
+            except NotModified:
+                return bid, None, "304", None
             except Gone:
-                return bid, [], "gone"
-            except urllib.error.HTTPError as e:  # e.g. 429, 5xx, 521 (Workday data center down): retry next poll
-                return bid, [], f"HTTP {e.code}"
-            except Exception as e:  # network trouble: try again next poll, don't count as gone
-                return bid, [], f"{type(e).__name__}"
+                return bid, None, "gone", None
+            except urllib.error.HTTPError as e:  # e.g. 429, 5xx, 521 (Workday data center down): retry next run
+                return bid, None, f"HTTP {e.code}", None
+            except Exception as e:  # network trouble: try again next run, don't count as gone
+                return bid, None, f"{type(e).__name__}", None
 
         with ThreadPoolExecutor(max_workers=WORKERS[ats]) as pool:
-            for bid, got, err in pool.map(one, todo):
-                if err == "gone":
-                    boards[bid]["fails"] = boards[bid].get("fails", 0) + 1
-                for j in got:
-                    j["board"] = bid
-                if err:
+            for bid, got, err, etag in pool.map(one, todo):
+                b = boards[bid]
+                if err == "304":
+                    h["unchanged"] += 1
+                    b["fails"] = 0
+                elif err:
+                    if err == "gone":
+                        b["fails"] = b.get("fails", 0) + 1
                     FAILED.add(bid)
                     h["failed"] += 1
                     h["errors"][err] = h["errors"].get(err, 0) + 1
                 else:
-                    boards[bid]["fails"] = 0
-                jobs.extend(got)
-                h["rows"] += len(got)
+                    b["fails"] = 0
+                    b["cache"] = _slim(got, since)
+                    b["pkey"] = pkey
+                    if etag:
+                        b["etag"], b["etag_t"] = etag, now
+                    else:
+                        b.pop("etag", None)
+                b["next"] = (next_check(bid, b, now) if err in (None, "304")
+                             else now + HOT_EVERY if retry_soon(err) else now + COLD_EVERY)
+        for bid, b in live:
+            rows = _expand(b.get("cache"), bid)
+            # a cached result can age past the window between polls: those rows become old dates too
+            for r in rows:
+                if not r.get("_old") and r.get("posted") and r["posted"] < since:
+                    r.update({"_old": True})
+            jobs.extend(rows)
+            h["rows"] += sum(1 for r in rows if not r.get("_old"))
         h["seconds"] = round(time.time() - t0, 1)
-        h["ok"] = h["boards"] == 0 or h["failed"] < h["boards"]
+        h["ok"] = h["checked"] == 0 or h["failed"] < h["checked"]
+        h["hot"] = sum(1 for _, b in live if is_hot(b, now))
         health[ATS_NAMES[ats]] = h
         print(f"[ats] {ATS_NAMES[ats]}: {h}", file=sys.stderr)
     return jobs, health

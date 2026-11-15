@@ -2,11 +2,11 @@ name: update
 
 on:
   schedule:
-    - cron: "7,37 * * * *"   # every 30 min (GitHub may start it a few minutes late)
+    - cron: "7,37 * * * *"   # backup only: GitHub skips most of these (measured: ~1 run per 6 h); tick.yml is the real clock
   workflow_dispatch:
     inputs:
       poll:
-        description: "Poll company boards: auto (every ~3 h), yes, no"
+        description: "Poll company boards: auto (boards that are due), yes (all now), no"
         default: auto
   push:
     branches: [main]

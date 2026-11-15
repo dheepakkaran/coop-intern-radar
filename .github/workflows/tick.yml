@@ -1,0 +1,51 @@
+# A reliable 30-minute clock for the `update` workflow.
+#
+# Why: GitHub's `schedule` trigger is best effort. Measured 2026-11-14/15 on this repo, the "every 30 min"
+# cron in update.yml started only 8 times in ~40 h (median gap between scheduled runs 6.6 h), so the radar
+# was really about 6 h behind whenever nobody pushed. github.com/hemnaath04/job-os measured the same thing
+# (scheduled runs a median ~4 h late).
+#
+# How: one job stays alive for ~5.5 h and starts `update` every 30 min with `workflow_dispatch` (the
+# GITHUB_TOKEN may start workflow_dispatch runs). Before it ends it starts the next `tick`, so the chain
+# keeps going. The hourly cron below only restarts the chain if it ever breaks (it is a no-op while a tick
+# is running: the concurrency group queues it). Public repo: Actions minutes are free.
+#
+# Stop it: disable this workflow in the Actions tab (or `gh workflow disable tick.yml`).
+
+name: tick
+
+on:
+  schedule:
+    - cron: "23 * * * *"    # restart the chain if it broke (no-op while one is alive)
+  workflow_dispatch:
+
+permissions:
+  actions: write            # start update.yml and the next tick
+  contents: read
+
+concurrency:
+  group: tick
+  cancel-in-progress: false
+
+jobs:
+  tick:
+    runs-on: ubuntu-latest
+    timeout-minutes: 350
+    steps:
+      - name: Start update every 30 min for ~5.5 h, then hand over to the next tick
+        env:
+          GH_TOKEN: ${{ github.token }}
+          GH_REPO: ${{ github.repository }}
+        run: |
+          for i in $(seq 1 11); do
+            # skip if an update run is already queued (a slow run must not pile up a backlog)
+            queued=$(gh run list -w update.yml -s queued --json databaseId -q 'length' || echo 0)
+            if [ "${queued:-0}" -eq 0 ]; then
+              gh workflow run update.yml -f poll=auto && echo "$(date -u +%H:%M) started update" \
+                || echo "::warning::could not start update"
+            else
+              echo "$(date -u +%H:%M) update already queued, skipping"
+            fi
+            [ "$i" -lt 11 ] && sleep 1800
+          done
+          gh workflow run tick.yml && echo "handed over to the next tick"

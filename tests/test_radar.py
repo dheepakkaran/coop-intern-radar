@@ -217,7 +217,7 @@ def test_poll_merges_with_lists_and_first_poll_is_quiet(tmp_path):
     st, out = str(tmp_path / "s.gz"), str(tmp_path / "o")
     build.run(st, out, fetch=_fake_fetch(now, [listed], []), poll="no", now=now)          # lists only
     build.run(st, out, fetch=_fake_fetch(now, [listed], []), poll_fn=fake_poll, now=now + 60)  # first poll
-    assert calls == [["gh:acme"]]
+    assert calls == [sorted(["gh:acme", *ats.FIXED_BOARDS])]   # discovered boards + the big employers' sites
     data = json.load(open(tmp_path / "o" / "jobs.json"))
     acme = [j for j in data["jobs"] if j["url"].endswith("/1")]
     assert len(acme) == 1 and set(acme[0]["sources"]) == {"Simplify", "Greenhouse"} and acme[0]["posted"] == now - 7200
@@ -233,8 +233,8 @@ def test_poll_merges_with_lists_and_first_poll_is_quiet(tmp_path):
     assert fw["posted"] == now + 7200 and fw["kind"] == "co-op"
     assert meta["boards"]["Greenhouse"] == 1 and meta["sources"]["Greenhouse"]["ok"]
 
-    # Between polls ('auto' before 3 h) the cached board jobs stay on the page.
-    build.run(st, out, fetch=_fake_fetch(now, [listed], []), poll_fn=fake_poll, now=now + 7200 + 1800)
+    # 'auto' polls every run (each board keeps its own schedule inside ats.poll); 'no' reuses the last result.
+    build.run(st, out, fetch=_fake_fetch(now, [listed], []), poll_fn=fake_poll, poll="no", now=now + 7200 + 1800)
     assert len(calls) == 2
     data = json.load(open(tmp_path / "o" / "jobs.json"))
     assert any(j["title"] == "Firmware Software Co-op" for j in data["jobs"])
@@ -1383,3 +1383,171 @@ def test_list_only_job_gets_its_real_date_from_the_jd_fetch(tmp_path):
         build.run(st, str(out), fetch=_fake_fetch(now, [], [_vansh_kbr(now)]), resolve=lambda u: KBR_URL,
                   poll="no", jd_fetch=fake_jd, now=t)
         assert _shown(out)[0] == []
+
+
+# ---- Faster, more precise polling (ideas from github.com/hemnaath04/job-os, 2026-11-15) -------------------
+
+def _gh_job(i, posted_iso, title="Software Engineer Intern"):
+    return {"id": i, "title": title, "absolute_url": f"https://boards.greenhouse.io/acme/jobs/{i}",
+            "location": {"name": "Boston, MA"}, "first_published": posted_iso, "content": "Python. US work."}
+
+
+def test_poll_uses_etag_and_304_reuses_cached_board(monkeypatch):
+    now = 2_000_000_000
+    sent = []
+
+    class Resp:
+        def __init__(self, body, etag):
+            self.body, self.headers = body, {"ETag": etag}
+        def __enter__(self):
+            return self
+        def __exit__(self, *a):
+            return False
+        def read(self):
+            return self.body
+
+    def urlopen(req, timeout=25):
+        sent.append(req.get_header("If-none-match"))
+        if req.get_header("If-none-match") == 'W/"v1"':
+            raise ats.urllib.error.HTTPError(req.full_url, 304, "Not Modified", {}, None)
+        body = json.dumps({"jobs": [_gh_job(1, "2033-05-18T03:00:00Z")]}).encode()
+        return Resp(body, 'W/"v1"')
+
+    monkeypatch.setattr(ats.json, "load", lambda r: json.loads(r.read()))
+    monkeypatch.setattr(ats.urllib.request, "urlopen", urlopen)
+    boards = {"gh:acme": {"ats": "gh", "token": "acme", "company": "Acme"}}
+    jobs, h = ats.poll(boards, now=now)
+    assert sent == [None] and boards["gh:acme"]["etag"] == 'W/"v1"'
+    assert [j["title"] for j in jobs] == ["Software Engineer Intern"]
+    # next run: the board is due again (ETag boards are checked every run), answers 304, cached jobs come back
+    jobs2, h2 = ats.poll(boards, now=now + 1800)
+    assert sent == [None, 'W/"v1"'] and h2["Greenhouse"]["unchanged"] == 1
+    assert [j["url"] for j in jobs2] == [j["url"] for j in jobs]
+    # a day later the ETag is not trusted any more: a full read (catches parser / rule changes)
+    ats.poll(boards, now=now + ats.ETAG_MAX_AGE + 60)
+    assert sent[-1] is None
+
+
+def test_cold_boards_wait_hot_boards_and_force_poll_every_run(monkeypatch):
+    now = 2_000_000_000
+    calls = []
+
+    def wd(token, company):
+        calls.append(token)
+        return [ats._job("wd", company, "Data Intern", f"https://x/{token}", ["Boston, MA"], ["US"], now - 3600)] \
+            if token == "hot" else []
+    monkeypatch.setitem(ats.FETCHERS, "wd", wd)
+    for k in [k for k in ats.FETCHERS if k != "wd"]:
+        monkeypatch.setitem(ats.FETCHERS, k, lambda t, c: [])
+    boards = {"wd:hot": {"ats": "wd", "token": "hot", "company": "H"},
+              "wd:cold": {"ats": "wd", "token": "cold", "company": "C"}}
+    ats.poll(boards, now=now)                       # never read: both due
+    assert sorted(calls) == ["cold", "hot"]
+    calls.clear()
+    ats.poll(boards, now=now + 1800)                # 30 min later: only the hot board (recent intern job)
+    assert calls == ["hot"]
+    calls.clear()
+    ats.poll(boards, now=now + 1800 + ats.COLD_EVERY)   # ~3 h later the cold one too
+    assert sorted(calls) == ["cold", "hot"]
+    calls.clear()
+    ats.poll(boards, now=now + 1800 + ats.COLD_EVERY + 60, force=True)
+    assert sorted(calls) == ["cold", "hot"]
+
+
+def test_failed_board_keeps_cached_jobs_and_old_jobs_become_dates(monkeypatch):
+    now = 2_000_000_000
+    state = {"fail": False}
+
+    def gh(token, company):
+        if state["fail"]:
+            raise ats.urllib.error.HTTPError("u", 503, "down", None, None)
+        return [ats._job("gh", company, "ML Intern", "https://x/new", ["Boston, MA"], None, now - 3600),
+                ats._job("gh", company, "Data Intern", "https://x/old", ["Boston, MA"], None, now - 9 * 86400)]
+    monkeypatch.setitem(ats.FETCHERS, "gh", gh)
+    for k in [k for k in ats.FETCHERS if k != "gh"]:
+        monkeypatch.setitem(ats.FETCHERS, k, lambda t, c: [])
+    boards = {"gh:a": {"ats": "gh", "token": "a", "company": "A"}}
+    jobs, _ = ats.poll(boards, now=now)
+    assert {j["url"]: bool(j.get("_old")) for j in jobs} == {"https://x/new": False, "https://x/old": True}
+    assert "title" not in [j for j in jobs if j.get("_old")][0]    # old ones are just url + date
+    state["fail"] = True
+    jobs2, h = ats.poll(boards, now=now + 1800)
+    assert h["Greenhouse"]["failed"] == 1 and {j["url"] for j in jobs2} == {"https://x/new", "https://x/old"}
+
+
+def test_day_only_date_uses_first_sighting_inside_that_day():
+    day = 2_000_000_000 - 2_000_000_000 % 86400 + 8 * 3600
+    j = {"posted": day, "posted_day": True, "posted_src": "day"}
+    assert build.dated(j, {"first": day + 15 * 3600, "boot": False}) == (day + 15 * 3600, "seen")
+    # seen days later = the job was already up: the day date stays (never newer than it is)
+    assert build.dated(j, {"first": day + 5 * 86400, "boot": False}) == (day, "day")
+    # bootstrap sighting means nothing
+    assert build.dated(j, {"first": day + 3600, "boot": True}) == (day, "day")
+    # exact board time / list time / only our sighting
+    assert build.dated({"posted": day, "posted_src": "board"}, {"first": day + 60}) == (day, "board")
+    assert build.dated({"posted": day, "posted_src": "list"}, {"first": day + 60}) == (day, "list")
+    assert build.dated({"posted": None}, {"first": day + 60}) == (day + 60, "seen")
+
+
+def test_build_reports_basis_and_speed(tmp_path):
+    now = 2_000_000_000
+    listed = _row("Acme", "ML Intern", now - 3600, url="https://boards.greenhouse.io/acme/jobs/1")
+    board = [{"source": "Greenhouse", "company": "Beta", "title": "Data Intern", "board": "gh:beta",
+              "url": "https://boards.greenhouse.io/beta/jobs/2", "locations": ["Boston, MA"], "terms": [],
+              "posted": now - 1200, "field": None, "sponsorship": None},
+             {"url": "https://boards.greenhouse.io/acme/jobs/1", "posted": now - 40 * 86400, "board": "gh:acme",
+              "_old": True}]
+    st, out = str(tmp_path / "s"), str(tmp_path / "o")
+    seed = _row("Old Co", "Data Intern", now - 30 * 86400, url="https://jobs.lever.co/old/1")
+    build.run(st, out, fetch=_fake_fetch(now - 7200, [seed], []), poll="yes",               # bootstrap run
+              poll_fn=lambda b: ([], {"Greenhouse": {"ok": True}}), now=now - 7200)
+    meta = build.run(st, out, fetch=_fake_fetch(now, [listed], []), poll="yes",
+                     poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now)
+    data = json.load(open(tmp_path / "o" / "jobs.json"))
+    rows = {j["company"]: j for j in data["jobs"]}
+    # the list says 1 h ago, but the board's own (old) date says 40 days: not new
+    assert "Acme" not in rows
+    assert rows["Beta"]["posted_basis"] == "board"
+    assert meta["speed"]["n"] == 1 and meta["speed"]["median_min"] == 20
+    assert meta["speed"]["found_by"] == {"Greenhouse": 1, "Simplify": 1}
+
+
+def test_bigtech_parsers(monkeypatch):
+    now = 2_000_000_000
+    amazon = {"jobs": [{"title": "Software Dev Engineer Intern", "company_name": "Amazon.com Services LLC",
+                        "job_path": "/en/jobs/1/sde-intern", "normalized_location": "Seattle, Washington, USA",
+                        "country_code": "USA", "posted_date": "May 17, 2033", "description": "Python. Java.",
+                        "primary_search_label": "studentprograms.team-internships-for-students"},
+                       {"title": "SDE Intern - Finland", "job_path": "/en/jobs/2/x", "country_code": "FIN",
+                        "posted_date": "May 17, 2033", "location": "FI, Tampere"}]}
+    monkeypatch.setattr(ats, "get_json", lambda url, **k: amazon)
+    a = [j for j in ats.fetch_amazon("us", "Amazon", now=now) if j]
+    assert [j["url"] for j in a] == ["https://www.amazon.jobs/en/jobs/1/sde-intern"]
+    assert a[0]["posted"] == ats.day_start_pt("May 17, 2033") and a[0]["posted_day"]
+
+    gjob = ["123", "Software Engineering Intern, BS/MS, Summer 2027", "https://x", [None, "<p>Build things</p>"],
+            [None, "<li>Python</li>"], "p", None, "Google", "en-US",
+            [["Mountain View, CA, USA", [], "Mountain View", "94043", "CA", "US"]], [None, ""], [3],
+            [1999990000, 0], [1999999000, 0], [1999999000, 0]]
+    page = ("<script>AF_initDataCallback({key: 'ds:1', hash: '2', data:" + json.dumps([[gjob], None, 1, 20])
+            + ", sideChannel: {}});</script>")
+    monkeypatch.setattr(ats, "get_text", lambda url, **k: page)
+    g = [j for j in ats.fetch_google("us", "Google") if j]
+    assert g[0]["posted"] == 1999990000   # creation date, not the later edit date Google sorts by
+    assert g[0]["url"].endswith("/123-software-engineering-intern-bs-ms-summer-2027")
+
+    apple = {"loaderData": {"search": {"totalRecords": 1, "searchResults": [
+        {"id": "200-1", "postingTitle": "Software Engineering Masters Internships",
+         "transformedPostingTitle": "software-engineering-masters-internships", "postDateInGMT": "2033-05-18T00:00:00Z",
+         "jobSummary": "Swift.", "locations": [{"countryID": "iso-country-USA", "city": "Cupertino",
+                                                "stateProvince": "California"}]}]}}}
+    page = '<script>window.__staticRouterHydrationData = JSON.parse(' + json.dumps(json.dumps(apple)) + ');</script>'
+    monkeypatch.setattr(ats, "get_text", lambda url, **k: page)
+    ap = [j for j in ats.fetch_apple("us", "Apple") if j]
+    assert ap[0]["url"] == "https://jobs.apple.com/en-us/details/200-1/software-engineering-masters-internships"
+    assert ap[0]["locations"] == ["Cupertino, California"]
+
+
+def test_only_passing_errors_retry_next_run():
+    assert ats.retry_soon("HTTP 429") and ats.retry_soon("HTTP 503") and ats.retry_soon("URLError")
+    assert not ats.retry_soon("HTTP 422") and not ats.retry_soon("HTTP 403") and not ats.retry_soon("gone")

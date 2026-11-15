@@ -9,9 +9,10 @@ One page that shows every **US tech** (AI/ML, Data, Software) co-op and intern j
 
 ```
 every 30 min   SimplifyJobs + vanshb03 listings.json ─┐
-every ~3 h     company job boards (public ATS APIs) ───┼─► US only ─► merge same job ─► seen store (data branch)
-               Greenhouse · Lever · Ashby · Workday ·  │                                └─► site/data/jobs.json ─► Pages
-               SmartRecruiters · Oracle Cloud          ┘
+every 30 min   company job boards that are due ────────┼─► US only ─► merge same job ─► seen store (data branch)
+(tick.yml)     Greenhouse · Lever · Ashby · Workday ·  │                                └─► site/data/jobs.json ─► Pages
+               SmartRecruiters · Oracle Cloud ·        │
+               Amazon · Google · Apple                 ┘
 ```
 
 - **Sources (phase 1):** the public `listings.json` feeds of
@@ -19,9 +20,19 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   [vanshb03/Summer2027-Internships](https://github.com/vanshb03/Summer2027-Internships).
   vanshb03 shortlinks are resolved to the real apply page once and cached.
 - **Company boards (phases 2–3):** every Greenhouse, Lever, Ashby, SmartRecruiters, Workday and Oracle Cloud board
-  those lists ever linked to (about 2,400 companies that hire interns) is polled through its public job-board API, about every 3 hours,
+  those lists ever linked to (about 2,400 companies that hire interns) is polled through its public job-board API,
   a few requests at a time. Only co-op / intern titles are kept. This catches jobs before the lists add them,
-  and co-ops the lists skip. A board that returns 404 three times in a row is dropped.
+  and co-ops the lists skip. A board that returns 404 three times in a row (~9 h apart) is dropped.
+  - **Each board has its own schedule (2026-11-15, ideas from [job-os](https://github.com/hemnaath04/job-os)):**
+    Greenhouse, Lever and Ashby are checked every run with the ETag from the last read (`If-None-Match`); an
+    unchanged board answers an empty `304` (Greenhouse 485 boards: 176 s → 10 s). The others are checked every run
+    while "hot" (an intern job posted in the last 14 days), else every ~3 h; boards that refuse (403/422) wait ~3 h,
+    rate limits and server errors retry next run. Every board's last result is cached, so a board that fails keeps
+    its jobs. A full read happens at least daily anyway, so rule changes reach unchanged boards.
+  - **Reliable 30-minute clock:** GitHub's cron skipped most "every 30 min" runs (measured: one scheduled run per
+    ~6.6 h), so `tick.yml` stays alive and starts `update` every 30 min, then hands over to the next tick.
+  - **Big employers' own sites:** Amazon (`amazon.jobs` search JSON), Google Careers (first page only, as its
+    robots.txt allows; dated by creation, not by Google's later edit date) and Apple (Students team).
   - **Workday:** the board's own filters do the work: its *Job Type* value for interns/co-ops (e.g. "Intern (Fixed Term)")
     plus its *Country* value for the United States. Boards without those filters fall back to a text search for
     "intern" / "co-op", and then the title and place must say intern/co-op and US. "Posted N Days Ago" is turned into a date.
@@ -71,6 +82,11 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   "Posted N Days Ago", JSON-LD datePosted), the list's posted date and the first time this radar saw the job. A list's
   date is when the *list* added the job, so it only ever caps the age; a job the board says is 30+ days old never shows as new.
   The first run marks everything it sees as already known, so old jobs never show up as new.
+  A day-only date (Workday, Amazon: "November 14") counts from the start of that day, unless the radar first saw the
+  job within that day: then its own sighting is the tighter estimate. Each job says how its date is known: the
+  board's exact time, the posting's date, the day only, a list's date, or "first seen by the radar".
+- **Speed:** the footer shows how long after a board published a job the radar first saw it (median and 90th
+  percentile over the last 7 days, exact board times only). Before the 30-minute clock it was a median of ~8 h.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).
 - **Seen store** = `seen.json.gz` on the `data` branch, kept as a single force-pushed commit so the repo does not grow.
 - **Home page:** a 24-hour radar. Each blip is a role first seen in the last 24 hours: the angle is how long ago
