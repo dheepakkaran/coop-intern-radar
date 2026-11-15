@@ -69,6 +69,9 @@ every ~3 h     company job boards (public ATS APIs) ───┼─► US only �
   The first run marks everything it sees as already known, so old jobs never show up as new.
 - **Co-op** = the title says co-op, or the term is Spring, Fall or Winter (off-season).
 - **Seen store** = `seen.json.gz` on the `data` branch, kept as a single force-pushed commit so the repo does not grow.
+- **Home page:** a 24-hour radar. Each blip is a role first seen in the last 24 hours: the angle is how long ago
+  (clockwise from "now"), the ring is how far it got (inner = passes every check, middle = other tech roles, outer =
+  other co-ops and internships); the sweep lights them up, hover or tap for the job. The job list is `jobs.html`.
 - **Page:** 24 h / 2 days, co-op/intern, field (AI/ML, Data, Software), Boston/MA, remote, term, search; Save / Applied / Skip marks
   stay in your browser (localStorage). A link bar opens LinkedIn and Indeed with the 24 h filter set, plus Handshake,
   NUworks, Jobright, Simplify, Wellfound, Runway, hiring.cafe and TrueUp. These sites are never scraped.

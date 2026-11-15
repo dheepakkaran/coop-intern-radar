@@ -1,0 +1,114 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Jobs · Co-op Intern Radar</title>
+<meta name="description" content="New US tech co-ops and internships, checked for a master's student on CPT and verified by a Claude Code review agent.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap">
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="wrap">
+  <header class="nav">
+    <a class="logo" href="./"><span class="mark" aria-hidden="true"></span>Co-op Intern Radar</a>
+    <nav class="navlinks" aria-label="Pages"><a href="./">Radar</a><a href="jobs.html" aria-current="page">Jobs</a></nav>
+    <div class="live"><i></i><span id="supd">Loading…</span></div>
+  </header>
+
+  <section class="hero">
+    <h1>US tech co-ops &amp; internships, verified for MS&nbsp;+&nbsp;CPT</h1>
+    <p class="sub">New roles from the last 2 days. Each one goes through four checks, an AI reader and a Claude&nbsp;Code review.</p>
+    <dl class="kpis">
+      <div><dt>Matches · 24 h</dt><dd id="k24">–</dd></div>
+      <div><dt>Matches · 2 days</dt><dd id="k48">–</dd></div>
+      <div><dt>Claude Code verified</dt><dd id="kcc">–</dd></div>
+      <div><dt>Roles scanned</dt><dd id="kall">–</dd></div>
+    </dl>
+    <ol class="funnel" id="funnel" aria-label="How the list is narrowed"></ol>
+  </section>
+
+  <div class="tabs" id="view" role="tablist" aria-label="View">
+    <button data-v="match" role="tab">My matches<span id="vmatch"></span></button>
+    <button data-v="all" role="tab">All co-op &amp; intern<span id="vall"></span></button>
+  </div>
+
+  <section class="toolbar" aria-label="Filters">
+    <div class="row">
+      <label class="search">
+        <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path d="m20 20-3.5-3.5"/></svg>
+        <input id="q" type="search" placeholder="Search company, title or place" aria-label="Search">
+      </label>
+      <div class="seg" id="win" role="group" aria-label="Time window">
+        <button data-v="1">24 h</button><button data-v="2">2 days</button>
+      </div>
+    </div>
+    <div class="row filters">
+      <div class="seg sm" id="kind" role="group" aria-label="Type">
+        <button data-v="all">All</button><button data-v="co-op">Co-op</button><button data-v="intern">Intern</button>
+      </div>
+      <div class="chips" id="fields" aria-label="Field"></div>
+      <div class="chips" id="places" aria-label="Location"><button data-v="Boston/MA">Boston / MA</button><button data-v="Remote">Remote</button></div>
+      <select id="term" aria-label="Term"><option value="">Any term</option></select>
+      <span class="grow"></span>
+      <label class="toggle"><input type="checkbox" id="ccOnly"><span></span>Claude Code verified</label>
+      <label class="toggle"><input type="checkbox" id="hideDone"><span></span>Hide applied &amp; skipped</label>
+    </div>
+  </section>
+
+  <main>
+    <div class="listhead">
+      <p id="count"></p>
+      <p class="legend">
+        <span><i class="dot ok"></i>Pass</span><span><i class="dot warn"></i>Review</span><span><i class="dot bad"></i>Fail</span><span><i class="dot none"></i>Not read</span>
+      </p>
+    </div>
+    <ol class="jobs" id="jobs"></ol>
+    <p class="empty" id="empty" hidden>No roles match these filters.</p>
+  </main>
+
+  <footer class="foot">
+    <section class="how" aria-label="How roles are checked">
+      <div>
+        <h3>Four checks</h3>
+        <dl>
+          <dt>Location</dt><dd>United States, remote-US included.</dd>
+          <dt>Role</dt><dd>AI/ML, Data or Software: a tech word in the title, or strong tech terms in the description.</dd>
+          <dt>Work authorization</dt><dd>No citizenship, green card, clearance or ITAR "U.S. person" rule, and CPT / F-1 not rejected. "No sponsorship" is fine: CPT is the authorization.</dd>
+          <dt>Education</dt><dd>Master's students can apply (not undergraduate-only or PhD-only), and any stated graduation window includes May 2028.</dd>
+        </dl>
+      </div>
+      <div>
+        <h3>Three readers</h3>
+        <dl>
+          <dt>Checks</dt><dd>Rules read the description and quote the sentence behind each answer.</dd>
+          <dt>Agent</dt><dd>An AI reader (gpt-oss-120b) reads the same sentences; every answer must quote the posting word for word.</dd>
+          <dt>Claude Code</dt><dd>A review agent on my laptop reads the full posting again and corrects the page when it is sure. My own decision overrides all three.</dd>
+        </dl>
+      </div>
+    </section>
+    <nav class="elsewhere" aria-label="Search other sites">
+      <span>Elsewhere</span>
+      <a href="https://www.linkedin.com/jobs/search/?keywords=co-op%20OR%20intern&location=United%20States&f_TPR=r86400&f_E=1&sortBy=DD" target="_blank" rel="noopener">LinkedIn</a>
+      <a href="https://www.indeed.com/jobs?q=co-op+OR+intern&l=United+States&fromage=1&sort=date" target="_blank" rel="noopener">Indeed</a>
+      <a href="https://app.joinhandshake.com/login?school=northeastern" target="_blank" rel="noopener">Handshake</a>
+      <a href="https://northeastern-csm.symplicity.com/students/" target="_blank" rel="noopener">NUworks</a>
+      <a href="https://jobright.ai/jobs" target="_blank" rel="noopener">Jobright</a>
+      <a href="https://simplify.jobs/jobs?experience=Internship" target="_blank" rel="noopener">Simplify</a>
+      <a href="https://wellfound.com/jobs" target="_blank" rel="noopener">Wellfound</a>
+      <a href="https://app.joinrunway.io/" target="_blank" rel="noopener">Runway</a>
+      <a href="https://hiring.cafe/" target="_blank" rel="noopener">hiring.cafe</a>
+      <a href="https://www.trueup.io/internships" target="_blank" rel="noopener">TrueUp</a>
+    </nav>
+    <details>
+      <summary>Sources &amp; status</summary>
+      <p id="health" class="health"></p>
+      <p class="health">Lists: <a href="https://github.com/SimplifyJobs/Summer2027-Internships">SimplifyJobs</a>, <a href="https://github.com/vanshb03/Summer2027-Internships">vanshb03</a> (every 30 min). Company boards: Greenhouse, Lever, Ashby, SmartRecruiters, Workday, Oracle Cloud (every ~3 h). Save / Applied / Skip stay in this browser. <a href="https://github.com/dheepakkaran/coop-intern-radar">Code</a></p>
+    </details>
+  </footer>
+</div>
+<script src="app.js"></script>
+</body>
+</html>

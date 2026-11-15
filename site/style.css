@@ -54,7 +54,11 @@ button { cursor: pointer; }
 
 /* nav */
 .nav { display: flex; justify-content: space-between; align-items: center; height: 60px; }
-.logo { white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.01em; }
+.navlinks { display: flex; gap: 4px; margin-left: auto; margin-right: 20px; }
+.navlinks a { text-decoration: none; color: var(--muted); font-size: 13px; font-weight: 500; padding: 5px 10px; border-radius: 7px; }
+.navlinks a:hover { color: var(--fg); background: var(--soft); }
+.navlinks a[aria-current="page"] { color: var(--fg); background: var(--soft); }
+.logo { text-decoration: none; white-space: nowrap; display: inline-flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.01em; }
 .mark { width: 18px; height: 18px; border-radius: 50%; border: 2px solid var(--ink); position: relative; }
 .mark::after { content: ""; position: absolute; inset: 3px; border-radius: 50%; background: var(--ink); }
 .live { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--muted); }
@@ -231,4 +235,7 @@ details[open] summary::before { content: "– "; }
   .funnel li + li::before { display: none; }
   .live { font-size: 12px; }
   .live .cc-ago { display: none; }
+  .navlinks { margin-right: 8px; }
+  .navlinks a { padding: 5px 7px; }
+  .live span { display: none; }
 }
