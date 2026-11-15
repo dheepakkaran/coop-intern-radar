@@ -1,30 +1,8 @@
 {
- "activision blizzard|activision 2027 summer internships audio engineering": {
-  "company": "Activision Blizzard",
-  "confidence": 88,
-  "jd_hash": "2b2772b4e19270d4",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
-   "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
-  },
-  "read_at": 1794677665,
-  "tech": "Software",
-  "title": "Activision 2027 Summer Internships - Audio Engineering",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
  "activision blizzard|game systems engineering intern": {
   "company": "Activision Blizzard",
-  "confidence": 93,
-  "jd_hash": null,
+  "confidence": 92,
+  "jd_hash": "69b79598784f13b2",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -37,7 +15,7 @@
    "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
    "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
   },
-  "read_at": 1794676647,
+  "read_at": 1794756634,
   "tech": "Software",
   "title": "Game Systems Engineering Intern",
   "us": true,
