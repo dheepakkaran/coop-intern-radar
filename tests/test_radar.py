@@ -1351,8 +1351,14 @@ def _vansh_kbr(now):
 
 
 def _shown(out):
+    """(fresh rows for the job, meta). A reposted row is not fresh: it lives in its own tab."""
     d = json.load(open(os.path.join(str(out), "jobs.json")))
-    return [j for j in d["jobs"] if "Image Processing" in j["title"]], d["meta"]
+    return [j for j in d["jobs"] if "Image Processing" in j["title"] and not j.get("reposted")], d["meta"]
+
+
+def _reposted(out):
+    d = json.load(open(os.path.join(str(out), "jobs.json")))
+    return [j for j in d["jobs"] if "Image Processing" in j["title"] and j.get("reposted")]
 
 
 def test_list_date_is_only_an_upper_bound_board_date_wins(tmp_path):
@@ -1366,11 +1372,14 @@ def test_list_date_is_only_an_upper_bound_board_date_wins(tmp_path):
     build.run(st, str(out), fetch=_fake_fetch(now, [], [_vansh_kbr(now)]), resolve=lambda u: KBR_URL,
               poll="yes", poll_fn=lambda b: (list(board), {"Workday": {"ok": True}}), now=now)
     rows, meta = _shown(out)
-    assert rows == [] and meta["count_all_24h"] == 0
+    assert rows == [] and meta["count_all_24h"] == 0 and meta["count_reposted"] == 1
+    rp = _reposted(out)
+    assert len(rp) == 1 and rp[0]["reposted"] == now - 31 * 86400          # its real date, shown in the Reposted tab
+    assert rp[0]["posted"] == now - 2 * 86400 + 600                         # when it showed up again (the list)
     # between polls the old date is still known
     build.run(st, str(out), fetch=_fake_fetch(now, [], [_vansh_kbr(now)]), resolve=lambda u: KBR_URL,
-              poll="auto", poll_fn=lambda b: ([], {}), now=now + 1800)
-    assert _shown(out)[0] == []
+              poll="auto", poll_fn=lambda b: ([], {}), now=now + 300)
+    assert _shown(out)[0] == [] and len(_reposted(out)) == 1
 
 
 def test_list_only_job_gets_its_real_date_from_the_jd_fetch(tmp_path):
@@ -1379,10 +1388,44 @@ def test_list_only_job_gets_its_real_date_from_the_jd_fetch(tmp_path):
     build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
     fake_jd = lambda url: {"text": "Pursuing an MS in CS. Python, C++, software development.", "via": "workday",
                            "posted": now - 38 * 86400, "country": "United States of America"}
-    for t in (now, now + 1800):          # first run fetches, the next one reads the cache
+    for t in (now, now + 300):           # first run fetches, the next one reads the cache
         build.run(st, str(out), fetch=_fake_fetch(now, [], [_vansh_kbr(now)]), resolve=lambda u: KBR_URL,
                   poll="no", jd_fetch=fake_jd, now=t)
         assert _shown(out)[0] == []
+        assert [j["reposted"] for j in _reposted(out)] == [now - 38 * 86400]
+
+
+MILLIMAN_URL = ("https://recruiting2.ultipro.com/mil1017/JobBoard/f54234e9-dfde-b183-fd20-4fbdb19cba7a/"
+                "OpportunityDetail?opportunityId=4f353716-eb67-4f11-a274-efee2100be07")
+
+
+def test_ultipro_gives_its_posted_date():
+    """Milliman 'AI Product Engineer Intern, CMH Health' (2026-11-15): posted 2026-10-02, a list added it today."""
+    now = ats.iso("2026-11-15T22:00:00Z")
+    desc = "Develop software and GenAI agents. " * 20
+    page = ('{"Title":"AI Product Engineer Intern","Description":"' + desc + '","PostedDate":"2026-10-02T18:22:50.706Z",'
+            '"UpdatedDate":"2026-10-02T18:22:43.467Z","ExternalPostedDate":"2026-10-02T18:22:50.704Z"}')
+    r = jdfetch.fetch(MILLIMAN_URL, get=lambda u, body=None: page, now=now)
+    assert r["via"] == "ultipro" and r["posted"] == ats.iso("2026-10-02T18:22:50.704Z")
+
+
+def test_reposted_job_gets_its_own_tab_not_the_24h_view(tmp_path):
+    now = ats.iso("2026-11-15T22:00:00Z")
+    row = {"company_name": "Milliman", "title": "AI Product Engineer Intern, CMH Health", "date_posted": now - 5400,
+           "url": MILLIMAN_URL, "locations": ["Chicago, IL"], "season": "Spring", "active": True, "is_visible": True}
+    fake_jd = lambda url: {"text": "Undergraduate and graduate students. Python, GenAI agents, software development.",
+                           "via": "ultipro", "posted": ats.iso("2026-10-02T18:22:50Z"), "country": None}
+    st, out = str(tmp_path / "s"), tmp_path / "o"
+    build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
+    meta = build.run(st, str(out), fetch=_fake_fetch(now, [], [row]), poll="no", jd_fetch=fake_jd, now=now)
+    jobs = json.load(open(out / "jobs.json"))["jobs"]
+    assert len(jobs) == 1 and jobs[0]["reposted"] == ats.iso("2026-10-02T18:22:50Z") and jobs[0]["posted"] == now - 5400
+    assert meta["count_24h"] == 0 and meta["count_all_24h"] == 0 and meta["count_reposted"] == 1
+    # a really new job is not marked
+    fresh = dict(row, title="ML Engineer Intern", url="https://boards.greenhouse.io/m/jobs/1", date_posted=now - 600)
+    build.run(st, str(out), fetch=_fake_fetch(now, [], [fresh]), poll="no", jd_fetch=lambda u: None, now=now + 60)
+    j = [x for x in json.load(open(out / "jobs.json"))["jobs"] if x["title"] == "ML Engineer Intern"][0]
+    assert j.get("reposted") is None
 
 
 # ---- Faster, more precise polling (ideas from github.com/hemnaath04/job-os, 2026-11-15) -------------------
@@ -1505,8 +1548,8 @@ def test_build_reports_basis_and_speed(tmp_path):
                      poll_fn=lambda b: (list(board), {"Greenhouse": {"ok": True}}), now=now)
     data = json.load(open(tmp_path / "o" / "jobs.json"))
     rows = {j["company"]: j for j in data["jobs"]}
-    # the list says 1 h ago, but the board's own (old) date says 40 days: not new
-    assert "Acme" not in rows
+    # the list says 1 h ago, but the board's own (old) date says 40 days: not new -> the Reposted tab
+    assert rows["Acme"]["reposted"] == now - 40 * 86400 and meta["count_all_24h"] == 1
     assert rows["Beta"]["posted_basis"] == "board"
     assert meta["speed"]["n"] == 1 and meta["speed"]["median_min"] == 20
     assert meta["speed"]["found_by"] == {"Greenhouse": 1, "Simplify": 1}
@@ -1551,3 +1594,15 @@ def test_bigtech_parsers(monkeypatch):
 def test_only_passing_errors_retry_next_run():
     assert ats.retry_soon("HTTP 429") and ats.retry_soon("HTTP 503") and ats.retry_soon("URLError")
     assert not ats.retry_soon("HTTP 422") and not ats.retry_soon("HTTP 403") and not ats.retry_soon("gone")
+
+
+def test_a_late_find_is_not_a_repost(tmp_path):
+    """Posted 3 days ago, a list adds it today: older than the window but no repost (gap < 7 days) -> not shown."""
+    now = 2_000_000_000
+    row = {"company_name": "Late", "title": "Data Engineer Intern", "date_posted": now - 3600, "url": "https://late.example.com/1",
+           "locations": ["Boston, MA"], "season": "Spring", "active": True, "is_visible": True}
+    fake_jd = lambda url: {"text": "Pursuing an MS. Python, SQL, data pipelines.", "via": "page", "posted": now - 3 * 86400}
+    st, out = str(tmp_path / "s"), tmp_path / "o"
+    build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
+    meta = build.run(st, str(out), fetch=_fake_fetch(now, [], [row]), poll="no", jd_fetch=fake_jd, now=now)
+    assert json.load(open(out / "jobs.json"))["jobs"] == [] and meta["count_reposted"] == 0

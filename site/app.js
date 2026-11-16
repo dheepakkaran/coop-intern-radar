@@ -12,7 +12,7 @@
     store.get("radar.filters", {})
   );
   if (![1, 2].includes(st.win)) st.win = 1;
-  if (!["match", "all"].includes(st.view)) st.view = "match";
+  if (!["match", "all", "repost"].includes(st.view)) st.view = "match";
   st.fields = st.fields || [];
   st.places = st.places || [];
   let data = { meta: null, jobs: [] };
@@ -144,8 +144,11 @@
       <p class="dfoot">Found via ${esc(j.sources.join(", "))} · ${esc(postedText(j))}</p></div>`;
   }
 
+  const dateText = (t) => new Date(t * 1000).toLocaleDateString(undefined, { month: "short", day: "numeric" });
+
   // How the date was known (build.dated): be honest about how sure it is.
   function postedText(j) {
+    if (j.reposted) return `first posted ${dateText(j.reposted)} (${ago(j.reposted)}); shown again ${ago(j.posted)}: a repost, not a new job`;
     switch (j.posted_basis) {
       case "board": return `posted ${ago(j.posted)} (time from the company's job board)`;
       case "page": return `posted ${ago(j.posted)} (date on the job posting)`;
@@ -158,7 +161,7 @@
 
   function row(j) {
     const m = markOf(j);
-    const fresh = Date.now() / 1000 - j.posted < 6 * 3600;
+    const fresh = !j.reposted && Date.now() / 1000 - j.posted < 6 * 3600;
     const [s, label] = status(j);
     const cats = categories(j);
     const tr = trail(j);
@@ -169,6 +172,7 @@
     return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${isOpen ? " open" : ""}" data-url="${esc(j.url)}" data-key="${esc(mk(j))}">
       <div class="jh"><div>
           <div class="co"><b>${esc(j.company)}</b><span class="age${fresh ? " fresh" : ""}">${ago(j.posted)}</span>${
+            j.reposted ? `<span class="kind repost" title="Shown again ${ago(j.posted)}; the job itself was first posted ${dateText(j.reposted)}">Reposted · first posted ${dateText(j.reposted)}</span>` : ""}${
             j.kind === "co-op" ? '<span class="kind coop">Co-op</span>' : '<span class="kind">Intern</span>'}</div>
           <a class="title" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener noreferrer">${esc(j.title)}</a>
           <div class="jmeta">${meta}</div>
@@ -191,7 +195,9 @@
   // ---- filters ----------------------------------------------------------------------------------------
   const ccDone = (j) => j.by === "agent" || j.checked === true;
   function visible(j, now) {
-    if (st.view === "match" && j.match === false) return false;
+    // fresh jobs only in My matches / All; a job that was posted earlier and only showed up again lives in "Reposted"
+    if ((st.view === "repost") !== !!j.reposted) return false;
+    if (st.view !== "all" && j.match === false) return false;
     if (j.posted < now - st.win * 86400) return false;
     if (st.kind !== "all" && j.kind !== st.kind) return false;
     if (st.fields.length && !st.fields.includes(j.field)) return false;
@@ -210,7 +216,7 @@
   function buildFields() {  // field chips for the jobs of the current view only
     if (fieldsFor === st.view) return;
     fieldsFor = st.view;
-    const pool = st.view === "match" ? data.jobs.filter((j) => j.match !== false) : data.jobs;
+    const pool = data.jobs.filter((j) => (st.view === "repost") === !!j.reposted && (st.view === "all" || j.match !== false));
     const fields = [...new Set(pool.map((j) => j.field))]
       .sort((x, y) => (TECH.indexOf(x) + 1 || 9) - (TECH.indexOf(y) + 1 || 9) || x.localeCompare(y));
     st.fields = st.fields.filter((f) => fields.includes(f));
@@ -274,17 +280,19 @@
     data = d;
     const m = d.meta;
     const now = Date.now() / 1000;
-    const matches = d.jobs.filter((j) => j.match !== false);
+    const freshJobs = d.jobs.filter((j) => !j.reposted);
+    const matches = freshJobs.filter((j) => j.match !== false);
     const verified = matches.filter(ccDone).length;
     $("k24").textContent = matches.filter((j) => j.posted >= now - 86400).length;
     $("k48").textContent = matches.length;
     $("kcc").innerHTML = matches.length ? `${verified}<small>of ${matches.length}</small>` : "–";
-    $("kall").textContent = d.jobs.length;
+    $("kall").textContent = freshJobs.length;
     $("vmatch").textContent = matches.length;
-    $("vall").textContent = d.jobs.length;
+    $("vall").textContent = freshJobs.length;
+    $("vrepost").textContent = d.jobs.filter((j) => j.reposted && j.match !== false).length;
 
-    const tech = d.jobs.filter((j) => j.why_not !== NOT_TECH).length;
-    $("funnel").innerHTML = [[d.jobs.length, "US co-ops & internships"], [tech, "tech roles"],
+    const tech = freshJobs.filter((j) => j.why_not !== NOT_TECH).length;
+    $("funnel").innerHTML = [[freshJobs.length, "US co-ops & internships"], [tech, "tech roles"],
       [matches.length, "pass all four checks"], [verified, "verified by Claude Code"]]
       .map(([n, t]) => `<li><b>${n}</b>${t}</li>`).join("");
 

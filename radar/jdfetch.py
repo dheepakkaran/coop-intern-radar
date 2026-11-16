@@ -142,7 +142,12 @@ def _ultipro(m, get):
     d = re.search(r'"Description"\s*:\s*"((?:[^"\\]|\\.)*)"', page)
     if not d:
         return None
-    return {"text": _text(json.loads('"' + d.group(1) + '"')), "posted": None, "country": None, "via": "ultipro"}
+    # UKG gives the dates in the same JSON: ExternalPostedDate (public), else PostedDate (Milliman, 2026-11-15)
+    dates = [iso(x) for k in ("ExternalPostedDate", "PostedDate")
+             for x in re.findall(rf'"{k}"\s*:\s*"([^"]+)"', page)]
+    dates = [x for x in dates if x]
+    return {"text": _text(json.loads('"' + d.group(1) + '"')), "posted": min(dates) if dates else None,
+            "country": None, "via": "ultipro"}
 
 
 ADAPTERS = [

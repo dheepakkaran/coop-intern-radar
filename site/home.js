@@ -137,7 +137,7 @@
     .then((r) => { if (!r.ok) throw new Error(r.status); return r.json(); })
     .then((d) => {
       const now = Date.now() / 1000;
-      const day = d.jobs.filter((j) => j.posted >= now - 86400);
+      const day = d.jobs.filter((j) => !j.reposted && j.posted >= now - 86400);   // fresh only: reposts are not new
       brief(d, day, now);
       place(day, now);
       if (reduce) blips.forEach((it) => { it.dot.setAttribute("opacity", 1); if (it.halo) it.halo.setAttribute("opacity", 0.15); });

@@ -13,6 +13,7 @@ from concurrent.futures import ThreadPoolExecutor
 from . import ats, classify, eligibility, jdfetch, llm, review, sources, store, tech
 
 WINDOW_DAYS = 2          # the page shows 24 h or 2 days
+REPOST_GAP = 7 * 86400   # first posted at least this long before it showed up again = a repost (own tab), not new
 # Boards are polled every run: each board has its own schedule (ats.next_check), unchanged boards answer 304.
 STRICT = True           # show only jobs that pass every check (no unverified, no "needs review")
 MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest next run; results are cached)
@@ -210,8 +211,11 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         keep = [j for j in got if not j.get("posted") or j["posted"] >= now - WINDOW_DAYS * 86400]
         # The older ones still matter: a list may add the same job today (its date_posted = when the LIST added it).
         # Their own dates are kept by URL so the merge can date that list row correctly (KBR R2130067, 2026-11-15).
-        old_dates = {store.norm_url(j["url"]): j["posted"] for j in got + old_rows
-                     if j.get("posted") and j["posted"] < now - WINDOW_DAYS * 86400}
+        # Sticky for 14 days after a board last showed the job: one empty or failed poll must not forget them.
+        old_dates = {u: v for u, v in (last.get("old_dates") or {}).items()
+                     if isinstance(v, list) and v[1] >= now - 14 * 86400}
+        old_dates.update({store.norm_url(j["url"]): [j["posted"], now] for j in got + old_rows
+                          if j.get("posted") and j["posted"] < now - WINDOW_DAYS * 86400})
         last = {"at": now, "jobs": [{k: v for k, v in j.items() if k != "countries" and not k.startswith("_")} for j in keep],
                 "health": ats_health, "old_dates": old_dates}
         state["ats"] = last
@@ -224,7 +228,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     # 4. Merge, date, keep the last WINDOW_DAYS.
     merged = merge(by_source)
-    old_dates = last.get("old_dates") or {}
+    old_dates = {u: (v[0] if isinstance(v, list) else v) for u, v in (last.get("old_dates") or {}).items()}
     jd_cache = state.setdefault("jd_cache", {})
     in_window = []
     for k, j in merged.items():
@@ -233,6 +237,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         rec = store.mark_seen(state, k, now, boot or from_new_type)
         # A list's date is when the list added the job: only an upper bound. The job's own date (its board, or
         # the posting page read for its JD) wins when it is earlier.
+        before, _ = dated(j, rec)   # what the list / our sighting alone would say
         own = [(d, src) for d, src in ((old_dates.get(store.norm_url(j["url"])), "board"),
                                        ((jd_cache.get(j["url"]) or {}).get("posted"), "page")) if d]
         if own and (not j.get("posted") or min(own)[0] < j["posted"]):
@@ -248,6 +253,11 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             rec["via"] = sorted(j["sources"])
         if t and t >= cut:
             in_window.append((j, t))
+        elif t and before and before >= cut and before - t >= REPOST_GAP:
+            # Reposted: a list (or our first sighting) shows it now, but the job itself is older. Not new: it goes
+            # to its own "Reposted" tab, dated by when it showed up again, with its real date (Milliman, 2026-11-15).
+            j["_reposted"] = t
+            in_window.append((j, before))
 
     # 5. Jobs we only know from a list have no JD yet: fetch it from the apply page (cached per URL),
     #    so every job, whatever its source, goes through the same tech + eligibility checks.
@@ -258,6 +268,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         c = jd_cache.get(j["url"])
         if c and c.get("v") != eligibility.RULES_VERSION and not c.get("miss"):
             c = None  # verdict from older rules: fetch the JD again
+        if c and c.get("via") == "ultipro" and not c.get("pv"):
+            c = None  # read before the UltiPro reader took the posted date (2026-11-15)
         if c and c.get("elig") is not None:
             apply_jd(j, c)
         elif not (c and c.get("miss") and now - c["t"] < JD_RETRY):
@@ -274,7 +286,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             if r and r.get("text"):
                 c = {"t": now, "v": eligibility.RULES_VERSION, "elig": eligibility.check(r["text"]),
                      "jd_terms": tech.jd_terms(r["text"]), "excerpt": eligibility.excerpt(r["text"]),
-                     "country": r.get("country"), "via": r.get("via"), "posted": r.get("posted")}
+                     "country": r.get("country"), "via": r.get("via"), "posted": r.get("posted"), "pv": 1}
                 jd_stats["fetched"] += 1
                 apply_jd(j, c)
             else:
@@ -283,15 +295,16 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             jd_cache[j["url"]] = c
     state["jd_cache"] = {u: v for u, v in jd_cache.items() if v["t"] >= now - 10 * 86400}
     # The posting itself may say it is older than the list's date: re-date, and drop what left the window.
-    kept = []
-    for j, t in in_window:
+    for i, (j, t) in enumerate(in_window):
         p = (jd_cache.get(j["url"]) or {}).get("posted")
-        if p and p < t:
-            j["posted"] = t = p
+        if p and p < (j.get("_reposted") or t):
             j["_basis"] = "page"
-        if t >= cut:
-            kept.append((j, t))
-    in_window = kept
+            if j.get("_reposted") or (p < cut and t - p >= REPOST_GAP):
+                j["_reposted"] = p          # a repost: keeps the date it showed up again, carries its real date
+            else:
+                j["posted"] = p
+                in_window[i] = (j, p)
+    in_window = [(j, t) for j, t in in_window if t >= cut]   # late finds that are already older than the window
 
     # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
     #    6a: US + tech, and the rules' reading.
@@ -458,6 +471,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "sponsorship": j.get("sponsorship") if j.get("sponsorship") not in (None, "Other") else None,
             "sources": j["sources"],
             "posted": t,
+            "reposted": j.get("_reposted"),   # its real (older) date when it is a repost, else None
             "posted_basis": j.get("_basis"),
             "elig": {"auth": e["auth"], "degree": e["degree"], "grad": e.get("grad"), "notes": e.get("notes") or [],
                      "labels": e.get("labels"), "quotes": e.get("quotes") or {}, "disagree": e.get("disagree") or [],
@@ -479,10 +493,12 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     meta = {
         "generated": now,
         "window_days": WINDOW_DAYS,
-        "count_24h": sum(1 for r in rows if r["match"] and r["posted"] >= now - 86400),
-        "count": sum(1 for r in rows if r["match"]),
-        "count_all_24h": sum(1 for r in rows if r["posted"] >= now - 86400),
-        "count_all": len(rows),
+        # fresh = first posted inside the window; reposted jobs are counted on their own
+        "count_24h": sum(1 for r in rows if r["match"] and not r["reposted"] and r["posted"] >= now - 86400),
+        "count": sum(1 for r in rows if r["match"] and not r["reposted"]),
+        "count_all_24h": sum(1 for r in rows if not r["reposted"] and r["posted"] >= now - 86400),
+        "count_all": sum(1 for r in rows if not r["reposted"]),
+        "count_reposted": sum(1 for r in rows if r["reposted"]),
         "sources": health,
         "boards": {ats.ATS_NAMES[a]: sum(1 for b in live if b["ats"] == a) for a in ats.ATS_NAMES},
         "polled": last.get("at"),
