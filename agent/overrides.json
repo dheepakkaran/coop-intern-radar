@@ -20,6 +20,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "carnival corporation|intern consumer insights and marketing analytics": {
+  "company": "Carnival Corporation",
+  "confidence": 88,
+  "jd_hash": "a9b80a25f2542d55",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "not an AI/ML, Data or Software role",
+  "quotes": {
+   "degree": "Current undergraduate or graduate student pursuing a degree in Marketing Research, Business Analytics, Marketing, Psychology, Communications, Hospitality, or related field."
+  },
+  "read_at": 1794854105,
+  "tech": null,
+  "title": "Intern, Consumer Insights and Marketing Analytics",
+  "us": true,
+  "was": "match"
+ },
  "constellation brands|intern data and ai enablement": {
   "company": "Constellation Brands",
   "confidence": 88,
