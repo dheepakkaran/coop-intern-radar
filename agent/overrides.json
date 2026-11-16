@@ -15,7 +15,7 @@
    "degree": "Currently enrolled in a bachelor's or master's degree program in Engineering, Computer Science or Relevant (technical background required) in the United States.",
    "sponsorship": "Must be legally authorized to work in the United States without company sponsorship now and in the future."
   },
-  "read_at": 1794859535,
+  "read_at": 1794869963,
   "tech": "Data",
   "title": "Sales Excellence Data Analytics Intern - Summer 2027",
   "us": true,
@@ -36,11 +36,34 @@
   "quotes": {
    "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Software Engineering, Computer Engineering, Biomedical Engineering, Electrical Engineering, or a related technical field."
   },
-  "read_at": 1794838228,
+  "read_at": 1794869963,
   "tech": "Software",
   "title": "Software Engineering Intern (Medical Device & Healthcare Integration)",
   "us": true,
   "was": "needs review: degree"
+ },
+ "boston scientific|ai acceleration intern": {
+  "company": "Boston Scientific",
+  "confidence": 90,
+  "jd_hash": "df6694a529922516",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a bachelor's or graduate degree in Computer, Industrial, or Software Engineering, Data or Computer Science, Artificial Intelligence, or Business/Data Analytics.",
+   "grad": "Must graduate between Fall 2027 \u2013 Spring 2029",
+   "sponsorship": "Must be eligible to work in the U.S. without company sponsorship, now or in the future, for employment-based work authorization."
+  },
+  "read_at": 1794869963,
+  "tech": "AI/ML",
+  "title": "AI Acceleration Intern",
+  "us": true,
+  "was": "fails: grad"
  },
  "carnival corporation|intern consumer insights and marketing analytics": {
   "company": "Carnival Corporation",
@@ -78,7 +101,7 @@
   "quotes": {
    "degree": "Current student in, or recent graduate of, a Computer Science, Data Science, Statistics, Mathematics, or other STEM-related program."
   },
-  "read_at": 1794843628,
+  "read_at": 1794869963,
   "tech": "Data",
   "title": "Intern, Data and AI Enablement",
   "us": true,
@@ -99,7 +122,7 @@
   "quotes": {
    "degree": "Current student in, or recent graduate of, a Computer Science, Data Science, Statistics, Mathematics, or other STEM-related program."
   },
-  "read_at": 1794852304,
+  "read_at": 1794869963,
   "tech": "Data",
   "title": "Intern, Data Science",
   "us": true,
@@ -107,7 +130,7 @@
  },
  "intuitive|clinical research engineering intern": {
   "company": "Intuitive",
-  "confidence": 88,
+  "confidence": 87,
   "jd_hash": "bab92102e55964bb",
   "labels": {
    "citizenship": "not_required",
@@ -120,7 +143,7 @@
   "quotes": {
    "degree": "Current enrollment in a Biomedical Engineering, Mechanical Engineering, or related degree-seeking program at the Master's level."
   },
-  "read_at": 1794859535,
+  "read_at": 1794869963,
   "tech": null,
   "title": "Clinical Research Engineering Intern",
   "us": true,
@@ -128,7 +151,7 @@
  },
  "kensho|machine learning engineer summer intern 2027": {
   "company": "Kensho",
-  "confidence": 92,
+  "confidence": 93,
   "jd_hash": "0fe76fbba6de4d61",
   "labels": {
    "citizenship": "not_required",
@@ -141,37 +164,38 @@
   "quotes": {
    "degree": "Pursuing a bachelor's degree or higher with relevant classwork or internships in Machine Learning"
   },
-  "read_at": 1794857735,
+  "read_at": 1794869963,
   "tech": "AI/ML",
   "title": "Machine Learning Engineer - Summer Intern 2027",
   "us": true,
   "was": "needs review: degree"
  },
- "optimum altice usa|cybersecurity operations intern": {
-  "company": "Optimum (Altice USA)",
-  "confidence": 90,
-  "jd_hash": "83405fcad60f4331",
+ "labcorp|intern people analytics": {
+  "company": "LabCorp",
+  "confidence": 88,
+  "jd_hash": "51ad2d3441a9c17c",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
    "degree": "ms_ok",
-   "grad": "not_stated",
+   "grad": "fits",
    "sponsorship": "no_sponsorship"
   },
   "now": "match",
   "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Information Security, or a related field.",
-   "sponsorship": "The Company will not provide current or future sponsorship for this role."
+   "degree": "Current enrollment in a Bachelor's, Master's, or PhD degree program.",
+   "grad": "Preferred candidates are rising juniors and seniors (December 2027 through June 2029 graduation) who are currently enrolled in a relevant degree program; however, all current students pursuing related studies are encouraged to apply.",
+   "sponsorship": "This position is not eligible for visa sponsorship now or in the future."
   },
-  "read_at": 1794775784,
-  "tech": "Software",
-  "title": "Cybersecurity Operations Intern",
+  "read_at": 1794869963,
+  "tech": "Data",
+  "title": "Intern - People Analytics",
   "us": true,
-  "was": "needs review: degree"
+  "was": "needs review: degree, grad"
  },
  "s p global|machine learning engineer summer intern 2027": {
   "company": "S&P Global ",
-  "confidence": 92,
+  "confidence": 93,
   "jd_hash": "0fe76fbba6de4d61",
   "labels": {
    "citizenship": "not_required",
@@ -184,7 +208,7 @@
   "quotes": {
    "degree": "Pursuing a bachelor's degree or higher with relevant classwork or internships in Machine Learning"
   },
-  "read_at": 1794857735,
+  "read_at": 1794869963,
   "tech": "AI/ML",
   "title": "Machine Learning Engineer - Summer Intern 2027",
   "us": true,
