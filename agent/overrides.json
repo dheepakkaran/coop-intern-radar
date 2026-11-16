@@ -41,6 +41,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "constellation brands|intern data science": {
+  "company": "Constellation Brands",
+  "confidence": 92,
+  "jd_hash": "40fb8a5d2a7ecaee",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Current student in, or recent graduate of, a Computer Science, Data Science, Statistics, Mathematics, or other STEM-related program."
+  },
+  "read_at": 1794852304,
+  "tech": "Data",
+  "title": "Intern, Data Science",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "intuitive|clinical research engineering intern": {
   "company": "Intuitive",
   "confidence": 85,
