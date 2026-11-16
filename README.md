@@ -77,7 +77,13 @@ every 30 min   company job boards that are due ────────┼─►
     final over everything. Order of authority: me > review agent > AI reader + rules > rules.
   The agent derives the corrections from scratch on every run (a pure function of the queue and what it has read),
   so a crash or a reboot mid-run can never leave a stale or missing correction. `scripts/agent_audit.py gold` turns
-  its corrections into gold-set candidates, so the rules learn from them.
+  its eligibility corrections into gold-set candidates, and `scripts/gold_review.py` walks through them (accept / edit /
+  skip, ~10 minutes a week) into `tests/gold/dev.json`, so the rules and the AI reader learn from them. When Claude
+  Code agrees a job is a match but is not sure (confidence < 85), the job stays but is tagged "Claude Code: not sure"
+  and goes on the `decide.py` list. Dates Claude Code's browser sees on JavaScript-only postings come back in its
+  heartbeat and date the job.
+- **Lost coverage is never silent:** a company board that answers 404 three times stops being polled, is listed under
+  "Sources & status", and is tried again once a week.
 - **"New"** = the earliest of the job's own date (its company board, or the posting page: Workday startDate /
   "Posted N Days Ago", JSON-LD datePosted), the list's posted date and the first time this radar saw the job. A list's
   date is when the *list* added the job, so it only ever caps the age; a job the board says is 30+ days old never shows as new.

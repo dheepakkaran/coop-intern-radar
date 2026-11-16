@@ -231,6 +231,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     # 4. Merge, date, keep the last WINDOW_DAYS.
     merged = merge(by_source)
     old_dates = {u: (v[0] if isinstance(v, list) else v) for u, v in (last.get("old_dates") or {}).items()}
+    agent_seen = agent_status.get("reviewed") or {}
     jd_cache = state.setdefault("jd_cache", {})
     in_window = []
     for k, j in merged.items():
@@ -240,8 +241,11 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         # A list's date is when the list added the job: only an upper bound. The job's own date (its board, or
         # the posting page read for its JD) wins when it is earlier.
         before, _ = dated(j, rec)   # what the list / our sighting alone would say
+        seen_by_agent = agent_seen.get(k)   # the date Claude Code's browser saw on the posting (JS-only sites)
         own = [(d, src) for d, src in ((old_dates.get(store.norm_url(j["url"])), "board"),
-                                       ((jd_cache.get(j["url"]) or {}).get("posted"), "page")) if d]
+                                       ((jd_cache.get(j["url"]) or {}).get("posted"), "page"),
+                                       (seen_by_agent.get("posted") if isinstance(seen_by_agent, dict) else None, "page"))
+               if d]
         j["_date_ok"] = bool(j.get("_board_dated") or own)
         if own and (not j.get("posted") or min(own)[0] < j["posted"]):
             j["posted"], j["posted_src"] = min(own)

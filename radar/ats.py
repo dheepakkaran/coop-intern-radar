@@ -609,6 +609,9 @@ def retry_soon(err: str) -> bool:
     return not m or int(m.group(1)) in (408, 425, 429) or int(m.group(1)) >= 500
 
 
+DEAD_RETRY = 7 * 86400   # a board that 404'd max_fails times is tried once a week (it may come back)
+
+
 def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None, now: int | None = None,
          force: bool = False, window_start: int | None = None) -> tuple[list[dict], dict]:
     """Poll the boards that are due (all of them with force=True); every other live board answers from its
@@ -624,11 +627,14 @@ def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None,
     pkey = _parse_key()
     jobs, health = [], {}
     for ats, fetch in FETCHERS.items():
-        live = [(bid, b) for bid, b in boards.items() if b["ats"] == ats and b.get("fails", 0) < max_fails]
+        mine = [(bid, b) for bid, b in boards.items() if b["ats"] == ats]
+        live = [(bid, b) for bid, b in mine if b.get("fails", 0) < max_fails]
+        retry = [(bid, b) for bid, b in mine if b.get("fails", 0) >= max_fails
+                 and now - b.get("dead_at", 0) >= DEAD_RETRY]
         for bid, b in live:
             if "next" not in b:   # never scheduled: spread first polls over the interval (due now if never read)
                 b["next"] = 0 if not b.get("cache") else now + _spread(bid, COLD_EVERY)
-        todo = [(bid, b) for bid, b in live if force or b.get("next", 0) <= now]
+        todo = [(bid, b) for bid, b in live if force or b.get("next", 0) <= now] + retry
         h = {"ok": True, "boards": len(live), "checked": len(todo), "unchanged": 0, "failed": 0, "rows": 0,
              "errors": {}}
         t0 = time.time()
@@ -658,14 +664,18 @@ def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None,
                 if err == "304":
                     h["unchanged"] += 1
                     b["fails"] = 0
+                    b.pop("dead_at", None)
                 elif err:
                     if err == "gone":
                         b["fails"] = b.get("fails", 0) + 1
+                        if b["fails"] >= max_fails:
+                            b["dead_at"] = now   # stops being polled; reported; retried after DEAD_RETRY
                     FAILED.add(bid)
                     h["failed"] += 1
                     h["errors"][err] = h["errors"].get(err, 0) + 1
                 else:
                     b["fails"] = 0
+                    b.pop("dead_at", None)
                     b["cache"] = _slim(got, since)
                     b["pkey"] = pkey
                     if etag:
@@ -685,6 +695,9 @@ def poll(boards: dict[str, dict], max_fails: int = 3, known: dict | None = None,
         h["seconds"] = round(time.time() - t0, 1)
         h["ok"] = h["checked"] == 0 or h["failed"] < h["checked"]
         h["hot"] = sum(1 for _, b in live if is_hot(b, now))
+        # boards that stopped answering (404 x max_fails): the page lists them, so lost coverage is never silent
+        h["dead"] = [{"company": b["company"], "board": bid, "since": b.get("dead_at")}
+                     for bid, b in mine if b.get("fails", 0) >= max_fails]
         health[ATS_NAMES[ats]] = h
         print(f"[ats] {ATS_NAMES[ats]}: {h}", file=sys.stderr)
     return jobs, health

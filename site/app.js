@@ -316,6 +316,11 @@
       (a.last_run ? ` · review agent: ran ${ago(a.last_run)}, agrees on ${a.checked}/${a.total}, ${a.applied} corrections live` +
         (a.ok === false ? ` · last agent run had errors: ${(a.errors || []).join("; ")}` : "") : " · review agent: not seen yet");
 
+    // boards that stopped answering (404 three times): lost coverage must never be silent
+    const dead = Object.entries(m.sources).flatMap(([k, v]) => (v.dead || []).map((x) => `${x.company} (${k})`));
+    $("dead").hidden = !dead.length;
+    $("dead").innerHTML = dead.length ? `<b>${dead.length} company boards stopped answering</b> (404 three times; moved or closed, tried again weekly): ${esc(dead.join(", "))}` : "";
+
     const terms = [...new Set(d.jobs.flatMap((j) => j.terms))].sort();
     $("term").innerHTML = `<option value="">Any term</option>` + terms.map((t) => `<option>${esc(t)}</option>`).join("");
     if (!terms.includes(st.term)) { st.term = ""; save(); }   // a saved term no job has today would empty the list

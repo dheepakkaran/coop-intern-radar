@@ -477,7 +477,9 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
                 "jd_hash": q["jd_hash"], "excerpt": E.excerpt(text), "base_match": q["base_match"],
                 "base_reason": q["base_why_not"], "agent_match": m, "agent_reason": reason,
                 "answer": {x: a[x] for x in ("us", "tech", *E.LABELS, "quotes", "confidence")},
-                "note": str(a.get("note") or ""), "unverified": a.get("unverified") or []}
+                "note": str(a.get("note") or ""), "unverified": a.get("unverified") or [],
+                # the posting's own date if its text says one (browser-only pages give the cloud no date)
+                "posted": jdfetch.text_posted(text, now)}
             stats["read"] += 1
         _save(REVIEWS, reviews)   # every batch: a crash loses at most one batch of reading
     live_keys = {q["key"] for q in queue}
@@ -503,7 +505,7 @@ def run(max_jobs: int, batch: int, dry: bool) -> dict:
     status = {"t": now, "say": say, "stats": {k: v for k, v in stats.items() if k != "errors"},
               "ok": not stats["errors"], "errors": stats["errors"][:5],
               # what the agent concluded for each job it read (the page shows "agrees" only for real agreement)
-              "reviewed": {k: {"h": v["jd_hash"], "verdict": verdict(by_key[k], v)}
+              "reviewed": {k: {"h": v["jd_hash"], "verdict": verdict(by_key[k], v), "posted": v.get("posted")}
                            for k, v in reviews.items() if v.get("jd") and k in by_key and verdict(by_key[k], v)},
               # jobs the agent tried but could not read (the page says so instead of "not read yet")
               "tried": {k: {"t": v["t"], "why": v.get("why") or "could not read the posting", "tries": v.get("tries", 1)}
@@ -550,8 +552,15 @@ def gold_candidates() -> str:
     for k, v in reviews.items():
         if not v.get("jd") or "answer" not in v or v["agent_match"] == v.get("base_match", v.get("live_match")):
             continue
+        # the gold set measures eligibility only: a disagreement about the role (tech or not) is not a candidate
+        why = (v.get("base_reason", v.get("live_reason")) or "") + " " + (v.get("agent_reason") or "")
+        if not re.search(r"fails|needs review|unverified", why):
+            continue
         a = v["answer"]
-        out.append({"company": v["company"], "title": v["title"], "url": v.get("url"), "excerpt": v.get("excerpt"),
+        excerpt = v.get("excerpt")
+        if not excerpt and v.get("url"):   # read before excerpts were saved: fetch the posting again
+            excerpt = E.excerpt(fetch_text(v["url"]) or "") or None
+        out.append({"company": v["company"], "title": v["title"], "url": v.get("url"), "excerpt": excerpt,
                     "gold": {x: a[x] for x in E.LABELS}, "quotes": a["quotes"], "confidence": a["confidence"],
                     "base": v.get("base_reason", v.get("live_reason")) or "match",
                     "note": "from the review agent " + time.strftime("%Y-%m-%d", time.localtime(v["t"]))

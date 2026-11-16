@@ -25,15 +25,17 @@ import time
 import urllib.error
 import urllib.request
 
-from .eligibility import LABELS, NEUTRAL, residency_fact
+from .eligibility import F1_REJECT, LABELS, NEUTRAL, NO_SPONSOR, residency_fact
 
 API = "https://api.groq.com/openai/v1/chat/completions"
 MODEL = os.environ.get("RADAR_LLM_MODEL") or "openai/gpt-oss-120b"  # empty env var (unset GitHub var) -> default
-LLM_VERSION = 3       # bump when the prompt, model settings or excerpt trimming change: cached answers are redone
+LLM_VERSION = 4       # bump when the prompt, model settings or excerpt trimming change: cached answers are redone
 # PROFILE "v1" = the exact setup measured on the held-out test set (one excerpt per call, full excerpt, the v1
 # prompt, the model's default reasoning): gpt-oss-120b 95.4% verdict accuracy, 0 / 35 not-eligible shown.
 # LLM_VERSION 3 (2026-11-15): the applicant profile also says how long he has lived in the US, and a US-residency
 # length he can't meet counts as citizenship "required" (KBR R2130067: "three years of continuous residency").
+# LLM_VERSION 4 (2026-11-16): "authorized to work without immigration support / sponsorship now or in the future" is
+# only no_sponsorship, not a CPT rejection (Milliman: gpt-oss read it as cpt "rejected"); verify() also enforces it.
 # PROFILE "v2" = batched + trimmed + low reasoning: fewer tokens but 85% on dev, so not used live.
 PROFILE = os.environ.get("RADAR_LLM_PROFILE") or "v1"
 BATCH = 1 if PROFILE == "v1" else int(os.environ.get("RADAR_LLM_BATCH") or 5)  # excerpts per request
@@ -48,7 +50,7 @@ Not a US citizen, no green card, no clearance. """ + residency_fact() + """
 
 For each excerpt answer 5 questions (exact values):
 citizenship: "required" = must be US citizen / green card / "U.S. person" (ITAR/EAR) / have or get a security clearance / hold another country's citizenship / have lived in the US longer than the applicant has (e.g. "3 years of continuous U.S. residency"). A PIV / public trust / background check alone is NOT "required". A company that only MAY decline non-U.S. persons is "not_required".
-cpt: "rejected" = F-1/CPT/OPT/student-visa holders not eligible or "do not meet" requirements, or PERMANENT work authorization required. "welcome" = says CPT/F-1 students can apply. Else "silent".
+cpt: "rejected" = F-1/CPT/OPT/student-visa holders not eligible or "do not meet" requirements, or PERMANENT work authorization required. "Authorized to work without sponsorship now or in the future" is not a CPT rejection (that is no_sponsorship). "welcome" = says CPT/F-1 students can apply. Else "silent".
 sponsorship: "no_sponsorship" = won't sponsor / must not need sponsorship now or in future / authorized for any employer. "sponsors" = will sponsor. Else "silent".
 degree: "ms_ok" = master's or graduate students can apply (BS/MS, "BS or higher", graduate internship, all levels). "ug_only" = only undergraduates (pursuing a Bachelor's, rising junior/senior, undergraduate program). "phd_only" = only PhD students. "ug_preferred" = undergrad only preferred. Else "unclear". A requirement line beats a softer mention (intro text, pay table).
 grad: "fits" = stated graduation window includes May 2028 (±3 months). "misses" = stated window excludes it. Else "not_stated". Ignore dates not about the applicant's graduation.
@@ -67,7 +69,9 @@ status (ITAR/EAR), an active or obtainable security clearance, or a number of ye
 that the applicant does not have (e.g. "three years of continuous residency in the U.S."); else "not_required". A \
 PIV badge, public trust, national agency check or background check alone is "not_required".
 - cpt: "rejected" if it says F-1 / CPT / OPT / student-visa holders are not eligible or do not meet requirements, \
-or it requires PERMANENT work authorization; "welcome" if it explicitly says CPT / F-1 students can apply; else "silent".
+or it requires PERMANENT work authorization; "welcome" if it explicitly says CPT / F-1 students can apply; else "silent". \
+"Must be authorized to work without (immigration support / sponsorship) now or in the future" is not a CPT rejection: \
+that is sponsorship "no_sponsorship" and cpt "silent" (CPT is the work authorization, no sponsorship needed).
 - sponsorship: "no_sponsorship" if it will not sponsor, or candidates must not need sponsorship now or in the future, \
 or must be authorized to work for any employer; "sponsors" if it says it will sponsor; else "silent".
 - degree: "ms_ok" if master's students can apply (master's, graduate students, BS/MS, "BS or higher", all levels); \
@@ -132,6 +136,12 @@ def verify(answer: dict, excerpt: str) -> tuple[dict, dict, list]:
             lab[k], quo[k] = v, q.strip()
         else:
             unverified.append(k)
+    # A "no sponsorship now or in the future" sentence is not a CPT rejection (Milliman, 2026-11-15): if the only
+    # evidence for "rejected" is such a sentence, with no F-1 / CPT / OPT / permanent-authorization words, drop it.
+    q = quo.get("cpt")
+    if lab["cpt"] == "rejected" and q and NO_SPONSOR.search(q) and not F1_REJECT.search(q):
+        lab["cpt"] = NEUTRAL["cpt"]
+        del quo["cpt"]
     return lab, quo, unverified
 
 

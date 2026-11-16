@@ -14,6 +14,7 @@ import urllib.error
 import urllib.parse
 import time
 import urllib.request
+from datetime import datetime
 
 from .ats import iso, workday_posted
 
@@ -83,9 +84,35 @@ POSTED_TEXT = re.compile(r"\bposted\s*:?\s*(today|yesterday|\d+\+?\s*days?\s+ago
 _NOW = [0]   # the run's clock for relative dates ("Posted 3 Days Ago"), set by fetch()
 
 
+# "Posted 11/13/2026" (SuccessFactors), "Open date: 11/10/2026" (USAJOBS), "Posted on October 2, 2026" (UltiPro),
+# "Date posted: 2026-11-12"
+POSTED_DATE = re.compile(r"\b(?:posted(?:\s+on)?|date\s+posted|posting\s+date|open(?:ing)?\s+date|published(?:\s+on)?)"
+                         r"\s*:?\s*(\d{1,2}/\d{1,2}/\d{4}|\d{4}-\d{2}-\d{2}|[A-Z][a-z]{2,8}\.?\s+\d{1,2},?\s+\d{4})", re.I)
+
+
+def _date(s: str) -> int | None:
+    s = re.sub(r"\s+", " ", s.replace(".", "").replace(",", "")).strip()
+    for f in ("%m/%d/%Y", "%Y-%m-%d", "%B %d %Y", "%b %d %Y"):
+        try:
+            return iso(datetime.strptime(s, f).date().isoformat())   # same as a JSON-LD date-only value
+        except ValueError:
+            continue
+    return None
+
+
 def page_posted(text: str) -> int | None:
+    """The posting's own date from its visible text, if it says one (relative or calendar date)."""
     m = POSTED_TEXT.search(text or "")
-    return _plausible(workday_posted(m.group(1), _NOW[0])) if m else None
+    if m:
+        return _plausible(workday_posted(m.group(1), _NOW[0]))
+    m = POSTED_DATE.search(text or "")
+    return _plausible(_date(m.group(1))) if m else None
+
+
+def text_posted(text: str, now: int | None = None) -> int | None:
+    """page_posted for callers outside fetch() (the review agent's browser pages)."""
+    _NOW[0] = int(now or time.time())
+    return page_posted(text)
 
 
 # ---- per-ATS adapters (url regex -> function(match) -> result) ------------------------------------------

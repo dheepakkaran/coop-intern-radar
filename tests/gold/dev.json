@@ -2995,5 +2995,23 @@
    "degree": "Position Overview This summer-based internship is open to juniors, seniors, and graduate students pursuing a career in software development."
   },
   "note": "Workday R2130067 (2026-11-15 RCA): 3 years of continuous US residency for a federal credential; applicant in the US since 2026-01. Also says 'national agency check' (federal credential tag)."
+ },
+ {
+  "id": 172,
+  "company": "Milliman",
+  "title": "AI Product Engineer Intern, CMH Health",
+  "excerpt": "Individual(s) must be legally authorized to work in the United States without the need for immigration support or sponsorship from Milliman now or in the future. Milliman's CMH Health Practice is seeking motivated undergraduate and graduate students pursuing degrees in mathematics, computer science, or related fields to join the Products team for Spring 2027. Minimum Requirements Current college undergraduate or graduate student (Math, Computer Science, or related fields of study is preferred). Will consider other majors (Philosophy, Art, Psychology, Biology) for students who have a demonstrated interest and aptitude for software development. Analytical prowess and organizational mastery. Benefits We offer competitive benefits which include the following based on plan eligibility: Employee Assistance Program (EAP) – Confidential support for personal and work-related challenges. 401(k) Plan – When an employee reaches 1,000 hours worked within 12 consecutive months, they become eligible for a 401(k) plan that includes a company matching program and profit-sharing contributions. Transportation – Pre-tax savings for eligible transit and parking expenses.",
+  "gold": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "sponsorship": "no_sponsorship",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "eligible",
+  "quotes": {
+   "sponsorship": "Individual(s) must be legally authorized to work in the United States without the need for immigration support or sponsorship from Milliman now or in the future."
+  },
+  "note": "UltiPro, 2026-11-15: gpt-oss read the no-sponsorship line as cpt rejected; Claude Code corrected it. Internship on CPT = fine."
  }
 ]

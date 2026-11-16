@@ -1299,7 +1299,7 @@ def test_profile_has_the_residency_fact():
     from radar import llm
     from scripts import agent_audit as A
     assert "In the US since 2026-01" in llm.SYSTEM_V1 and "In the US since 2026-01" in A.SYSTEM
-    assert llm.LLM_VERSION >= 3 and A.AGENT_VERSION >= 2 and elig.RULES_VERSION >= 10
+    assert llm.LLM_VERSION >= 3 and A.AGENT_VERSION >= 2 and elig.RULES_VERSION >= 11
 
 
 def test_ai_reader_cannot_overrule_a_residency_block(in_us_under_a_year):
@@ -1649,3 +1649,100 @@ def test_date_confirmed_only_when_a_board_or_the_posting_dates_it(tmp_path):
               jd_fetch=fake_jd, now=now)
     got = {j["company"]: j["date_confirmed"] for j in json.load(open(out / "jobs.json"))["jobs"]}
     assert got == {"A": True, "B": False, "C": True}
+
+
+def test_ai_no_sponsorship_line_is_not_a_cpt_rejection():
+    """Milliman (2026-11-15): Groq read 'without the need for immigration support or sponsorship ... now or in the
+    future' as CPT rejected. For an internship on CPT that is only 'no sponsorship'."""
+    from radar import llm
+    line = ("Individual(s) must be legally authorized to work in the United States without the need for immigration "
+            "support or sponsorship from Milliman now or in the future.")
+    ex = "Undergraduate and graduate students. " + line
+    lab, quo, unv = llm.verify({"cpt": "rejected", "sponsorship": "no_sponsorship",
+                                "q": {"cpt": line, "sponsorship": line}}, ex)
+    assert lab["cpt"] == "silent" and lab["sponsorship"] == "no_sponsorship" and "cpt" not in quo
+    # a real rejection stays
+    real = "Students on F-1 visas, including CPT and OPT, are not eligible for this position."
+    lab2, _, _ = llm.verify({"cpt": "rejected", "q": {"cpt": real}}, "Pursuing an MS. " + real)
+    assert lab2["cpt"] == "rejected"
+    assert "not a CPT rejection" in llm.SYSTEM_V1 and llm.LLM_VERSION >= 4
+
+
+def test_graduate_students_is_not_a_graduation_date():
+    """Milliman: 'undergraduate and graduate students ... for Spring 2027' is about who can apply, not when you graduate."""
+    t = ("Milliman's CMH Health Practice is seeking motivated undergraduate and graduate students pursuing degrees in "
+         "mathematics, computer science, or related fields to join the Products team for Spring 2027.")
+    assert elig.labels(t)[0]["grad"] == "not_stated"
+    assert elig.labels("Must be graduating between December 2027 and June 2028.")[0]["grad"] == "fits"
+    assert elig.labels("Expected graduation date: May 2026.")[0]["grad"] == "misses"
+    assert elig.labels("Graduate students graduating in December 2026 only.")[0]["grad"] == "misses"
+
+
+@pytest.mark.parametrize("text,iso_date", [
+    ("Requisition ID 137221 - Posted 11/13/2026 - RTP, North Carolina", "2026-11-13"),      # SuccessFactors
+    ("Reviewing applications Open date: 11/10/2026 Closed date: 11/15/2026", "2026-11-10"),  # USAJOBS
+    ("Job Details Posting Details Posted on October 2, 2026 Locations", "2026-10-02"),       # UltiPro page text
+    ("Date posted: 2026-11-12 · Full time", "2026-11-12"),
+])
+def test_page_dates_in_more_formats(text, iso_date):
+    jdfetch._NOW[0] = ats.iso("2026-11-16T00:00:00Z")
+    assert jdfetch.page_posted(text) == ats.iso(iso_date)
+
+
+def test_agent_page_dates_reach_the_build(tmp_path):
+    """A posting only Claude Code's browser could read (SuccessFactors): its date comes back in the heartbeat."""
+    now = 2_000_000_000
+    row = _row("NetApp", "Data Analyst Intern", now - 3600, url="https://career4.successfactors.com/career?x=1")
+    st, out = str(tmp_path / "s"), tmp_path / "o"
+    build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
+    key = "netapp|data analyst intern"
+    hb = {"t": now, "reviewed": {key: {"h": None, "verdict": "agree", "posted": now - 20 * 86400}}}
+    meta = build.run(st, str(out), fetch=_fake_fetch(now, [row], []), poll="no", jd_fetch=lambda u: None, now=now,
+                     agent_status=hb)
+    j = json.load(open(out / "jobs.json"))["jobs"][0]
+    assert j["reposted"] == now - 20 * 86400 and j["date_confirmed"] is True and meta["count_all_24h"] == 0
+
+
+def test_dead_boards_are_reported_and_retried_weekly(monkeypatch):
+    """36 boards had silently stopped (3 x 404) on 2026-11-16: the page must say so, and they get a weekly retry."""
+    now = 2_000_000_000
+    calls = []
+
+    def gone(token, company):
+        calls.append(token)
+        raise ats.Gone(token)
+    monkeypatch.setattr(ats, "FETCHERS", {"gh": gone})
+    boards = {"gh:moved": {"ats": "gh", "token": "moved", "company": "Moved Co", "fails": 2, "next": 0}}
+    _, h = ats.poll(boards, now=now)
+    assert boards["gh:moved"]["fails"] == 3 and boards["gh:moved"]["dead_at"] == now
+    assert h["Greenhouse"]["dead"] == [{"company": "Moved Co", "board": "gh:moved", "since": now}]
+    calls.clear()
+    ats.poll(boards, now=now + 86400)                 # dead: not polled the next day ...
+    assert calls == []
+    ats.poll(boards, now=now + 8 * 86400)             # ... but tried again after a week
+    assert calls == ["moved"]
+    monkeypatch.setattr(ats, "FETCHERS", {"gh": lambda token, company: []})
+    _, h = ats.poll(boards, now=now + 16 * 86400)      # it came back
+    assert boards["gh:moved"]["fails"] == 0 and "dead_at" not in boards["gh:moved"] and h["Greenhouse"]["dead"] == []
+
+
+def test_gold_review_adds_only_what_you_accept(tmp_path, monkeypatch):
+    from scripts import gold_review as G
+    g = tmp_path / "gold"
+    g.mkdir()
+    lab = dict(elig.NEUTRAL, degree="ms_ok")
+    cands = [{"company": c, "title": "Intern", "url": None, "excerpt": "Pursuing a BS or MS.", "gold": dict(lab),
+              "quotes": {"degree": "Pursuing a BS or MS."}, "confidence": 90, "base": "needs review: degree"}
+             for c in ("A", "B", "C", "Old")]
+    (g / "candidates.json").write_text(json.dumps(cands))
+    (g / "dev.json").write_text(json.dumps([{"id": 7, "company": "Old", "title": "Intern", "excerpt": "x",
+                                             "gold": lab, "verdict": "eligible"}]))
+    (g / "test.json").write_text("[]")
+    monkeypatch.setattr(G, "GOLD", str(g))
+    monkeypatch.setattr(G, "SEEN", str(tmp_path / "seen.json"))
+    answers = iter(["a", "e", "degree=bogus", "e", "degree=ug_only", "s"])
+    G.main(inp=lambda prompt: next(answers))
+    dev = json.loads((g / "dev.json").read_text())
+    assert [(x["id"], x["company"], x["gold"]["degree"], x["verdict"]) for x in dev] == [
+        (7, "Old", "ms_ok", "eligible"), (8, "A", "ms_ok", "eligible"), (9, "B", "ug_only", "not_eligible")]
+    G.main(inp=lambda prompt: (_ for _ in ()).throw(AssertionError("asked again")))   # nothing left to ask

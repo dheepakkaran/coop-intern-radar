@@ -8,3 +8,4 @@ docs/
 .env
 .venv/
 .cache/
+tests/gold/candidates.json

@@ -243,3 +243,4 @@ details[open] summary::before { content: "– "; }
 /* a repost: posted earlier, shown again in the window (lives in its own tab) */
 .kind.repost { background: var(--warn-bg, rgb(217 119 6 / .12)); color: var(--warn, #b45309); }
 .kind.nodate { background: transparent; color: var(--muted); border: 1px dashed var(--line2); }
+.health.dead b { color: var(--warn); }

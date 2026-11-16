@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
 US_SINCE = (2026, 1)  # in the US since January 2026 (MS started Spring 2026): "N years of US residency" needs N <= this
-RULES_VERSION = 10  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+RULES_VERSION = 11  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 TERM_TAG = False  # Dheepak decides later: True -> a JD that offers only a summer term gets the tag "Term: summer"
 
 TAG = re.compile(r"<[^>]+>")
@@ -210,7 +210,11 @@ MONTHS = {m: i for i, m in enumerate(
 SEASONS = {"spring": 5, "summer": 8, "fall": 12, "autumn": 12, "winter": 12}
 DATE = re.compile(r"\b(spring|summer|fall|autumn|winter|jan\w*|feb\w*|mar\w*|apr\w*|may|jun\w*|jul\w*|aug\w*|sep\w*|oct\w*|nov\w*|dec\w*)?"
                   r"[\s,/-]*((?:20)\d\d)\b", re.I)
-GRAD_WORD = re.compile(r"\bgraduat\w*", re.I)
+# "graduate students / program / degree" says who may apply, not when they graduate (Milliman, 2026-11-16:
+# "graduate students ... for Spring 2027" was read as a Spring 2027 graduation).
+GRAD_WORD = re.compile(r"\bgraduat(?:ion|ing|ed|es)\w*|\bgraduate\b(?!\s*(?:-\s*)?(?:students?|programs?|degrees?|level|school|"
+                       r"research|positions?|interns?|internships?|candidates?|or\b|and\b|/|assistants?|courses?|studies|"
+                       r"study|work|engineers?|roles?))", re.I)
 
 
 def _grad_snippets(text: str) -> list[str]:
