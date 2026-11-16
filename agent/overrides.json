@@ -41,27 +41,26 @@
   "us": true,
   "was": "needs review: degree"
  },
- "jp morgan chase|2027 consumer community banking summer associate": {
-  "company": "JP Morgan Chase",
-  "confidence": 92,
-  "jd_hash": "157ef6843aefedbd",
+ "intuitive|clinical research engineering intern": {
+  "company": "Intuitive",
+  "confidence": 85,
+  "jd_hash": "3e9f772836d0d508",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
    "degree": "ms_ok",
-   "grad": "fits",
+   "grad": "not_stated",
    "sponsorship": "silent"
   },
-  "now": "match",
+  "now": "not an AI/ML, Data or Software role",
   "quotes": {
-   "degree": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research or a related quantitative field, with an expected graduation date between December 2027 and August 2028",
-   "grad": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research or a related quantitative field, with an expected graduation date between December 2027 and August 2028"
+   "degree": "Current enrollment in a Biomedical Engineering, Mechanical Engineering, or related degree-seeking program at the Master's level."
   },
-  "read_at": 1794843628,
-  "tech": "AI/ML",
-  "title": "2027 Consumer & Community Banking -Summer Associate",
+  "read_at": 1794848674,
+  "tech": null,
+  "title": "Clinical Research Engineering Intern",
   "us": true,
-  "was": "needs review: grad"
+  "was": "match"
  },
  "optimum altice usa|cybersecurity operations intern": {
   "company": "Optimum (Altice USA)",
