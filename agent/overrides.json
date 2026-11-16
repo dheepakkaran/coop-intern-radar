@@ -1,4 +1,26 @@
 {
+ "abb|sales excellence data analytics intern summer 2027": {
+  "company": "ABB",
+  "confidence": 85,
+  "jd_hash": "f2962efa059e385e",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in a bachelor's or master's degree program in Engineering, Computer Science or Relevant (technical background required) in the United States.",
+   "sponsorship": "Must be legally authorized to work in the United States without company sponsorship now and in the future."
+  },
+  "read_at": 1794859535,
+  "tech": "Data",
+  "title": "Sales Excellence Data Analytics Intern - Summer 2027",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "analog devices|software engineering intern medical device healthcare integration": {
   "company": "Analog Devices",
   "confidence": 90,
@@ -85,8 +107,8 @@
  },
  "intuitive|clinical research engineering intern": {
   "company": "Intuitive",
-  "confidence": 85,
-  "jd_hash": "3e9f772836d0d508",
+  "confidence": 88,
+  "jd_hash": "bab92102e55964bb",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -98,7 +120,7 @@
   "quotes": {
    "degree": "Current enrollment in a Biomedical Engineering, Mechanical Engineering, or related degree-seeking program at the Master's level."
   },
-  "read_at": 1794848674,
+  "read_at": 1794859535,
   "tech": null,
   "title": "Clinical Research Engineering Intern",
   "us": true,
