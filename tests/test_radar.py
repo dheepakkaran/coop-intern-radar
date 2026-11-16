@@ -1746,3 +1746,76 @@ def test_gold_review_adds_only_what_you_accept(tmp_path, monkeypatch):
     assert [(x["id"], x["company"], x["gold"]["degree"], x["verdict"]) for x in dev] == [
         (7, "Old", "ms_ok", "eligible"), (8, "A", "ms_ok", "eligible"), (9, "B", "ug_only", "not_eligible")]
     G.main(inp=lambda prompt: (_ for _ in ()).throw(AssertionError("asked again")))   # nothing left to ask
+
+
+# ---- Closed postings (Altice USA "Data Analyst Intern - Modernization Program BSS/OSS Migration", 2026-11-16) -----
+ALTICE_URL = ("https://www.optimumcareers.com/job/Bethpage-Intern-Data-Analyst,-Modernization-Program-BSSOSS-Migration"
+              "-NY-11714/1450883000/?ats=successfactors")
+
+
+def test_closed_posting_page_is_seen_as_closed_not_as_a_jd():
+    """Simplify still listed it, but the page said 'no longer accepting applications': its menus were read as the JD."""
+    page = open(os.path.join(os.path.dirname(__file__), "fixtures", "successfactors_altice_closed.html")).read()
+    r = jdfetch.fetch(ALTICE_URL, get=lambda u, body=None: page, now=ats.iso("2026-11-16T20:00:00Z"))
+    assert r["closed"] is True and r["text"] == ""
+    # its sister posting (Software Developer Intern) is open: a real JD, dated by <meta itemprop="datePosted">
+    page = open(os.path.join(os.path.dirname(__file__), "fixtures", "successfactors_altice_open.html")).read()
+    r = jdfetch.fetch(ALTICE_URL.replace("Data-Analyst", "SD"), get=lambda u, body=None: page,
+                      now=ats.iso("2026-11-16T20:00:00Z"))
+    assert not r.get("closed") and "Software" in r["text"] and r["posted"] == ats.iso("2026-11-16T00:00:00+00:00")
+
+
+@pytest.mark.parametrize("text,closed", [
+    ("Sorry, we are no longer accepting applications for this role at this time.", True),
+    ("This job is no longer available.", True),
+    ("The position has been filled.", True),
+    ("This job posting has expired", True),
+    ("Applications for this role are now closed.", True),
+    ("Applications are accepted until the position is filled.", False),       # a normal JD line
+    ("We will review applications until the position is no longer open.", False),
+    ("Positions are filled on a rolling basis.", False),
+])
+def test_closed_wording(text, closed):
+    assert jdfetch.page_closed(text) is closed
+
+
+def test_open_page_with_a_description_is_not_closed():
+    desc = "Build data pipelines in Python and SQL for our intern program. " * 30
+    page = f'<html><body><meta itemprop="datePosted" content="Mon Nov 16 00:00:00 UTC 2026"><div>{desc}</div></body></html>'
+    r = jdfetch.fetch("https://careers.example.com/job/1", get=lambda u, body=None: page, now=ats.iso("2026-11-16T20:00:00Z"))
+    assert not r.get("closed") and r["via"] == "page" and r["posted"] == ats.iso("2026-11-16T00:00:00+00:00")
+
+
+def test_closed_job_is_hidden_and_a_later_close_is_caught(tmp_path):
+    now = 2_000_000_000
+    rows = [_row("Altice USA", "Data Analyst Intern", now - 3600, url="https://careers.example.com/job/1"),
+            _row("Altice USA", "Software Developer Intern", now - 3600, url="https://careers.example.com/job/2")]
+    jd = "Data analysis with SQL and Python for students in a bachelor's or master's program. " * 20
+    state = {"closed": {"https://careers.example.com/job/1"}}
+    fake_jd = lambda u: ({"closed": True, "text": "", "posted": None} if u in state["closed"]
+                         else {"text": jd, "via": "page", "posted": None, "country": None})
+    st, out = str(tmp_path / "s"), tmp_path / "o"
+    build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
+    meta = build.run(st, str(out), fetch=_fake_fetch(now, rows, []), poll="no", jd_fetch=fake_jd, now=now)
+    titles = [j["title"] for j in json.load(open(out / "jobs.json"))["jobs"]]
+    assert titles == ["Software Developer Intern"] and meta["closed_skipped"] == 1
+    # the open one closes later: the 12-hour re-read catches it
+    state["closed"].add("https://careers.example.com/job/2")
+    t = now + build.RECHECK + 60
+    build.run(st, str(out), fetch=_fake_fetch(t, rows, []), poll="no", jd_fetch=fake_jd, now=t)
+    assert json.load(open(out / "jobs.json"))["jobs"] == []
+    # a re-read that fails (network) keeps the old reading
+    t2 = t + 600
+    state["closed"].discard("https://careers.example.com/job/2")
+    st2, out2 = str(tmp_path / "s2"), tmp_path / "o2"
+    build.run(st2, str(out2), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
+    build.run(st2, str(out2), fetch=_fake_fetch(now, rows[1:], []), poll="no", jd_fetch=fake_jd, now=now)
+    build.run(st2, str(out2), fetch=_fake_fetch(t2, rows[1:], []), poll="no", jd_fetch=lambda u: None, now=t2)
+    assert [j["title"] for j in json.load(open(out2 / "jobs.json"))["jobs"]] == ["Software Developer Intern"]
+
+
+def test_ats_query_param_does_not_split_a_job():
+    """Simplify's link has ?ats=successfactors, vanshb03's doesn't: same job, two rows (Altice / Optimum)."""
+    a = "https://www.optimumcareers.com/job/Bethpage-Intern-Software-Developer-NY-11714/1450884000/?ats=successfactors"
+    b = "https://www.optimumcareers.com/job/Bethpage-Intern-Software-Developer-NY-11714/1450884000"
+    assert store.norm_url(a) == store.norm_url(b)

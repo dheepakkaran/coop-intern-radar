@@ -9,7 +9,7 @@ import os
 import re
 from urllib.parse import urlsplit, urlunsplit, parse_qsl, urlencode
 
-TRACKING = re.compile(r"^(utm_|ref$|refs$|source$|src$|gh_src$|lever-source|iis$|iisn$|jobboard$|codes$|embed$)", re.I)
+TRACKING = re.compile(r"^(utm_|ref$|refs$|source$|src$|gh_src$|lever-source|iis$|iisn$|jobboard$|codes$|embed$|ats$)", re.I)
 
 
 def norm_url(url: str) -> str:

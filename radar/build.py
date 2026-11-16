@@ -18,6 +18,7 @@ REPOST_GAP = 7 * 86400   # first posted at least this long before it showed up a
 STRICT = True           # show only jobs that pass every check (no unverified, no "needs review")
 MAX_JD_FETCH = 150       # list-only jobs whose JD we fetch per run (the rest next run; results are cached)
 JD_RETRY = 6 * 3600      # a JD we couldn't get is tried again after this
+RECHECK = 12 * 3600      # a list-only job's posting is read again after this, to see if it closed
 MAX_AI_PER_RUN = int(os.environ.get("RADAR_AI_REQUESTS", "20"))  # AI requests per run (each = up to llm.BATCH JDs)
 ATS_SOURCES = set(ats.ATS_NAMES.values())
 # Corrections from the local review agent and Dheepak's own decisions: see radar/review.py for the contract.
@@ -268,20 +269,24 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
 
     # 5. Jobs we only know from a list have no JD yet: fetch it from the apply page (cached per URL),
     #    so every job, whatever its source, goes through the same tech + eligibility checks.
-    todo = []
+    todo, recheck = [], []
     for j, _ in in_window:
         if j.get("elig") is not None or tech.TITLE_NOT.search(j["title"]):
             continue
         c = jd_cache.get(j["url"])
-        if c and c.get("v") != eligibility.RULES_VERSION and not c.get("miss"):
+        if c and c.get("v") != eligibility.RULES_VERSION and not c.get("miss") and not c.get("closed"):
             c = None  # verdict from older rules: fetch the JD again
         if c and c.get("via") in ("ultipro", "lever") and not c.get("pv"):
             c = None  # read before the UltiPro / Lever readers took the posted date (2026-11-15)
-        if c and c.get("elig") is not None:
+        if c and c.get("closed") and now - c["t"] < JD_RETRY:
+            j["_closed"] = True
+        elif c and c.get("elig") is not None:
             apply_jd(j, c)
-        elif not (c and c.get("miss") and now - c["t"] < JD_RETRY):
+            if now - c["t"] >= RECHECK:
+                recheck.append(j)
+        elif not (c and (c.get("miss") or c.get("closed")) and now - c["t"] < JD_RETRY):
             todo.append(j)
-    todo = todo[:MAX_JD_FETCH]
+    todo = (todo + recheck)[:MAX_JD_FETCH]   # new ones first; then open ones read 12+ h ago, in case they closed
     jd_stats = {"fetched": 0, "missed": 0, "cached": sum(1 for v in jd_cache.values() if v.get("elig") is not None)}
     with ThreadPoolExecutor(max_workers=8) as pool:
         def safe(x):
@@ -290,12 +295,19 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             except Exception:
                 return None
         for j, r in zip(todo, pool.map(safe, todo)):
-            if r and r.get("text"):
+            if r and r.get("closed"):
+                # the posting page says it takes no more applications (a list can keep it for days)
+                c = {"t": now, "closed": True, "posted": r.get("posted"), "pv": 1}
+                j["_closed"] = True
+                jd_stats["closed"] = jd_stats.get("closed", 0) + 1
+            elif r and r.get("text"):
                 c = {"t": now, "v": eligibility.RULES_VERSION, "elig": eligibility.check(r["text"]),
                      "jd_terms": tech.jd_terms(r["text"]), "excerpt": eligibility.excerpt(r["text"]),
                      "country": r.get("country"), "via": r.get("via"), "posted": r.get("posted"), "pv": 1}
                 jd_stats["fetched"] += 1
                 apply_jd(j, c)
+            elif j in recheck:
+                continue          # couldn't read it again this time: keep what we had
             else:
                 c = {"t": now, "miss": True}
                 jd_stats["missed"] += 1
@@ -318,7 +330,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     # 6. The same checks for every job: US, tech role, eligibility (rules, then the AI reader as a second reader).
     #    6a: US + tech, and the rules' reading.
     cands, audit_rows, others = [], [], []
-    skipped_not_tech = skipped_inelig = skipped_non_us = skipped_unverified = skipped_review = 0
+    skipped_not_tech = skipped_inelig = skipped_non_us = skipped_unverified = skipped_review = skipped_closed = 0
     ov_stale = 0
     for j, t in in_window:
         d = {"company": j["company"], "title": j["title"], "url": j["url"], "locations": j["locations"][:3],
@@ -335,6 +347,10 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             ov_stale += 1
         if ov:
             j["_agent"] = ov
+        if j.get("_closed"):
+            skipped_closed += 1
+            d["result"] = "hidden: posting closed"
+            continue
         if j.get("non_us"):
             skipped_non_us += 1
             d["result"] = "hidden: not US (JD country)"
@@ -519,6 +535,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         "unverified_skipped": skipped_unverified,
         "review_skipped": skipped_review,
         "non_us_skipped": skipped_non_us,
+        "closed_skipped": skipped_closed,
         "jd": jd_stats,
         "ai": {**ai_stats, **budget.report(), "model": llm.MODEL, "on": ai_on},
         "check_count": sum(1 for r in rows if r["match"] and eligibility.needs_check(r["elig"])),

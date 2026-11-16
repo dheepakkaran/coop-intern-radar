@@ -60,6 +60,8 @@ every 30 min   company job boards that are due ────────┼─►
   API when there is one (`radar/jdfetch.py`), else the page's schema.org JobPosting (JSON-LD), else the page text.
   Results are cached per URL (and redone when the rules change), so each JD is fetched once. Then US → tech →
   eligibility, exactly like the board jobs. Pages that block robots (e.g. Meta) stay "Work auth: no JD".
+  Lists keep closed jobs for days: a posting page that says "no longer accepting applications" / "job has expired"
+  (and has no description) hides the job, and list-only postings are read again every 12 h to catch a later close.
 - **Only clean matches (2026-11-14):** a job is published only when every check passes. Failed checks, "no
   sponsorship" / "bachelor's preferred" / readers that disagree ("needs review"), and postings whose description
   can't be read ("unverified") are all left out; the counts are in the page footer.

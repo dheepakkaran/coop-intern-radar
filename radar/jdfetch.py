@@ -1,6 +1,7 @@
 """Get the job description for a job we only know from a list (apply URL, no JD).
 
-`fetch(url)` -> {"text": str, "posted": int|None, "country": str|None, "via": str} or None.
+`fetch(url)` -> {"text": str, "posted": int|None, "country": str|None, "via": str} or None, or {"closed": True, ...}
+when the posting says it no longer takes applications (lists keep closed jobs for days: Altice, 2026-11-16).
 `posted` is the job's own date (Workday startDate / "Posted N Days Ago", JSON-LD datePosted, the page's "Posted N
 Days Ago"): a list's date is only when the list added the job, so the build takes the earlier of the two.
 Order: a known ATS API for that URL (Workday, Greenhouse, Lever, Ashby, Workable, BambooHR, iCIMS, UltiPro),
@@ -98,6 +99,42 @@ def _date(s: str) -> int | None:
         except ValueError:
             continue
     return None
+
+
+# schema.org microdata instead of JSON-LD (SuccessFactors career sites): <meta itemprop="datePosted" content="Mon Nov 16
+# 00:00:00 UTC 2026">
+MICRO_DATE = re.compile(r'<meta[^>]+itemprop=["\']datePosted["\'][^>]*content=["\']([^"\']+)'
+                        r'|<meta[^>]+content=["\']([^"\']+)["\'][^>]*itemprop=["\']datePosted', re.I)
+
+
+def micro_posted(page: str) -> int | None:
+    m = MICRO_DATE.search(page or "")
+    if not m:
+        return None
+    v = (m.group(1) or m.group(2)).strip()
+    t = iso(v)
+    if t is None:
+        try:
+            t = iso(datetime.strptime(v.replace("UTC", "+0000"), "%a %b %d %H:%M:%S %z %Y").isoformat())
+        except ValueError:
+            t = _date(v)
+    return _plausible(t)
+
+
+# The page itself says the job is closed. "until the position is filled" is a normal JD line, so "filled" only counts
+# as "has been filled", and anything after "until" is ignored.
+CLOSED = re.compile(r"(?<!until )(?<!until the )\b(?:"
+                    r"(?:are|is|we're|we are)\s+no\s+longer\s+accepting\s+applications"
+                    r"|(?:job|position|posting|role|requisition|opportunity|vacancy)(?:\s+posting)?\s+(?:is\s+)?no\s+longer"
+                    r"\s+(?:available|open|active|accepting)"
+                    r"|(?:job|position|posting|role|requisition|opportunity)\s+has\s+(?:been\s+)?(?:closed|filled|expired|removed)"
+                    r"|(?:job|posting)\s+(?:has\s+)?expired\b"
+                    r"|applications?\s+for\s+this\s+(?:job|role|position)\s+(?:are|is|have)\s+(?:now\s+)?closed"
+                    r")", re.I)
+
+
+def page_closed(text: str) -> bool:
+    return bool(CLOSED.search(text or ""))
 
 
 def page_posted(text: str) -> int | None:
@@ -211,12 +248,16 @@ def fetch(url: str, get=None, now: int | None = None) -> dict | None:
         page = get(url)
         r = _json_ld(page)
         text = _text(page)
+        dates = [d for d in (page_posted(text), micro_posted(page)) if d]
         if r and len(r["text"].split()) >= 30:
-            dates = [d for d in (_plausible(r["posted"]), page_posted(text)) if d]
+            dates = [d for d in [_plausible(r["posted"])] + dates if d]
             r["posted"] = min(dates) if dates else None
             return r
+        if page_closed(text):
+            # no description, and the page says it's closed (the rest is the site's menus and cookie text)
+            return {"closed": True, "text": "", "posted": min(dates) if dates else None, "country": None, "via": "page"}
         if len(text.split()) >= MIN_WORDS:
-            return {"text": text, "posted": page_posted(text), "country": None, "via": "page"}
+            return {"text": text, "posted": min(dates) if dates else None, "country": None, "via": "page"}
     except Exception:  # any broken page (cut-off download, odd JSON, ...) just means "no JD this time"
         return None
     return None
