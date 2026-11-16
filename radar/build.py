@@ -107,12 +107,14 @@ def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
             k = by_url.get(u, k) if u else k
             if j.get("posted") and not j.get("posted_src"):
                 j["posted_src"] = "list" if src in LIST_SOURCES else ("day" if j.get("posted_day") else "board")
+            dated_by_board = src not in sources.SOURCES and bool(j.get("posted"))
             if k not in merged:
-                merged[k] = {**j, "sources": [src]}
+                merged[k] = {**j, "sources": [src], "_board_dated": dated_by_board}
                 if u:
                     by_url.setdefault(u, k)
                 continue
             m = merged[k]
+            m["_board_dated"] = m.get("_board_dated") or dated_by_board
             if src not in m["sources"]:
                 m["sources"].append(src)
             m["locations"] = sorted(set(m["locations"]) | set(j["locations"]))
@@ -240,6 +242,7 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         before, _ = dated(j, rec)   # what the list / our sighting alone would say
         own = [(d, src) for d, src in ((old_dates.get(store.norm_url(j["url"])), "board"),
                                        ((jd_cache.get(j["url"]) or {}).get("posted"), "page")) if d]
+        j["_date_ok"] = bool(j.get("_board_dated") or own)
         if own and (not j.get("posted") or min(own)[0] < j["posted"]):
             j["posted"], j["posted_src"] = min(own)
             j["posted_day"] = False
@@ -268,8 +271,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
         c = jd_cache.get(j["url"])
         if c and c.get("v") != eligibility.RULES_VERSION and not c.get("miss"):
             c = None  # verdict from older rules: fetch the JD again
-        if c and c.get("via") == "ultipro" and not c.get("pv"):
-            c = None  # read before the UltiPro reader took the posted date (2026-11-15)
+        if c and c.get("via") in ("ultipro", "lever") and not c.get("pv"):
+            c = None  # read before the UltiPro / Lever readers took the posted date (2026-11-15)
         if c and c.get("elig") is not None:
             apply_jd(j, c)
         elif not (c and c.get("miss") and now - c["t"] < JD_RETRY):
@@ -297,6 +300,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
     # The posting itself may say it is older than the list's date: re-date, and drop what left the window.
     for i, (j, t) in enumerate(in_window):
         p = (jd_cache.get(j["url"]) or {}).get("posted")
+        if p:
+            j["_date_ok"] = True
         if p and p < (j.get("_reposted") or t):
             j["_basis"] = "page"
             if j.get("_reposted") or (p < cut and t - p >= REPOST_GAP):
@@ -472,6 +477,8 @@ def run(state_path: str, out_dir: str, fetch=sources.fetch_json, resolve=sources
             "sources": j["sources"],
             "posted": t,
             "reposted": j.get("_reposted"),   # its real (older) date when it is a repost, else None
+            # a company board or the posting itself gave a date; False = only a list's date / our first sighting
+            "date_confirmed": bool(j.get("_date_ok")),
             "posted_basis": j.get("_basis"),
             "elig": {"auth": e["auth"], "degree": e["degree"], "grad": e.get("grad"), "notes": e.get("notes") or [],
                      "labels": e.get("labels"), "quotes": e.get("quotes") or {}, "disagree": e.get("disagree") or [],

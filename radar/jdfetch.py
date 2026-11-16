@@ -105,7 +105,9 @@ def _greenhouse(m, get):
 
 def _lever(m, get):
     d = json.loads(get(f"https://api.lever.co/v0/postings/{m.group(1)}/{m.group(2)}"))
-    return {"text": _text(" ".join(_strings(d))), "posted": None, "country": d.get("country"), "via": "lever"}
+    created = d.get("createdAt")   # ms; Lever's own creation time of the posting
+    return {"text": _text(" ".join(_strings(d))), "posted": int(created / 1000) if isinstance(created, (int, float)) else None,
+            "country": d.get("country"), "via": "lever"}
 
 
 def _ashby(m, get):

@@ -1606,3 +1606,46 @@ def test_a_late_find_is_not_a_repost(tmp_path):
     build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
     meta = build.run(st, str(out), fetch=_fake_fetch(now, [], [row]), poll="no", jd_fetch=fake_jd, now=now)
     assert json.load(open(out / "jobs.json"))["jobs"] == [] and meta["count_reposted"] == 0
+
+
+# ---- 2026-11-15: Claude Code doubts on a match, Lever dates, dates nobody confirmed -----------------------------
+def test_low_confidence_agree_on_a_match_goes_to_your_list():
+    """KBR R2130067: Claude Code agreed 'match' at 65 with a worried note; that must not show as a plain agree."""
+    from scripts import agent_audit as A
+    assert A.verdict(_q("a", True), _rv(True, 65)) == "doubt"
+    assert A.verdict(_q("a", True), _rv(True, 95)) == "agree"
+    assert A.verdict(_q("a", False), _rv(False, 40)) == "agree"     # both say 'not a match': nothing to check
+    rv = dict(_rv(True, 65), note="Requires three years continuous US residency; likely disqualifying.")
+    ov, unsure = A.corrections([_q("a", True)], {"a": rv})
+    assert ov == {} and len(unsure) == 1
+    u = unsure[0]
+    assert u["was"] == "match" and u["now"] == "match (not sure)" and "residency" in u["note"] and u["id"] == A.short_id("a")
+    assert review.cc_state(None, {"h": "h1", "verdict": "doubt"}, None, "h1") == {"state": "doubt"}
+
+
+def test_lever_posting_gives_its_created_date():
+    d = {"text": "ML Intern", "createdAt": 1_999_000_000_000, "descriptionPlain": "Python " * 40, "country": "US"}
+    r = jdfetch.fetch("https://jobs.lever.co/acme/0b1e4c2a-1111-2222-3333-444455556666",
+                      get=lambda u, body=None: json.dumps(d), now=2_000_000_000)
+    assert r["via"] == "lever" and r["posted"] == 1_999_000_000
+
+
+def test_date_confirmed_only_when_a_board_or_the_posting_dates_it(tmp_path):
+    now = 2_000_000_000
+    rows = [_row("A", "Data Intern", now - 3600, url="https://a.example.com/1"),           # posting gives a date
+            _row("B", "ML Intern", now - 3600, url="https://b.example.com/1"),             # posting has no date
+            _row("C", "SWE Intern", now - 3600, url="https://boards.greenhouse.io/c/jobs/1")]  # board dates it
+    board = [{"source": "Greenhouse", "company": "C", "title": "SWE Intern", "url": "https://boards.greenhouse.io/c/jobs/1",
+              "locations": ["Boston, MA"], "terms": [], "posted": now - 1800, "field": None, "sponsorship": None, "board": "gh:c"}]
+    jds = {"a.example": now - 7200, "b.example": None}
+
+    def fake_jd(url):
+        for k, p in jds.items():
+            if k in url:
+                return {"text": "Pursuing an MS. Python, SQL, machine learning.", "via": "page", "posted": p}
+    st, out = str(tmp_path / "s"), tmp_path / "o"
+    build.run(st, str(out), fetch=_fake_fetch(now, [], []), poll="no", now=now - 86400)
+    build.run(st, str(out), fetch=_fake_fetch(now, rows, []), poll="yes", poll_fn=lambda b: (list(board), {}),
+              jd_fetch=fake_jd, now=now)
+    got = {j["company"]: j["date_confirmed"] for j in json.load(open(out / "jobs.json"))["jobs"]}
+    assert got == {"A": True, "B": False, "C": True}

@@ -114,6 +114,8 @@
     const ccs = (j.cc || {}).state;
     if (ccs === "pending") Object.assign(steps[2], { warn: true, text: "Claude Code: correction pending",
       tip: "Claude Code read the full posting, disagrees and has pushed a correction; it shows after the next build" });
+    if (ccs === "doubt") Object.assign(steps[2], { warn: true, text: "Claude Code: not sure",
+      tip: "Claude Code read the full posting and thinks it is a match, but is not sure. It is on your check list (decide.py list): open the posting and decide." });
     if (ccs === "unsure") Object.assign(steps[2], { warn: true, text: "Claude Code: unsure",
       tip: "Claude Code read the full posting and reads it differently, but is not sure enough to change it. Open the posting and decide." });
     const t = j.cc_tried;
@@ -172,6 +174,7 @@
     return `<li class="job${m === "applied" || m === "skip" ? " done" : ""}${isOpen ? " open" : ""}" data-url="${esc(j.url)}" data-key="${esc(mk(j))}">
       <div class="jh"><div>
           <div class="co"><b>${esc(j.company)}</b><span class="age${fresh ? " fresh" : ""}">${ago(j.posted)}</span>${
+            j.date_confirmed === false ? `<span class="kind nodate" title="No company board or posting gave a date: this is when a list added it or the radar first saw it. The job may be older.">Date not confirmed</span>` : ""}${
             j.reposted ? `<span class="kind repost" title="Shown again ${ago(j.posted)}; the job itself was first posted ${dateText(j.reposted)}">Reposted · first posted ${dateText(j.reposted)}</span>` : ""}${
             j.kind === "co-op" ? '<span class="kind coop">Co-op</span>' : '<span class="kind">Intern</span>'}</div>
           <a class="title" href="${esc(safeUrl(j.url))}" target="_blank" rel="noopener noreferrer">${esc(j.title)}</a>

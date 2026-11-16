@@ -338,11 +338,13 @@ def short_id(key: str) -> str:
 
 
 def verdict(q: dict, rv: dict | None) -> str | None:
-    """agree / correction / unsure for a job the agent read against the current description, else None."""
+    """agree / doubt / correction / unsure for a job the agent read against the current description, else None.
+    doubt = agrees it is a match but is not sure (KBR R2130067 was agreed at 65 with "likely disqualifying"):
+    it stays a match, and goes to Dheepak's list."""
     if not rv or not rv.get("jd") or "answer" not in rv or rv.get("jd_hash") != q["jd_hash"]:
         return None
     if rv["agent_match"] == q["base_match"]:
-        return "agree"
+        return "doubt" if q["base_match"] and _conf(rv["answer"]) < MIN_CONF else "agree"
     return "correction" if _conf(rv["answer"]) >= MIN_CONF else "unsure"
 
 
@@ -358,10 +360,14 @@ def corrections(queue_jobs: list[dict], reviews: dict) -> tuple[dict, list[dict]
         rv = reviews.get(q["key"])
         if not rv or not rv.get("jd") or "answer" not in rv or rv.get("jd_hash") != q["jd_hash"]:
             continue
-        if rv["agent_match"] == q["base_match"]:
-            continue
         a = rv["answer"]
         conf = _conf(a)
+        if rv["agent_match"] == q["base_match"]:
+            if q["base_match"] and conf < MIN_CONF:   # agrees it's a match, but not sure: your call
+                unsure.append({"company": q["company"], "title": q["title"], "was": "match", "now": "match (not sure)",
+                               "confidence": conf, "id": short_id(q["key"]), "key": q["key"], "url": q["url"],
+                               "note": rv.get("note") or ""})
+            continue
         item = {"company": q["company"], "title": q["title"], "was": q["base_why_not"] or "match",
                 "now": "match" if rv["agent_match"] else rv["agent_reason"], "confidence": conf}
         if conf < MIN_CONF:

@@ -59,8 +59,8 @@ def overrides_sha(overrides: dict) -> str:
 
 def cc_state(by: str | None, rv, tried: dict | None, h: str | None) -> dict:
     """What Claude Code made of a job, for the page:
-    corrected (its correction is live) / agree / pending (correction pushed, not built yet) / unsure (disagrees,
-    not sure enough to correct) / tried (could not read the posting) / none."""
+    corrected (its correction is live) / agree / doubt (agrees it's a match, but not sure) / pending (correction
+    pushed, not built yet) / unsure (disagrees, not sure enough to correct) / tried (could not read it) / none."""
     if by == "agent":
         return {"state": "corrected"}
     if isinstance(rv, str):          # heartbeat from before verdicts were sent: read, verdict unknown
