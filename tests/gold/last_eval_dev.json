@@ -1,7 +1,7 @@
 [
  {
   "reader": "rules",
-  "n": 171,
+  "n": 172,
   "verdict_acc": 0.994,
   "false_show": 1,
   "false_hide": 0,
@@ -9,10 +9,66 @@
   "cpt_acc": 1.0,
   "sponsorship_acc": 0.988,
   "degree_acc": 0.965,
-  "grad_acc": 0.982,
+  "grad_acc": 0.983,
   "false_show_ids": [
    16
   ],
   "false_hide_ids": []
+ },
+ {
+  "reader": "ai (openai/gpt-oss-120b)",
+  "n": 172,
+  "verdict_acc": 0.924,
+  "false_show": 0,
+  "false_hide": 13,
+  "citizenship_acc": 0.953,
+  "cpt_acc": 1.0,
+  "sponsorship_acc": 0.971,
+  "degree_acc": 0.849,
+  "grad_acc": 0.994,
+  "false_show_ids": [],
+  "false_hide_ids": [
+   14,
+   17,
+   26,
+   42,
+   59,
+   73,
+   81,
+   84,
+   115,
+   117,
+   122,
+   136,
+   167
+  ]
+ },
+ {
+  "reader": "rules + ai (merged)",
+  "n": 172,
+  "verdict_acc": 0.924,
+  "false_show": 0,
+  "false_hide": 13,
+  "citizenship_acc": 0.953,
+  "cpt_acc": 1.0,
+  "sponsorship_acc": 0.971,
+  "degree_acc": 0.849,
+  "grad_acc": 0.994,
+  "false_show_ids": [],
+  "false_hide_ids": [
+   14,
+   17,
+   26,
+   42,
+   59,
+   73,
+   81,
+   84,
+   115,
+   117,
+   122,
+   136,
+   167
+  ]
  }
 ]
