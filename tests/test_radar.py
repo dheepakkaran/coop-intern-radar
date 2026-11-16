@@ -1861,9 +1861,12 @@ def test_merge_keeps_board_excerpt_and_labels_for_the_ai_reader():
     assert j["elig"]["labels"]["citizenship"] == "required"
     # two board copies, both read: the labels must survive combine()
     other = {**board, "source": "Lever", "elig": E.check("Open to Master's students.")}
-    m2 = build.merge({"Greenhouse": [board], "Lever": [other]})
-    (j2,) = m2.values()
+    third = {"company": "Pacific Fusion", "title": "Data Intern", "url": "https://x/2", "locations": [], "terms": [],
+             "posted": 5}   # a later row of the same source
+    m2 = build.merge({"Greenhouse": [board], "Lever": [other, third]})
+    j2 = m2[store.job_key("Pacific Fusion", board["title"])]
     assert j2["elig"]["auth"] == "no" and j2["elig"]["labels"]["citizenship"] == "required"
+    assert m2[store.job_key("Pacific Fusion", "Data Intern")]["posted_src"] == "board"   # loop variable intact
 
 
 def test_list_plus_board_job_reaches_ai_reader_and_is_hidden(tmp_path):

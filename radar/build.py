@@ -133,11 +133,11 @@ def merge(jobs_by_source: dict[str, list[dict]]) -> dict[str, dict]:
                 # combine() keeps only the verdict; the AI reader needs the five labels (+ quotes) to read a row.
                 # Keep them from the stricter reading (Pacific Fusion HPC/DevOps, 2026-11-16: lost -> never read).
                 if not m["elig"].get("labels"):
-                    src = max((e for e in (had, j["elig"]) if e and e.get("labels")),
-                              key=lambda e: eligibility.RANK.get(e.get("auth"), -1), default=None)
-                    if src:
-                        m["elig"] = {**m["elig"], "labels": src["labels"], "quotes": src.get("quotes") or {},
-                                     "source": src.get("source", "rules")}
+                    best = max((e for e in (had, j["elig"]) if e and e.get("labels")),
+                               key=lambda e: eligibility.RANK.get(e.get("auth"), -1), default=None)
+                    if best:
+                        m["elig"] = {**m["elig"], "labels": best["labels"], "quotes": best.get("quotes") or {},
+                                     "source": best.get("source", "rules")}
             if j.get("excerpt") and not m.get("excerpt"):
                 # A list row (no JD) merged with its board row: keep the board's JD excerpt, or the AI reader and
                 # Claude Code's jd_hash lose it and an ITAR block it found is dropped (Pacific Fusion, 2026-11-16).
