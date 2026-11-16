@@ -29,7 +29,7 @@ from .eligibility import F1_REJECT, LABELS, NEUTRAL, NO_SPONSOR, residency_fact
 
 API = "https://api.groq.com/openai/v1/chat/completions"
 MODEL = os.environ.get("RADAR_LLM_MODEL") or "openai/gpt-oss-120b"  # empty env var (unset GitHub var) -> default
-LLM_VERSION = 4       # bump when the prompt, model settings or excerpt trimming change: cached answers are redone
+LLM_VERSION = 5       # bump when the prompt, model settings or excerpt trimming change: cached answers are redone
 # PROFILE "v1" = the exact setup measured on the held-out test set (one excerpt per call, full excerpt, the v1
 # prompt, the model's default reasoning): gpt-oss-120b 95.4% verdict accuracy, 0 / 35 not-eligible shown.
 # LLM_VERSION 3 (2026-11-15): the applicant profile also says how long he has lived in the US, and a US-residency
@@ -49,7 +49,7 @@ Applicant: master's student (MS Electrical & Computer Engineering), F-1 visa, ne
 Not a US citizen, no green card, no clearance. """ + residency_fact() + """
 
 For each excerpt answer 5 questions (exact values):
-citizenship: "required" = must be US citizen / green card / "U.S. person" (ITAR/EAR) / have or get a security clearance / hold another country's citizenship / have lived in the US longer than the applicant has (e.g. "3 years of continuous U.S. residency"). A PIV / public trust / background check alone is NOT "required". A company that only MAY decline non-U.S. persons is "not_required".
+citizenship: "required" = must be US citizen / green card / "U.S. person" (ITAR/EAR) / have or get a security clearance / hold another country's citizenship / have lived in the US longer than the applicant has (e.g. "3 years of continuous U.S. residency"). A PIV / public trust / background check alone is NOT "required". A posting that limits export-controlled (ITAR/EAR) access to "U.S. persons" is "required" even if the role only MAY need that access. Only "may need an export license", "show your U.S. person or non-U.S. person status", or "may decline" with no U.S.-person-only limit is "not_required".
 cpt: "rejected" = F-1/CPT/OPT/student-visa holders not eligible or "do not meet" requirements, or PERMANENT work authorization required. "Authorized to work without sponsorship now or in the future" is not a CPT rejection (that is no_sponsorship). "welcome" = says CPT/F-1 students can apply. Else "silent".
 sponsorship: "no_sponsorship" = won't sponsor / must not need sponsorship now or in future / authorized for any employer. "sponsors" = will sponsor. Else "silent".
 degree: "ms_ok" = master's or graduate students can apply (BS/MS, "BS or higher", graduate internship, all levels). "ug_only" = only undergraduates (pursuing a Bachelor's, rising junior/senior, undergraduate program). "phd_only" = only PhD students. "ug_preferred" = undergrad only preferred. Else "unclear". A requirement line beats a softer mention (intro text, pay table).

@@ -42,7 +42,7 @@ NOTES_MARK = "<!-- notes below this line are written by hand and kept across age
 UNSURE = os.path.join(DIR, "unsure.json")        # unsure list with stable ids (scripts/decide.py uses the ids)
 WT = os.path.join(DIR, "wt")                     # private worktree of origin/main, used only to push
 WT_LOCK = os.path.join(DIR, "wt.lock")           # agent and decide.py never use the worktree at the same time
-AGENT_VERSION = 2   # bump when SYSTEM / the verdict policy changes: every job is read again, most important first
+AGENT_VERSION = 3   # bump when SYSTEM / the verdict policy changes: every job is read again, most important first
 STATUS_BRANCH = "agent-status"
 NO_JD_RETRY = 6 * 3600   # a job whose description could not be read is tried again after this x tries so far
 NO_JD_MAX_TRIES = 4      # then it stays "blocked" (shown on the page as such) until the job leaves the window
@@ -76,8 +76,10 @@ For each job answer:
 - citizenship: "required" if US citizenship, permanent residency / green card, "U.S. person" status, an active or
   obtainable security clearance, or N years of (continuous) US residency that he does not have (e.g. "three years of
   continuous residency in the U.S." for a government credential) is REQUIRED; quote that sentence. "not_required"
-  otherwise. A PIV badge, public trust, national agency check or background check alone is "not_required". A company that only says it MAY decline or
-  that export rules MAY apply, without requiring it, is "not_required".
+  otherwise. A PIV badge, public trust, national agency check or background check alone is "not_required". A posting that limits export-controlled
+  (ITAR/EAR) access to "U.S. persons" is "required" even when the role only MAY need that access (the form then asks
+  "Are you a U.S. Person?" and he must say no). Only "may need an export license", "show U.S. person or non-U.S. person
+  status", or "may decline" with no U.S.-person-only limit is "not_required".
 - cpt: "rejected" if F-1 / CPT / OPT students cannot apply, or "do not meet" the authorization requirement, or
   permanent (unrestricted, no-time-limit) work authorization is required; "welcome" if CPT/OPT/F-1 students are
   explicitly welcome; "silent" otherwise.

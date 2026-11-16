@@ -1819,3 +1819,69 @@ def test_ats_query_param_does_not_split_a_job():
     a = "https://www.optimumcareers.com/job/Bethpage-Intern-Software-Developer-NY-11714/1450884000/?ats=successfactors"
     b = "https://www.optimumcareers.com/job/Bethpage-Intern-Software-Developer-NY-11714/1450884000"
     assert store.norm_url(a) == store.norm_url(b)
+
+
+# ---- 2026-11-16: Pacific Fusion "HPC/DevOps Engineering Intern" showed in My matches though it is U.S.-persons only ----
+PF_JD = ("<p>What You Bring</p><p>Junior or Senior standing in a 4-year Computer Science program, or current enrollment "
+         "in a related Master's program. Programming experience in Python.</p><p>U.S. EXPORT CONTROL COMPLIANCE</p>"
+         "<p>This position may require access to information or technology that is subject to U.S. export control laws, "
+         "such as ITAR or EAR. Under these regulations, we are required to ensure that such access is provided only to "
+         "individuals who are classified as 'U.S. Persons.'This status includes U.S. citizens, U.S. nationals, lawful "
+         "permanent residents (green card holders), and asylees and refugees with such status granted, not pending.</p>")
+
+
+def test_us_person_only_access_blocks_across_sentences():
+    from radar import eligibility as E
+    e = E.check(PF_JD)
+    assert e["auth"] == "no" and e["labels"]["citizenship"] == "required"
+    assert "U.S. Persons" in e["quotes"]["citizenship"]
+    assert E.check("Our policy is to only hire “U.S. persons” who may access export-controlled items.")["auth"] == "no"
+    assert E.check("Degree in CS. U.S. person required (ITAR).")["auth"] == "no"
+    # softer wording stays open (the company applies for a license, or it only asks your status)
+    for ok in ("This position requires access to information that is subject to U.S. export controls. All applicants "
+               "are asked to provide documentation that legally establishes status as a U.S. person or non-U.S. "
+               "person (and nationalities in the case of a non-U.S. person).",
+               "Export Control Regulations: For positions requiring access to controlled technology subject to the "
+               "U.S. Export Administration Regulations, the company may need to obtain an export license.",
+               "Candidates should have capacity to comply with the federally mandated requirements of U.S. export "
+               "control laws.",
+               "We only consider candidates who live near the office; U.S. persons and others welcome."):
+        assert E.check(ok)["labels"]["citizenship"] == "not_required", ok
+
+
+def test_merge_keeps_board_excerpt_and_labels_for_the_ai_reader():
+    from radar import eligibility as E
+    lst = {"company": "Pacific Fusion", "title": "HPC/DevOps Engineering Intern", "url": "https://x/1",
+           "locations": ["San Leandro, CA"], "terms": ["Summer"], "posted": 1}
+    board = {**lst, "title": "Summer 2027 HPC/DevOps Engineering Intern", "terms": ["Summer 2027"],
+             "elig": E.check(PF_JD), "excerpt": E.excerpt(PF_JD), "jd_terms": []}
+    m = build.merge({"vanshb03": [lst], "Greenhouse": [board]})
+    (j,) = m.values()
+    assert j["excerpt"] and "U.S. Persons" in j["excerpt"]
+    assert j["elig"]["labels"]["citizenship"] == "required"
+    # two board copies, both read: the labels must survive combine()
+    other = {**board, "source": "Lever", "elig": E.check("Open to Master's students.")}
+    m2 = build.merge({"Greenhouse": [board], "Lever": [other]})
+    (j2,) = m2.values()
+    assert j2["elig"]["auth"] == "no" and j2["elig"]["labels"]["citizenship"] == "required"
+
+
+def test_list_plus_board_job_reaches_ai_reader_and_is_hidden(tmp_path):
+    """End to end: vanshb03 lists the job under a shorter title, the board has the JD. The merged row must keep the
+    JD excerpt (so the AI reader reads it) and be hidden from the matches."""
+    from radar import eligibility as E
+    now = 2_000_000_000
+    v = {"company_name": "Pacific Fusion", "title": "HPC/DevOps Engineering Intern", "date_posted": now - 600,
+         "url": "https://go.vansh.nyc/1Ao", "locations": ["San Leandro, CA"], "season": "Summer", "active": True,
+         "is_visible": True}
+    board = [{"source": "Greenhouse", "company": "Pacific Fusion", "title": "Summer 2027 HPC/DevOps Engineering Intern",
+              "url": "https://job-boards.greenhouse.io/pacificfusion/jobs/4505668009", "locations": ["San Leandro, CA"],
+              "terms": ["Summer 2027"], "posted": now - 1200, "field": None, "sponsorship": None,
+              "jd_terms": tech.jd_terms(PF_JD), "elig": E.check(PF_JD), "excerpt": E.excerpt(PF_JD)}]
+    seen = []
+    build.run(str(tmp_path / "s"), str(tmp_path / "o"), fetch=_fake_fetch(now, [], [v]),
+              resolve=lambda u: "https://job-boards.greenhouse.io/pacificfusion/jobs/4505668009",
+              poll="yes", poll_fn=lambda b: (list(board), {}), ai=lambda ex: seen.append(ex) or None, now=now)
+    assert seen and "U.S. Persons" in seen[0]
+    jobs = json.load(open(tmp_path / "o" / "jobs.json"))["jobs"]
+    assert not any(j["match"] for j in jobs if j["company"] == "Pacific Fusion")

@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
 US_SINCE = (2026, 1)  # in the US since January 2026 (MS started Spring 2026): "N years of US residency" needs N <= this
-RULES_VERSION = 12  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+RULES_VERSION = 13  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 TERM_TAG = False  # Dheepak decides later: True -> a JD that offers only a summer term gets the tag "Term: summer"
 
 TAG = re.compile(r"<[^>]+>")
@@ -61,6 +61,32 @@ CITIZEN = re.compile(
     r"must (either )?be (\(\w\) )?an? (\(\w+\) )?u\.?s\.? (person|citizen)|u\.?s\.? person status|\bperson status required|"
     r"(^|[.:;]\s*)citizenship (is )?required|proof of u\.?s\.? citizenship|restricted to u\.?s\.? citizens|"
     r"(available|open) (only )?to citizens of|\b(eea|eu|european economic area|european union) citizens?(hip)?\b", re.I)
+# ---- export control: access only for U.S. persons (2026-11-16, Pacific Fusion HPC/DevOps Engineering Intern) ----
+# The CITIZEN patterns look inside one sentence, but postings split the rule from the "U.S. person" part ("... subject to
+# U.S. export control laws, such as ITAR or EAR. Under these regulations, we are required to ensure that such access
+# is provided only to individuals who are classified as 'U.S. Persons.'") and "U.S." itself holds periods. A posting
+# that limits that access to U.S. persons blocks even when the role only "may" need it: its form then asks "Are you a
+# U.S. Person?" and an F-1 student must say no (Dheepak, 2026-11-16). Still not a block: "documentation of status as a
+# U.S. person or non-U.S. person" and "may need an export license" (the company applies for the license).
+_USP = r"[\"'“”‘’]?u\.?\s?s\.?\s?persons?\b"
+EXPORT_CTX = re.compile(r"\bitar\b|\bear\b|export[- ]control|export administration|international traffic in arms|"
+                        r"export regulations|export[- ]controlled", re.I)
+USP_ONLY = re.compile(
+    rf"\bonly\b[^;]{{0,80}}?\b(?:to|hire|employ|individuals|persons|candidates|applicants)\b[^;]{{0,60}}?{_USP}"
+    rf"(?![^.;]{{0,8}}\bor non)|"
+    rf"{_USP}[\"'”’]?\s*(?:status\s*)?(?:is |are )?(?:required|only)\b|"
+    rf"(?:must|shall|need to|required to)(?: also| either)? (?:qualify as|be classified as|meet the definition of)"
+    rf"\s+(?:an?\s+)?{_USP}", re.I)
+
+
+def us_person_only(text: str) -> str | None:
+    """The sentence that limits export-controlled work to U.S. persons, or None (needs an export-control word near)."""
+    for m in USP_ONLY.finditer(text):
+        if EXPORT_CTX.search(text, max(0, m.start() - 500), m.end() + 300):
+            return _sentence(text, m.start(), m.end(), limit=320)
+    return None
+
+
 F1_REJECT = re.compile(
     r"(f-?1|\bcpt\b|\bopt\b|j-?1|student visa)[^.]{0,200}(not eligible|ineligible|will not be considered|cannot be considered|"
     r"not able to|unable to|do(es)? not (accept|support|qualify|meet)|don'?t meet|not meet|not accepted|not be accepted|"
@@ -314,6 +340,8 @@ def labels(jd: str) -> tuple[dict, dict]:
     lab, quo = dict(NEUTRAL), {}
 
     if (q := _quote(CITIZEN, t)):
+        lab["citizenship"], quo["citizenship"] = "required", q
+    elif (q := us_person_only(t)):
         lab["citizenship"], quo["citizenship"] = "required", q
     elif (r := residency(t)) and r["block"]:
         lab["citizenship"], quo["citizenship"] = "required", r["quote"]

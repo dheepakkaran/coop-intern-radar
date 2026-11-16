@@ -3013,5 +3013,24 @@
    "sponsorship": "Individual(s) must be legally authorized to work in the United States without the need for immigration support or sponsorship from Milliman now or in the future."
   },
   "note": "UltiPro, 2026-11-15: gpt-oss read the no-sponsorship line as cpt rejected; Claude Code corrected it. Internship on CPT = fine."
+ },
+ {
+  "id": 173,
+  "company": "Pacific Fusion",
+  "title": "Summer 2027 HPC/DevOps Engineering Intern",
+  "excerpt": "for Lustre, S3 and virtual desktops Write documentation and runbooks that our users and team rely on What You Bring Junior or Senior standing in a 4-year Computer Science, Computer Engineering, or related program, or current enrollment in a related Master's program Comfort working in Linux from the command line, Pay Range: $30 &mdash; $48 USD TOTAL COMPENSATION AND BENEFITS FOR ELIGIBLE EMPLOYEES 💰 Industry-Competitive Salary 🚀 Equity Plan 🏦 6% Employer 401k Matching 🌴 Generous Paid Time Off (including sick leave, vacation, paid family leave) 🩺 Medical, Dental, and Vision insurance Actual base salary offered will be determined by: experience, skills, and work location. U.S. EXPORT CONTROL COMPLIANCE This position may require access to information or technology that is subject to U.S. export control laws, such as ITAR or EAR. Under these regulations, we are required to ensure that such access is provided only to individuals who are classified as 'U.S. Persons.'This status includes U.S. citizens, U.S. nationals, lawful permanent residents (green card holders), and asylees and refugees with such status granted, not pending.",
+  "gold": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "sponsorship": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated"
+  },
+  "verdict": "not_eligible",
+  "quotes": {
+   "citizenship": "Under these regulations, we are required to ensure that such access is provided only to individuals who are classified as 'U.S. Persons.'This status includes U.S. citizens, U.S. nationals, lawful permanent residents (green card holders), and asylees and refugees with such status granted, not pending.",
+   "degree": "ing, or related program, or current enrollment in a related Master's program Comfort working in Linux from the command line, Pay Range: $30 &mdash; $48 USD TOTAL COMPENSATION AND BENEFITS"
+  },
+  "note": "2026-11-16 Dheepak: export-controlled access only for U.S. persons blocks even when the role only 'may' need it (form asks 'Are you a U.S. Person?'). Was a live false show: rules missed the cross-sentence wording, merge dropped the excerpt, Claude Code doubted at 65."
  }
 ]
