@@ -20,50 +20,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "milliman|ai product engineer intern cmh health": {
-  "company": "Milliman",
-  "confidence": 88,
-  "jd_hash": "76318ebb6d2f5205",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Milliman's CMH Health Practice is seeking motivated undergraduate and graduate students pursuing degrees in mathematics, computer science, or related fields to join the Products team for Spring 2027.",
-   "sponsorship": "Individual(s) must be legally authorized to work in the United States without the need for immigration support or sponsorship from Milliman now or in the future."
-  },
-  "read_at": 1794793434,
-  "tech": "AI/ML",
-  "title": "AI Product Engineer Intern, CMH Health",
-  "us": true,
-  "was": "fails: cpt"
- },
- "milliman|data analytics intern intelliscript": {
-  "company": "Milliman",
-  "confidence": 90,
-  "jd_hash": "fa7429aadaa56781",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's degree in mathematics, information science, data science, statistics, or a related field",
-   "sponsorship": "Individual(s) must be legally authorized to work in the United States without the need for immigration support or sponsorship from Milliman now or in the future."
-  },
-  "read_at": 1794793434,
-  "tech": "Data",
-  "title": "Data Analytics Intern, IntelliScript",
-  "us": true,
-  "was": "fails: cpt"
- },
  "optimum altice usa|cybersecurity operations intern": {
   "company": "Optimum (Altice USA)",
   "confidence": 90,
