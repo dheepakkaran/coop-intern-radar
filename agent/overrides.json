@@ -104,6 +104,27 @@
   "us": true,
   "was": "match"
  },
+ "kensho|machine learning engineer summer intern 2027": {
+  "company": "Kensho",
+  "confidence": 92,
+  "jd_hash": "0fe76fbba6de4d61",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a bachelor's degree or higher with relevant classwork or internships in Machine Learning"
+  },
+  "read_at": 1794857735,
+  "tech": "AI/ML",
+  "title": "Machine Learning Engineer - Summer Intern 2027",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "optimum altice usa|cybersecurity operations intern": {
   "company": "Optimum (Altice USA)",
   "confidence": 90,
@@ -123,6 +144,27 @@
   "read_at": 1794775784,
   "tech": "Software",
   "title": "Cybersecurity Operations Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "s p global|machine learning engineer summer intern 2027": {
+  "company": "S&P Global ",
+  "confidence": 92,
+  "jd_hash": "0fe76fbba6de4d61",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a bachelor's degree or higher with relevant classwork or internships in Machine Learning"
+  },
+  "read_at": 1794857735,
+  "tech": "AI/ML",
+  "title": "Machine Learning Engineer - Summer Intern 2027",
   "us": true,
   "was": "needs review: degree"
  }
