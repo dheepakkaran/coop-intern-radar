@@ -1,4 +1,25 @@
 {
+ "analog devices|software engineering intern medical device healthcare integration": {
+  "company": "Analog Devices",
+  "confidence": 90,
+  "jd_hash": "d47de3b082947837",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Software Engineering, Computer Engineering, Biomedical Engineering, Electrical Engineering, or a related technical field."
+  },
+  "read_at": 1794838228,
+  "tech": "Software",
+  "title": "Software Engineering Intern (Medical Device & Healthcare Integration)",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "milliman|ai product engineer intern cmh health": {
   "company": "Milliman",
   "confidence": 88,
