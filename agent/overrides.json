@@ -1,133 +1,68 @@
 {
- "activision blizzard|game systems engineering intern": {
-  "company": "Activision Blizzard",
-  "confidence": 92,
-  "jd_hash": "69b79598784f13b2",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028",
-   "grad": "Currently enrolled in an associate's, bachelor's, or master's degree program and graduating December 2027 \u2013 June 2028"
-  },
-  "read_at": 1794775784,
-  "tech": "Software",
-  "title": "Game Systems Engineering Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "fieldpulse|ai intern": {
-  "company": "FieldPulse",
+ "milliman|ai product engineer intern cmh health": {
+  "company": "Milliman",
   "confidence": 88,
-  "jd_hash": "a79630b46685c793",
+  "jd_hash": "76318ebb6d2f5205",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
    "degree": "ms_ok",
    "grad": "not_stated",
-   "sponsorship": "silent"
+   "sponsorship": "no_sponsorship"
   },
   "now": "match",
   "quotes": {
-   "degree": "Current student pursuing a degree in Computer Science, Information Systems, Business, or a related field."
+   "degree": "Milliman's CMH Health Practice is seeking motivated undergraduate and graduate students pursuing degrees in mathematics, computer science, or related fields to join the Products team for Spring 2027.",
+   "sponsorship": "Individual(s) must be legally authorized to work in the United States without the need for immigration support or sponsorship from Milliman now or in the future."
   },
-  "read_at": 1794775784,
+  "read_at": 1794793434,
   "tech": "AI/ML",
-  "title": "AI Intern",
+  "title": "AI Product Engineer Intern, CMH Health",
   "us": true,
-  "was": "needs review: degree"
+  "was": "fails: cpt"
  },
- "kbr wyle services|image processing software engineer intern": {
-  "company": "KBR Wyle Services",
-  "confidence": 88,
-  "jd_hash": "e0edbf6e3ff50f72",
+ "milliman|data analytics intern intelliscript": {
+  "company": "Milliman",
+  "confidence": 90,
+  "jd_hash": "fa7429aadaa56781",
   "labels": {
-   "citizenship": "required",
+   "citizenship": "not_required",
    "cpt": "silent",
    "degree": "ms_ok",
    "grad": "not_stated",
-   "sponsorship": "silent"
+   "sponsorship": "no_sponsorship"
   },
-  "now": "fails: citizenship",
+  "now": "match",
   "quotes": {
-   "citizenship": "Candidate must have three years of continuous residency in the U.S. for issuance of a Government Security credential.",
-   "degree": "This summer-based internship is open to juniors, seniors, and graduate students pursuing a career in software development."
+   "degree": "Currently pursuing a Bachelor's or Master's degree in mathematics, information science, data science, statistics, or a related field",
+   "sponsorship": "Individual(s) must be legally authorized to work in the United States without the need for immigration support or sponsorship from Milliman now or in the future."
   },
-  "read_at": 1794775784,
-  "tech": "Software",
-  "title": "Image Processing Software Engineer Intern",
+  "read_at": 1794793434,
+  "tech": "Data",
+  "title": "Data Analytics Intern, IntelliScript",
   "us": true,
-  "was": "match"
+  "was": "fails: cpt"
  },
- "netapp|software engineer intern cloud": {
-  "company": "NetApp",
-  "confidence": 88,
-  "jd_hash": null,
+ "optimum altice usa|cybersecurity operations intern": {
+  "company": "Optimum (Altice USA)",
+  "confidence": 90,
+  "jd_hash": "83405fcad60f4331",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
    "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
   },
   "now": "match",
   "quotes": {
-   "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Software Engineering, or a related technical field are encouraged to apply.",
-   "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
+   "degree": "Currently pursuing a degree in Computer Science, Information Security, or a related field.",
+   "sponsorship": "The Company will not provide current or future sponsorship for this role."
   },
   "read_at": 1794775784,
   "tech": "Software",
-  "title": "Software Engineer Intern, Cloud",
+  "title": "Cybersecurity Operations Intern",
   "us": true,
   "was": "needs review: degree"
- },
- "netapp|software engineer intern systems": {
-  "company": "NetApp",
-  "confidence": 88,
-  "jd_hash": null,
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Candidates pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering, Electrical Engineering, Software Engineering, or a related technical field are encouraged to apply.",
-   "grad": "Must be enrolled in an educational or professional program through the summer of 2027."
-  },
-  "read_at": 1794775784,
-  "tech": "Software",
-  "title": "Software Engineer Intern, Systems",
-  "us": true,
-  "was": "needs review: degree"
- },
- "servicenow|security engineer intern": {
-  "company": "ServiceNow",
-  "confidence": 88,
-  "jd_hash": "9e540d608c5fb444",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later.",
-   "grad": "Currently enrolled in an accredited university, working on a Masters degree in Computer Science, or related field, and graduating December 2027, or later."
-  },
-  "read_at": 1794775784,
-  "tech": "Software",
-  "title": "Security Engineer Intern",
-  "us": true,
-  "was": "needs review: degree, grad"
  }
 }
