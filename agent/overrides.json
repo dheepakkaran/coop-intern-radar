@@ -86,7 +86,7 @@
   "us": true,
   "was": "needs review: degree"
  },
- "constellation brands|intern data and ai enablement": {
+ "constellation brands|data and ai enablement intern": {
   "company": "Constellation Brands",
   "confidence": 88,
   "jd_hash": "9ce2aa8d2e18d4ce",
@@ -101,9 +101,9 @@
   "quotes": {
    "degree": "Current student in, or recent graduate of, a Computer Science, Data Science, Statistics, Mathematics, or other STEM-related program."
   },
-  "read_at": 1794869963,
+  "read_at": 1794949838,
   "tech": "Data",
-  "title": "Intern, Data and AI Enablement",
+  "title": "Data and AI Enablement Intern",
   "us": true,
   "was": "needs review: degree"
  },
