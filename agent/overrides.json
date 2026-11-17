@@ -65,6 +65,27 @@
   "us": true,
   "was": "fails: grad"
  },
+ "centific|technical intern masters or phd": {
+  "company": "Centific",
+  "confidence": 85,
+  "jd_hash": "c7f741fbd51f4300",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Master's Degree in Statistics, Econometrics, Computer Science, Electrical or Computer Engineering, or related field AND 1+ years related experience (e.g., statistics, predictive analytics, research)"
+  },
+  "read_at": 1794946208,
+  "tech": "AI/ML",
+  "title": "Technical Intern (Masters or PhD)",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "constellation brands|intern data and ai enablement": {
   "company": "Constellation Brands",
   "confidence": 88,
@@ -104,6 +125,27 @@
   "read_at": 1794869963,
   "tech": "Data",
   "title": "Intern, Data Science",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "hewlett packard enterprise|hpe labs ai enablement intern": {
+  "company": "Hewlett Packard Enterprise",
+  "confidence": 93,
+  "jd_hash": "35799e3b5e2b4ae3",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a Master's or PhD in Computer Science, Computer Engineering, Electrical Engineering, Data Science, Artificial Intelligence, Machine Learning, or a related technical or quantitative field."
+  },
+  "read_at": 1794946208,
+  "tech": "AI/ML",
+  "title": "HPE Labs - AI Enablement Intern",
   "us": true,
   "was": "needs review: degree"
  },
@@ -195,27 +237,71 @@
   "us": true,
   "was": "needs review: degree, grad"
  },
- "ptc|onshape performance engineering intern summer 2027": {
-  "company": "PTC",
-  "confidence": 92,
-  "jd_hash": "780050ab50b2532f",
+ "marvell|ai infrastructure engineer intern ms summer 2027": {
+  "company": "Marvell",
+  "confidence": 85,
+  "jd_hash": "48778096b48c58eb",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a bachelor's or master's degree in Computer Science, Data Science, Artificial Intelligence, Electrical Engineering, Computer Engineering, or a related technical field, with an anticipated graduation date between Fall 2027 and Spring 2028.",
+   "grad": "Currently pursuing a bachelor's or master's degree in Computer Science, Data Science, Artificial Intelligence, Electrical Engineering, Computer Engineering, or a related technical field, with an anticipated graduation date between Fall 2027 and Spring 2028."
+  },
+  "read_at": 1794946208,
+  "tech": "AI/ML",
+  "title": "AI Infrastructure Engineer Intern, MS - Summer 2027",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "motorola|software engineer co op": {
+  "company": "Motorola",
+  "confidence": 90,
+  "jd_hash": "a928e32fe00d9c51",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "cpt": "(F1 Visa on CPT accepted only for Masters-level students).",
+   "degree": "Working towards Bachelor's or Master's degree in Computer Science, Computer Engineering, or related technical discipline and graduating May 1st, 2027 or later.",
+   "grad": "Working towards Bachelor's or Master's degree in Computer Science, Computer Engineering, or related technical discipline and graduating May 1st, 2027 or later."
+  },
+  "read_at": 1794946208,
+  "tech": "Software",
+  "title": "Software Engineer Co-op",
+  "us": true,
+  "was": "fails: citizenship"
+ },
+ "nvidia|ai operations intern ai clouds summer 2027": {
+  "company": "NVIDIA",
+  "confidence": 88,
+  "jd_hash": "c9b7d7e4325e4c84",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
    "degree": "ms_ok",
    "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
+   "sponsorship": "silent"
   },
   "now": "match",
   "quotes": {
-   "degree": "Must be enrolled in some type of degree program in one of the following or related fields: Software Engineering, Computer Engineering, Computer Science.",
-   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
+   "degree": "Pursuing a BS or MS in Computer Science, Software Engineering, Data Science, or an equivalent program area."
   },
-  "read_at": 1794875382,
+  "read_at": 1794946208,
   "tech": "Software",
-  "title": "Onshape Performance Engineering Intern (Summer 2027)",
+  "title": "AI Operations Intern, AI Clouds - Summer 2027",
   "us": true,
-  "was": "not an AI/ML, Data or Software role"
+  "was": "needs review: degree"
  },
  "s p global|machine learning engineer summer intern 2027": {
   "company": "S&P Global ",
