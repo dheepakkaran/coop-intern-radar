@@ -237,6 +237,27 @@
   "us": true,
   "was": "needs review: degree, grad"
  },
+ "lumentum|sw developer support intern program management office": {
+  "company": "Lumentum",
+  "confidence": 92,
+  "jd_hash": "8721015ad9a8887d",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Computer Science, Software Engineering, or a related field."
+  },
+  "read_at": 1794957473,
+  "tech": "Software",
+  "title": "SW Developer Support Intern, Program Management Office",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "marvell|ai infrastructure engineer intern ms summer 2027": {
   "company": "Marvell",
   "confidence": 85,
