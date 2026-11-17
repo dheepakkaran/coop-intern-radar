@@ -172,6 +172,50 @@
   "us": true,
   "was": "needs review: degree, grad"
  },
+ "noblis|environmental analyst intern": {
+  "company": "Noblis",
+  "confidence": 88,
+  "jd_hash": "1175e84a948d3106",
+  "labels": {
+   "citizenship": "required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "fails: citizenship",
+  "quotes": {
+   "citizenship": "U.S. Citizenship",
+   "degree": "Pursuing a bachelor's or master's degree in data science, computer science, environmental science or engineering, public policy, or a similar field"
+  },
+  "read_at": 1794875382,
+  "tech": "AI/ML",
+  "title": "Environmental Analyst Intern",
+  "us": true,
+  "was": "match"
+ },
+ "ptc|onshape performance engineering intern summer 2027": {
+  "company": "PTC",
+  "confidence": 92,
+  "jd_hash": "780050ab50b2532f",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Must be enrolled in some type of degree program in one of the following or related fields: Software Engineering, Computer Engineering, Computer Science.",
+   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
+  },
+  "read_at": 1794875382,
+  "tech": "Software",
+  "title": "Onshape Performance Engineering Intern (Summer 2027)",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "s p global|machine learning engineer summer intern 2027": {
   "company": "S&P Global ",
   "confidence": 93,
