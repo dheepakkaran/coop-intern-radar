@@ -303,6 +303,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "ptc|onshape performance engineering intern": {
+  "company": "PTC",
+  "confidence": 92,
+  "jd_hash": "780050ab50b2532f",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Must be enrolled in some type of degree program in one of the following or related fields: Software Engineering, Computer Engineering, Computer Science.",
+   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
+  },
+  "read_at": 1794953468,
+  "tech": "Software",
+  "title": "Onshape Performance Engineering Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "s p global|machine learning engineer summer intern 2027": {
   "company": "S&P Global ",
   "confidence": 93,
@@ -391,5 +413,24 @@
   "title": "Time Series Foundation Model Intern",
   "us": true,
   "was": "needs review: grad"
+ },
+ "t d williamson|engineering intern summer 2027": {
+  "company": "T.D. Williamson",
+  "confidence": 88,
+  "jd_hash": "16a58b53c48dd1a0",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "unclear",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {},
+  "read_at": 1794953468,
+  "tech": "Software",
+  "title": "Engineering Intern - Summer 2027",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
  }
 }
