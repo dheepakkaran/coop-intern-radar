@@ -128,6 +128,29 @@
   "us": true,
   "was": "match"
  },
+ "jmp statistical discovery|jmp core user interface team r d intern master s phd": {
+  "company": "JMP Statistical Discovery",
+  "confidence": 92,
+  "jd_hash": "70f8d9fbcd82b2e0",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a graduate degree in Computer Science, Software Engineering, Human-Computer Interaction, or a related field",
+   "grad": "You're a graduate student enrolled in an accredited program, not graduating prior to December 2027",
+   "sponsorship": "To qualify, applicants must be legally authorized to work in the United States, and should not require, now or in the future, sponsorship for employment visa status."
+  },
+  "read_at": 1794890766,
+  "tech": "Software",
+  "title": "JMP Core User Interface Team R&D Intern - Master's/PhD",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "kensho|machine learning engineer summer intern 2027": {
   "company": "Kensho",
   "confidence": 93,
@@ -171,28 +194,6 @@
   "title": "Intern - People Analytics",
   "us": true,
   "was": "needs review: degree, grad"
- },
- "noblis|environmental analyst intern": {
-  "company": "Noblis",
-  "confidence": 88,
-  "jd_hash": "1175e84a948d3106",
-  "labels": {
-   "citizenship": "required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "fails: citizenship",
-  "quotes": {
-   "citizenship": "U.S. Citizenship",
-   "degree": "Pursuing a bachelor's or master's degree in data science, computer science, environmental science or engineering, public policy, or a similar field"
-  },
-  "read_at": 1794875382,
-  "tech": "AI/ML",
-  "title": "Environmental Analyst Intern",
-  "us": true,
-  "was": "match"
  },
  "ptc|onshape performance engineering intern summer 2027": {
   "company": "PTC",
@@ -259,6 +260,29 @@
   "us": true,
   "was": "match"
  },
+ "sas|optimization intern": {
+  "company": "SAS",
+  "confidence": 88,
+  "jd_hash": "619c98e60c460c29",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "You're a Master's level student studying Operations Research, Applied Math, Computer Science or related quant field; not graduating prior to December 2027",
+   "grad": "You're a Master's level student studying Operations Research, Applied Math, Computer Science or related quant field; not graduating prior to December 2027",
+   "sponsorship": "To qualify, applicants must be legally authorized to work in the United States, and should not require, now or in the future, sponsorship for employment visa status."
+  },
+  "read_at": 1794890766,
+  "tech": "Software",
+  "title": "Optimization Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "sas|time series foundation model intern": {
   "company": "SAS",
   "confidence": 92,
@@ -280,6 +304,6 @@
   "tech": "AI/ML",
   "title": "Time Series Foundation Model Intern",
   "us": true,
-  "was": "fails: grad"
+  "was": "needs review: grad"
  }
 }
