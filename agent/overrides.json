@@ -237,6 +237,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "samsung|technical product management intern d2c shopping experiences mobile consumer electronics": {
+  "company": "Samsung",
+  "confidence": 85,
+  "jd_hash": "a9165a45d54076ef",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "not an AI/ML, Data or Software role",
+  "quotes": {
+   "degree": "Currently enrolled in a degree-seeking program (Bachelor's, Master's, MBA, or PhD).",
+   "sponsorship": "This role is not eligible for immigration sponsorship"
+  },
+  "read_at": 1794888309,
+  "tech": null,
+  "title": "Technical Product Management Intern ( D2C Shopping Experiences (Mobile & Consumer Electronics)",
+  "us": true,
+  "was": "match"
+ },
  "sas|time series foundation model intern": {
   "company": "SAS",
   "confidence": 92,
