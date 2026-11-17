@@ -192,5 +192,28 @@
   "title": "Machine Learning Engineer - Summer Intern 2027",
   "us": true,
   "was": "needs review: degree"
+ },
+ "sas|time series foundation model intern": {
+  "company": "SAS",
+  "confidence": 92,
+  "jd_hash": "02a24c014c065835",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "You're a Master's level student studying Statistics, Econometrics, Computer Science, Machine Learning/Artificial Intelligence, or related quant field; not graduating prior to December 2027",
+   "grad": "You're a Master's level student studying Statistics, Econometrics, Computer Science, Machine Learning/Artificial Intelligence, or related quant field; not graduating prior to December 2027",
+   "sponsorship": "To qualify, applicants must be legally authorized to work in the United States, and should not require, now or in the future, sponsorship for employment visa status."
+  },
+  "read_at": 1794873563,
+  "tech": "AI/ML",
+  "title": "Time Series Foundation Model Intern",
+  "us": true,
+  "was": "fails: grad"
  }
 }
