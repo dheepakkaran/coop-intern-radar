@@ -449,6 +449,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "sallie mae|software engineer intern": {
+  "company": "Sallie Mae",
+  "confidence": 95,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Open to undergraduate and graduate level students with expected graduation dates of Dec 2027 - May 2028",
+   "grad": "Open to undergraduate and graduate level students with expected graduation dates of Dec 2027 - May 2028"
+  },
+  "read_at": 1794973161,
+  "tech": "Software",
+  "title": "Software Engineer Intern",
+  "us": true,
+  "was": "unverified: no job description"
+ },
  "samsung|technical product management intern d2c shopping experiences mobile consumer electronics": {
   "company": "Samsung",
   "confidence": 85,
