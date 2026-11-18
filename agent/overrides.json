@@ -344,27 +344,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "raptor maps|software engineer intern": {
-  "company": "Raptor Maps",
-  "confidence": 92,
-  "jd_hash": "da2edc1c5c752310",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Engineering, Robotics, or a related technical field (rising Seniors and graduate students preferred)"
-  },
-  "read_at": 1794961102,
-  "tech": "Software",
-  "title": "Software Engineer Intern",
-  "us": true,
-  "was": "needs review: sponsorship"
- },
  "sallie mae|software engineer intern": {
   "company": "Sallie Mae",
   "confidence": 95,
@@ -471,6 +450,27 @@
   "title": "IT Intern",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
+ },
+ "vibrantz technologies|applied ai automation intern": {
+  "company": "Vibrantz Technologies",
+  "confidence": 88,
+  "jd_hash": "805450128ecbd896",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Computer Science, Engineering, Information Systems, Artificial Intelligence, or a related field, or able to demonstrate equivalent learning through projects or other training."
+  },
+  "read_at": 1795044008,
+  "tech": "AI/ML",
+  "title": "Applied AI & Automation Intern",
+  "us": true,
+  "was": "needs review: degree"
  },
  "zillow|data science intern": {
   "company": "Zillow",
