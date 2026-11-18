@@ -191,29 +191,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "illumio|security and compliance analyst intern": {
-  "company": "Illumio",
-  "confidence": 88,
-  "jd_hash": "cf5a0085f44cb3f6",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "welcome",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "cpt": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered.",
-   "degree": "Currently pursuing a bachelor's or master's degree in Computer Science, Artificial Intelligence, or a closely related field.",
-   "sponsorship": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered."
-  },
-  "read_at": 1794959302,
-  "tech": "AI/ML",
-  "title": "Security and Compliance Analyst Intern",
-  "us": true,
-  "was": "needs review: cpt"
- },
  "intuitive|clinical research engineering intern": {
   "company": "Intuitive",
   "confidence": 87,
