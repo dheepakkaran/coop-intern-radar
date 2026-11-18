@@ -216,6 +216,27 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
+ "nvidia|ai operations intern ai clouds summer 2027": {
+  "company": "NVIDIA",
+  "confidence": 88,
+  "jd_hash": "c9b7d7e4325e4c84",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a BS or MS in Computer Science, Software Engineering, Data Science, or an equivalent program area."
+  },
+  "read_at": 1794946208,
+  "tech": "Software",
+  "title": "AI Operations Intern, AI Clouds - Summer 2027",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "pathlabs|software and ai engineering intern": {
   "company": "Pathlabs",
   "confidence": 88,
