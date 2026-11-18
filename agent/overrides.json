@@ -322,6 +322,28 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
+ "trimble|qa engineer intern": {
+  "company": "Trimble",
+  "confidence": 90,
+  "jd_hash": "8cd568ceaf67dcb2",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Current enrollment in a Bachelor's or Master's degree program in Computer Science, Software Engineering, or a related technical field.",
+   "sponsorship": "Visa sponsorship is not available for this position."
+  },
+  "read_at": 1795025292,
+  "tech": "Software",
+  "title": "QA Engineer Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "unum|it intern": {
   "company": "Unum",
   "confidence": 85,
