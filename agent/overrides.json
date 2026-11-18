@@ -64,6 +64,29 @@
   "us": true,
   "was": "match"
  },
+ "bristol myers squibb|data science intern ms phd summer 2027": {
+  "company": "Bristol Myers Squibb",
+  "confidence": 85,
+  "jd_hash": "bec7b4033a0310df",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Data Science Intern (MS/PhD)-Summer 2027",
+   "grad": "-Currently in a quantitative sciences program ( Computer Science, Math, Computational Biology), and should not have graduated from the program before the end of internship (Aug 2027)",
+   "sponsorship": "-Please note that immigration or visa sponsorship is not available for this position"
+  },
+  "read_at": 1795021686,
+  "tech": "Data",
+  "title": "Data Science Intern (MS/PhD)-Summer 2027",
+  "us": true,
+  "was": "needs review: sponsorship, grad"
+ },
  "camping world|ai intern": {
   "company": "Camping World",
   "confidence": 85,
@@ -105,27 +128,6 @@
   "title": "HPE Labs - AI Enablement Intern",
   "us": true,
   "was": "needs review: degree"
- },
- "intuitive|clinical research engineering intern": {
-  "company": "Intuitive",
-  "confidence": 87,
-  "jd_hash": "bab92102e55964bb",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "not an AI/ML, Data or Software role",
-  "quotes": {
-   "degree": "Current enrollment in a Biomedical Engineering, Mechanical Engineering, or related degree-seeking program at the Master's level."
-  },
-  "read_at": 1794869963,
-  "tech": null,
-  "title": "Clinical Research Engineering Intern",
-  "us": true,
-  "was": "match"
  },
  "lumentum|sw developer support intern program management office": {
   "company": "Lumentum",
