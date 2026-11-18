@@ -108,6 +108,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "delta dental|internship application development": {
+  "company": "Delta Dental",
+  "confidence": 92,
+  "jd_hash": "525121603bc6352c",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Must be currently enrolled in an undergraduate or graduate program and have completed at least one course or equivalent experience with programming in Java, Python, C++, or other similar languages."
+  },
+  "read_at": 1795030752,
+  "tech": "Software",
+  "title": "Internship- Application Development",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "hewlett packard enterprise|hpe labs ai enablement intern": {
   "company": "Hewlett Packard Enterprise",
   "confidence": 93,
@@ -172,9 +193,9 @@
   "us": true,
   "was": "needs review: degree"
  },
- "motorola|software engineer co op": {
-  "company": "Motorola",
-  "confidence": 90,
+ "motorola solutions|software engineer co op": {
+  "company": "Motorola Solutions",
+  "confidence": 92,
   "jd_hash": "a928e32fe00d9c51",
   "labels": {
    "citizenship": "not_required",
@@ -189,7 +210,7 @@
    "degree": "Working towards Bachelor's or Master's degree in Computer Science, Computer Engineering, or related technical discipline and graduating May 1st, 2027 or later.",
    "grad": "Working towards Bachelor's or Master's degree in Computer Science, Computer Engineering, or related technical discipline and graduating May 1st, 2027 or later."
   },
-  "read_at": 1794946208,
+  "read_at": 1795030752,
   "tech": "Software",
   "title": "Software Engineer Co-op",
   "us": true,
