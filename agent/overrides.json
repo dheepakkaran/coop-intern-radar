@@ -471,5 +471,27 @@
   "title": "IT Intern",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
+ },
+ "zillow|data science intern": {
+  "company": "Zillow",
+  "confidence": 93,
+  "jd_hash": "462041a4affe5846",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Data Science, Statistics, Mathematics, Computer Science, Economics, Engineering, Finance, or a related quantitative field.",
+   "grad": "You're targeting a graduation date before December 2028."
+  },
+  "read_at": 1795042178,
+  "tech": "Data",
+  "title": "Data Science Intern",
+  "us": true,
+  "was": "needs review: degree"
  }
 }
