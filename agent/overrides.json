@@ -129,6 +129,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "copart|software engineering intern": {
+  "company": "Copart",
+  "confidence": 92,
+  "jd_hash": "199230cd5eb5fd40",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Bachelor's degree or higher in computer science, Engineering or similar"
+  },
+  "read_at": 1795045808,
+  "tech": "Software",
+  "title": "Software Engineering Intern",
+  "us": true,
+  "was": "fails: citizenship"
+ },
  "delta dental|internship application development": {
   "company": "Delta Dental",
   "confidence": 92,
