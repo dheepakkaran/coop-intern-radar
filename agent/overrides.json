@@ -1,27 +1,5 @@
 {
- "abb|sales excellence data analytics intern summer 2027": {
-  "company": "ABB",
-  "confidence": 85,
-  "jd_hash": "f2962efa059e385e",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a bachelor's or master's degree program in Engineering, Computer Science or Relevant (technical background required) in the United States.",
-   "sponsorship": "Must be legally authorized to work in the United States without company sponsorship now and in the future."
-  },
-  "read_at": 1794869963,
-  "tech": "Data",
-  "title": "Sales Excellence Data Analytics Intern - Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
- },
- "airbnb|software engineering intern": {
+ "airbnb|software engineer intern": {
   "company": "Airbnb",
   "confidence": 93,
   "jd_hash": "6d486cef67deed4a",
@@ -38,32 +16,11 @@
    "grad": "Currently enrolled in a Bachelor's or Master's degree program and graduating between December 2027 - June 2028",
    "sponsorship": "Please note: This role is not eligible for visa or immigration sponsorship, now or in the future."
   },
-  "read_at": 1794984030,
+  "read_at": 1795011970,
   "tech": "Software",
-  "title": "Software Engineering Intern",
+  "title": "Software Engineer Intern",
   "us": true,
   "was": "needs review: grad"
- },
- "analog devices|software engineering intern medical device healthcare integration": {
-  "company": "Analog Devices",
-  "confidence": 90,
-  "jd_hash": "d47de3b082947837",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Software Engineering, Computer Engineering, Biomedical Engineering, Electrical Engineering, or a related technical field."
-  },
-  "read_at": 1794869963,
-  "tech": "Software",
-  "title": "Software Engineering Intern, Medical Device & Healthcare Integration",
-  "us": true,
-  "was": "needs review: degree"
  },
  "apex analytix|product management intern devops": {
   "company": "APEX Analytix",
@@ -107,33 +64,10 @@
   "us": true,
   "was": "match"
  },
- "boston scientific|ai acceleration intern": {
-  "company": "Boston Scientific",
-  "confidence": 90,
-  "jd_hash": "df6694a529922516",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a bachelor's or graduate degree in Computer, Industrial, or Software Engineering, Data or Computer Science, Artificial Intelligence, or Business/Data Analytics.",
-   "grad": "Must graduate between Fall 2027 \u2013 Spring 2029",
-   "sponsorship": "Must be eligible to work in the U.S. without company sponsorship, now or in the future, for employment-based work authorization."
-  },
-  "read_at": 1794869963,
-  "tech": "AI/ML",
-  "title": "AI Acceleration Intern",
-  "us": true,
-  "was": "fails: grad"
- },
- "centific|technical intern masters or phd": {
-  "company": "Centific",
+ "camping world|ai intern": {
+  "company": "Camping World",
   "confidence": 85,
-  "jd_hash": "c7f741fbd51f4300",
+  "jd_hash": "1e86df2577f81a09",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -143,53 +77,11 @@
   },
   "now": "match",
   "quotes": {
-   "degree": "Master's Degree in Statistics, Econometrics, Computer Science, Electrical or Computer Engineering, or related field AND 1+ years related experience (e.g., statistics, predictive analytics, research)"
+   "degree": "Currently pursuing a degree in Computer Science, Data Science, AI/ML, Engineering, or a related field."
   },
-  "read_at": 1794946208,
+  "read_at": 1795011970,
   "tech": "AI/ML",
-  "title": "Technical Intern (Masters or PhD)",
-  "us": true,
-  "was": "needs review: degree"
- },
- "constellation brands|data and ai enablement intern": {
-  "company": "Constellation Brands",
-  "confidence": 88,
-  "jd_hash": "9ce2aa8d2e18d4ce",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Current student in, or recent graduate of, a Computer Science, Data Science, Statistics, Mathematics, or other STEM-related program."
-  },
-  "read_at": 1794949838,
-  "tech": "Data",
-  "title": "Data and AI Enablement Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "constellation brands|intern data science": {
-  "company": "Constellation Brands",
-  "confidence": 92,
-  "jd_hash": "40fb8a5d2a7ecaee",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Current student in, or recent graduate of, a Computer Science, Data Science, Statistics, Mathematics, or other STEM-related program."
-  },
-  "read_at": 1794869963,
-  "tech": "Data",
-  "title": "Intern, Data Science",
+  "title": "AI Intern",
   "us": true,
   "was": "needs review: degree"
  },
@@ -234,29 +126,6 @@
   "title": "Clinical Research Engineering Intern",
   "us": true,
   "was": "match"
- },
- "labcorp|intern people analytics": {
-  "company": "LabCorp",
-  "confidence": 88,
-  "jd_hash": "51ad2d3441a9c17c",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Current enrollment in a Bachelor's, Master's, or PhD degree program.",
-   "grad": "Preferred candidates are rising juniors and seniors (December 2027 through June 2029 graduation) who are currently enrolled in a relevant degree program; however, all current students pursuing related studies are encouraged to apply.",
-   "sponsorship": "This position is not eligible for visa sponsorship now or in the future."
-  },
-  "read_at": 1794869963,
-  "tech": "Data",
-  "title": "Intern - People Analytics",
-  "us": true,
-  "was": "needs review: degree, grad"
  },
  "lumentum|sw developer support intern program management office": {
   "company": "Lumentum",
@@ -345,27 +214,6 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
- "nvidia|ai operations intern ai clouds summer 2027": {
-  "company": "NVIDIA",
-  "confidence": 88,
-  "jd_hash": "c9b7d7e4325e4c84",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a BS or MS in Computer Science, Software Engineering, Data Science, or an equivalent program area."
-  },
-  "read_at": 1794946208,
-  "tech": "Software",
-  "title": "AI Operations Intern, AI Clouds - Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
- },
  "pathlabs|software and ai engineering intern": {
   "company": "Pathlabs",
   "confidence": 88,
@@ -386,28 +234,6 @@
   "title": "Software and AI Engineering Intern",
   "us": true,
   "was": "needs review: degree"
- },
- "ptc|onshape performance engineering intern": {
-  "company": "PTC",
-  "confidence": 92,
-  "jd_hash": "780050ab50b2532f",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Must be enrolled in some type of degree program in one of the following or related fields: Software Engineering, Computer Engineering, Computer Science.",
-   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
-  },
-  "read_at": 1794953468,
-  "tech": "Software",
-  "title": "Onshape Performance Engineering Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
  },
  "raptor maps|software engineer intern": {
   "company": "Raptor Maps",
@@ -430,48 +256,6 @@
   "us": true,
   "was": "needs review: sponsorship"
  },
- "s p global|machine learning engineer intern": {
-  "company": "S&P Global",
-  "confidence": 95,
-  "jd_hash": "0fe76fbba6de4d61",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a bachelor's degree or higher with relevant classwork or internships in Machine Learning"
-  },
-  "read_at": 1794984030,
-  "tech": "AI/ML",
-  "title": "Machine Learning Engineer Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "s p global|machine learning engineer summer intern 2027": {
-  "company": "S&P Global ",
-  "confidence": 93,
-  "jd_hash": "0fe76fbba6de4d61",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a bachelor's degree or higher with relevant classwork or internships in Machine Learning"
-  },
-  "read_at": 1794869963,
-  "tech": "AI/ML",
-  "title": "Machine Learning Engineer - Summer Intern 2027",
-  "us": true,
-  "was": "needs review: degree"
- },
  "sallie mae|software engineer intern": {
   "company": "Sallie Mae",
   "confidence": 95,
@@ -493,28 +277,6 @@
   "title": "Software Engineer Intern",
   "us": true,
   "was": "unverified: no job description"
- },
- "samsung|technical product management intern d2c shopping experiences mobile consumer electronics": {
-  "company": "Samsung",
-  "confidence": 85,
-  "jd_hash": "a9165a45d54076ef",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "not an AI/ML, Data or Software role",
-  "quotes": {
-   "degree": "Currently enrolled in a degree-seeking program (Bachelor's, Master's, MBA, or PhD).",
-   "sponsorship": "This role is not eligible for immigration sponsorship"
-  },
-  "read_at": 1794888309,
-  "tech": null,
-  "title": "Technical Product Management Intern ( D2C Shopping Experiences (Mobile & Consumer Electronics)",
-  "us": true,
-  "was": "match"
  },
  "sas|iot analytics intern": {
   "company": "SAS",
