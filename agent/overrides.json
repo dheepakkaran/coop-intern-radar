@@ -323,6 +323,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "ptc|creo software engineering intern summer 2027": {
+  "company": "PTC",
+  "confidence": 92,
+  "jd_hash": "78ff02012076b68b",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Computer Science, Software Engineering, Applied Mathematics, Electrical Engineering, or a related field.",
+   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
+  },
+  "read_at": 1795067313,
+  "tech": "Software",
+  "title": "Creo Software Engineering Intern (Summer 2027)",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "t d williamson|engineering intern summer 2027": {
   "company": "T.D. Williamson",
   "confidence": 88,
