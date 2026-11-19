@@ -22,6 +22,27 @@
   "us": true,
   "was": "needs review: grad"
  },
+ "analog devices|information technology intern": {
+  "company": "Analog Devices",
+  "confidence": 85,
+  "jd_hash": "8e09bdcd102410b7",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's Degree in Computer Science, Information Technology, Computer Engineering, Information Systems, or a related field."
+  },
+  "read_at": 1795113257,
+  "tech": "Software",
+  "title": "Information Technology Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "apex analytix|product management intern devops": {
   "company": "APEX Analytix",
   "confidence": 88,
@@ -40,27 +61,6 @@
   "read_at": 1794961102,
   "tech": null,
   "title": "Product Management Intern - DevOps",
-  "us": true,
-  "was": "match"
- },
- "bge|business analyst intern gis": {
-  "company": "BGE",
-  "confidence": 85,
-  "jd_hash": "b58e57182a66ab2c",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ug_preferred",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "needs review: degree",
-  "quotes": {
-   "degree": "Pursuing bachelor's degree in Geography, Geographical Information Systems or related coursework preferred"
-  },
-  "read_at": 1794961102,
-  "tech": "Data",
-  "title": "Business Analyst Intern - GIS",
   "us": true,
   "was": "match"
  },
@@ -108,27 +108,6 @@
   "us": true,
   "was": "needs review: sponsorship, grad"
  },
- "camping world|ai intern": {
-  "company": "Camping World",
-  "confidence": 85,
-  "jd_hash": "1e86df2577f81a09",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Data Science, AI/ML, Engineering, or a related field."
-  },
-  "read_at": 1795011970,
-  "tech": "AI/ML",
-  "title": "AI Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
  "copart|software engineering intern": {
   "company": "Copart",
   "confidence": 92,
@@ -171,27 +150,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "hewlett packard enterprise|hpe labs ai enablement intern": {
-  "company": "Hewlett Packard Enterprise",
-  "confidence": 93,
-  "jd_hash": "35799e3b5e2b4ae3",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a Master's or PhD in Computer Science, Computer Engineering, Electrical Engineering, Data Science, Artificial Intelligence, Machine Learning, or a related technical or quantitative field."
-  },
-  "read_at": 1794946208,
-  "tech": "AI/ML",
-  "title": "HPE Labs - AI Enablement Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
  "johnson controls|software engineering co op": {
   "company": "Johnson Controls",
   "confidence": 92,
@@ -214,73 +172,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "marvell|ai infrastructure engineer intern ms summer 2027": {
-  "company": "Marvell",
-  "confidence": 85,
-  "jd_hash": "48778096b48c58eb",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a bachelor's or master's degree in Computer Science, Data Science, Artificial Intelligence, Electrical Engineering, Computer Engineering, or a related technical field, with an anticipated graduation date between Fall 2027 and Spring 2028.",
-   "grad": "Currently pursuing a bachelor's or master's degree in Computer Science, Data Science, Artificial Intelligence, Electrical Engineering, Computer Engineering, or a related technical field, with an anticipated graduation date between Fall 2027 and Spring 2028."
-  },
-  "read_at": 1794946208,
-  "tech": "AI/ML",
-  "title": "AI Infrastructure Engineer Intern, MS - Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
- },
- "marvell|ms ai infrastructure engineer intern": {
-  "company": "Marvell",
-  "confidence": 85,
-  "jd_hash": "48778096b48c58eb",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Minimum Qualifications: Currently pursuing a bachelor's or master's degree in Computer Science, Data Science, Artificial Intelligence, Electrical Engineering, Computer Engineering, or a related technical field, with an anticipated graduation date between Fall 2027 and Spring 2028.",
-   "grad": "Minimum Qualifications: Currently pursuing a bachelor's or master's degree in Computer Science, Data Science, Artificial Intelligence, Electrical Engineering, Computer Engineering, or a related technical field, with an anticipated graduation date between Fall 2027 and Spring 2028."
-  },
-  "read_at": 1795040348,
-  "tech": "AI/ML",
-  "title": "MS AI Infrastructure Engineer Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "motorola solutions|software engineer co op": {
-  "company": "Motorola Solutions",
-  "confidence": 92,
-  "jd_hash": "a928e32fe00d9c51",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "welcome",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "cpt": "(F1 Visa on CPT accepted only for Masters-level students).",
-   "degree": "Working towards Bachelor's or Master's degree in Computer Science, Computer Engineering, or related technical discipline and graduating May 1st, 2027 or later.",
-   "grad": "Working towards Bachelor's or Master's degree in Computer Science, Computer Engineering, or related technical discipline and graduating May 1st, 2027 or later."
-  },
-  "read_at": 1795030752,
-  "tech": "Software",
-  "title": "Software Engineer Co-op",
-  "us": true,
-  "was": "fails: citizenship"
- },
  "new york city housing development corporation|strategic operations graduate intern": {
   "company": "New York City Housing Development Corporation",
   "confidence": 90,
@@ -302,30 +193,9 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
- "nvidia|ai operations intern ai clouds summer 2027": {
-  "company": "NVIDIA",
-  "confidence": 88,
-  "jd_hash": "c9b7d7e4325e4c84",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a BS or MS in Computer Science, Software Engineering, Data Science, or an equivalent program area."
-  },
-  "read_at": 1794946208,
-  "tech": "Software",
-  "title": "AI Operations Intern, AI Clouds - Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
- },
- "ptc|creo software engineering intern summer 2027": {
+ "ptc|full stack engineering intern cloud data management cad": {
   "company": "PTC",
-  "confidence": 92,
+  "confidence": 93,
   "jd_hash": "78ff02012076b68b",
   "labels": {
    "citizenship": "not_required",
@@ -339,30 +209,11 @@
    "degree": "Currently pursuing a degree in Computer Science, Software Engineering, Applied Mathematics, Electrical Engineering, or a related field.",
    "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
   },
-  "read_at": 1795067313,
+  "read_at": 1795113257,
   "tech": "Software",
-  "title": "Creo Software Engineering Intern (Summer 2027)",
+  "title": "Full-Stack Engineering Intern, Cloud Data Management (CAD)",
   "us": true,
   "was": "needs review: degree"
- },
- "t d williamson|engineering intern summer 2027": {
-  "company": "T.D. Williamson",
-  "confidence": 88,
-  "jd_hash": "16a58b53c48dd1a0",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "unclear",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {},
-  "read_at": 1794953468,
-  "tech": "Software",
-  "title": "Engineering Intern - Summer 2027",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
  },
  "trimble|qa engineer intern": {
   "company": "Trimble",
@@ -383,27 +234,6 @@
   "read_at": 1795025292,
   "tech": "Software",
   "title": "QA Engineer Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "unum|it intern": {
-  "company": "Unum",
-  "confidence": 85,
-  "jd_hash": "704ea63513744ef2",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Candidate must be currently enrolled in an accredited college degree program or be a Spring 2026 graduate"
-  },
-  "read_at": 1794961102,
-  "tech": "Software",
-  "title": "IT Intern",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
