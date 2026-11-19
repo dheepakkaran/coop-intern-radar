@@ -193,6 +193,27 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
+ "nvidia|phd research intern ai for climate and weather simulation 2027": {
+  "company": "NVIDIA",
+  "confidence": 96,
+  "jd_hash": "7eabd30fe281faa7",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "phd_only",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "fails: degree",
+  "quotes": {
+   "degree": "Currently enrolled in at least the 2nd year of a Ph.D. in geophysical sciences, computer science, applied math/statistics, or related fields."
+  },
+  "read_at": 1795122289,
+  "tech": "AI/ML",
+  "title": "PhD Research Intern, AI for Climate and Weather Simulation - 2027",
+  "us": true,
+  "was": "match"
+ },
  "ptc|full stack engineering intern cloud data management cad": {
   "company": "PTC",
   "confidence": 93,
