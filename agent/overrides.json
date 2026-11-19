@@ -258,6 +258,29 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
+ "vertiv|ai intern summer 2027": {
+  "company": "Vertiv",
+  "confidence": 92,
+  "jd_hash": "42e48bf5b0f45c1c",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "fails: cpt",
+  "quotes": {
+   "cpt": "Individuals with temporary visas such as E, F-1, H-1, H-2, L, B, J, or TN or who need sponsorship for work authorization now or in the future, are not eligible for hire.",
+   "degree": "Current student or recent graduate with a degree in Computer Science, Computer or Electrical Engineering, Information Systems Management, Data Science, or a related field",
+   "sponsorship": "This is not a position for which sponsorship will be provided."
+  },
+  "read_at": 1795125919,
+  "tech": "AI/ML",
+  "title": "AI Intern (Summer 2027)",
+  "us": true,
+  "was": "match"
+ },
  "vibrantz technologies|applied ai automation intern": {
   "company": "Vibrantz Technologies",
   "confidence": 88,
