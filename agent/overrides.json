@@ -43,27 +43,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "apex analytix|product management intern devops": {
-  "company": "APEX Analytix",
-  "confidence": 88,
-  "jd_hash": "89cd3d22200ec1e8",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "not an AI/ML, Data or Software role",
-  "quotes": {
-   "degree": "Currently pursuing a bachelor's or master's degree in Computer Science, Information Systems, Business Analytics, Engineering or a related field."
-  },
-  "read_at": 1794961102,
-  "tech": null,
-  "title": "Product Management Intern - DevOps",
-  "us": true,
-  "was": "match"
- },
  "bose|software engineer co op": {
   "company": "Bose",
   "confidence": 88,
@@ -107,6 +86,29 @@
   "title": "Data Science Intern (MS/PhD)-Summer 2027",
   "us": true,
   "was": "needs review: sponsorship, grad"
+ },
+ "centene|data science intern graduate summer": {
+  "company": "Centene",
+  "confidence": 92,
+  "jd_hash": "8d180624866d086a",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "fails: cpt",
+  "quotes": {
+   "cpt": "Sponsorship and future sponsorship are not available for this opportunity, including employment-based visa types H-1B, L-1, O-1, H-1B1, F-1, J-1, OPT, or CPT.",
+   "degree": "Must be enrolled in a graduate program at an accredited university or college in a field related to the hiring department through the internship period.",
+   "sponsorship": "Must be authorized to work in the U.S. without the need for employment-based visa sponsorship now or in the future."
+  },
+  "read_at": 1795131379,
+  "tech": "Data",
+  "title": "Data Science Intern (Graduate - Summer)",
+  "us": true,
+  "was": "match"
  },
  "copart|software engineering intern": {
   "company": "Copart",
@@ -171,48 +173,6 @@
   "title": "Software Engineering Co-Op",
   "us": true,
   "was": "needs review: degree"
- },
- "new york city housing development corporation|strategic operations graduate intern": {
-  "company": "New York City Housing Development Corporation",
-  "confidence": 90,
-  "jd_hash": "5979e6de67399820",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Bachelor's degree from an accredited institution and current enrollment in a graduate program"
-  },
-  "read_at": 1794961102,
-  "tech": "Data",
-  "title": "Strategic Operations Graduate Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "nvidia|phd research intern ai for climate and weather simulation 2027": {
-  "company": "NVIDIA",
-  "confidence": 96,
-  "jd_hash": "7eabd30fe281faa7",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "phd_only",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "fails: degree",
-  "quotes": {
-   "degree": "Currently enrolled in at least the 2nd year of a Ph.D. in geophysical sciences, computer science, applied math/statistics, or related fields."
-  },
-  "read_at": 1795122289,
-  "tech": "AI/ML",
-  "title": "PhD Research Intern, AI for Climate and Weather Simulation - 2027",
-  "us": true,
-  "was": "match"
  },
  "ptc|full stack engineering intern cloud data management cad": {
   "company": "PTC",
