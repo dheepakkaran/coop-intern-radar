@@ -214,27 +214,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "lumentum|sw developer support intern program management office": {
-  "company": "Lumentum",
-  "confidence": 92,
-  "jd_hash": "8721015ad9a8887d",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Software Engineering, or a related field."
-  },
-  "read_at": 1794957473,
-  "tech": "Software",
-  "title": "SW Developer Support Intern, Program Management Office",
-  "us": true,
-  "was": "needs review: degree"
- },
  "marvell|ai infrastructure engineer intern ms summer 2027": {
   "company": "Marvell",
   "confidence": 85,
@@ -343,72 +322,6 @@
   "title": "AI Operations Intern, AI Clouds - Summer 2027",
   "us": true,
   "was": "needs review: degree"
- },
- "pathlabs|software and ai engineering intern": {
-  "company": "Pathlabs",
-  "confidence": 88,
-  "jd_hash": "a0c36d5bd9b48004",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently studying or recently graduated in Computer Science, Software Engineering, Computer Engineering, Data Science, Information Systems or a related field"
-  },
-  "read_at": 1794961102,
-  "tech": "Software",
-  "title": "Software and AI Engineering Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "sallie mae|software engineer intern": {
-  "company": "Sallie Mae",
-  "confidence": 95,
-  "jd_hash": null,
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Open to undergraduate and graduate level students with expected graduation dates of Dec 2027 - May 2028",
-   "grad": "Open to undergraduate and graduate level students with expected graduation dates of Dec 2027 - May 2028"
-  },
-  "read_at": 1794973161,
-  "tech": "Software",
-  "title": "Software Engineer Intern",
-  "us": true,
-  "was": "unverified: no job description"
- },
- "sas|iot analytics intern": {
-  "company": "SAS",
-  "confidence": 88,
-  "jd_hash": "3fff8995a3f13b87",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "You're a Master's level student studying Statistics, Mathematics, Computer Science, Electrical Engineering, or related field; not graduating prior to December 2027",
-   "grad": "You're a Master's level student studying Statistics, Mathematics, Computer Science, Electrical Engineering, or related field; not graduating prior to December 2027",
-   "sponsorship": "To qualify, applicants must be legally authorized to work in the United States, and should not require, now or in the future, sponsorship for employment visa status."
-  },
-  "read_at": 1794961102,
-  "tech": "Data",
-  "title": "IoT Analytics Intern",
-  "us": true,
-  "was": "needs review: grad"
  },
  "t d williamson|engineering intern summer 2027": {
   "company": "T.D. Williamson",
