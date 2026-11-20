@@ -1,26 +1,4 @@
 {
- "barry s|undergraduate summer scholar intern data analyst": {
-  "company": "Barry's",
-  "confidence": 92,
-  "jd_hash": "aa81d669b2edbe59",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ug_only",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "fails: degree",
-  "quotes": {
-   "degree": "Undergraduate student graduating between December 2027 and June 2028 in Computer Science, Data Science, Statistics, Economics, Business Analytics or a related field",
-   "grad": "Undergraduate student graduating between December 2027 and June 2028 in Computer Science, Data Science, Statistics, Economics, Business Analytics or a related field"
-  },
-  "read_at": 1795133210,
-  "tech": "Data",
-  "title": "Undergraduate Summer Scholar Intern - Data Analyst",
-  "us": true,
-  "was": "match"
- },
  "ford motor company|vehicle access system engineering intern advanced ev": {
   "company": "Ford Motor Company",
   "confidence": 88,
