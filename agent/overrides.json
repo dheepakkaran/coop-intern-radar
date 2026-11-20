@@ -1,27 +1,4 @@
 {
- "airbnb|software engineer intern": {
-  "company": "Airbnb",
-  "confidence": 93,
-  "jd_hash": "6d486cef67deed4a",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a Bachelor's or Master's degree program and graduating between December 2027 - June 2028",
-   "grad": "Currently enrolled in a Bachelor's or Master's degree program and graduating between December 2027 - June 2028",
-   "sponsorship": "Please note: This role is not eligible for visa or immigration sponsorship, now or in the future."
-  },
-  "read_at": 1795011970,
-  "tech": "Software",
-  "title": "Software Engineer Intern",
-  "us": true,
-  "was": "needs review: grad"
- },
  "analog devices|information technology intern": {
   "company": "Analog Devices",
   "confidence": 85,
