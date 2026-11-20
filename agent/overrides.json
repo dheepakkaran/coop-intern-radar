@@ -65,27 +65,6 @@
   "us": true,
   "was": "match"
  },
- "bose|software engineer co op": {
-  "company": "Bose",
-  "confidence": 88,
-  "jd_hash": "a9c582e8f418efa2",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing an undergraduate or graduate degree in a STEM discipline."
-  },
-  "read_at": 1795040348,
-  "tech": "Software",
-  "title": "Software Engineer Co-op",
-  "us": true,
-  "was": "needs review: sponsorship"
- },
  "bristol myers squibb|data science intern ms phd summer 2027": {
   "company": "Bristol Myers Squibb",
   "confidence": 85,
@@ -108,29 +87,6 @@
   "title": "Data Science Intern (MS/PhD)-Summer 2027",
   "us": true,
   "was": "needs review: sponsorship, grad"
- },
- "centene|data science intern graduate summer": {
-  "company": "Centene",
-  "confidence": 92,
-  "jd_hash": "8d180624866d086a",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "rejected",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "fails: cpt",
-  "quotes": {
-   "cpt": "Sponsorship and future sponsorship are not available for this opportunity, including employment-based visa types H-1B, L-1, O-1, H-1B1, F-1, J-1, OPT, or CPT.",
-   "degree": "Must be enrolled in a graduate program at an accredited university or college in a field related to the hiring department through the internship period.",
-   "sponsorship": "Must be authorized to work in the U.S. without the need for employment-based visa sponsorship now or in the future."
-  },
-  "read_at": 1795131379,
-  "tech": "Data",
-  "title": "Data Science Intern (Graduate - Summer)",
-  "us": true,
-  "was": "match"
  },
  "copart|software engineering intern": {
   "company": "Copart",
@@ -196,6 +152,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "llnl|computing graduate student intern summer 2027": {
+  "company": "LLNL",
+  "confidence": 85,
+  "jd_hash": "1bacc3dac6383eef",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "These positions are intended for students who have earned their bachelor's degree and will be enrolled in a graduate program by Fall 2027."
+  },
+  "read_at": 1795135040,
+  "tech": "Software",
+  "title": "Computing Graduate Student Intern - Summer 2027",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "ptc|full stack engineering intern cloud data management cad": {
   "company": "PTC",
   "confidence": 93,
@@ -260,29 +237,6 @@
   "title": "QA Engineer Intern",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
- },
- "vertiv|ai intern summer 2027": {
-  "company": "Vertiv",
-  "confidence": 92,
-  "jd_hash": "42e48bf5b0f45c1c",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "rejected",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "fails: cpt",
-  "quotes": {
-   "cpt": "Individuals with temporary visas such as E, F-1, H-1, H-2, L, B, J, or TN or who need sponsorship for work authorization now or in the future, are not eligible for hire.",
-   "degree": "Current student or recent graduate with a degree in Computer Science, Computer or Electrical Engineering, Information Systems Management, Data Science, or a related field",
-   "sponsorship": "This is not a position for which sponsorship will be provided."
-  },
-  "read_at": 1795125919,
-  "tech": "AI/ML",
-  "title": "AI Intern (Summer 2027)",
-  "us": true,
-  "was": "match"
  },
  "vibrantz technologies|applied ai automation intern": {
   "company": "Vibrantz Technologies",
