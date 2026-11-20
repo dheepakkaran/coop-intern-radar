@@ -109,6 +109,28 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
+ "general dynamics information technology|summer 2027 ai and estimation intern": {
+  "company": "General Dynamics Information Technology",
+  "confidence": 88,
+  "jd_hash": "26759fb3d6258be7",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in a bachelor's or master's degree program in computer science, IT, engineering, or other STEM field from a United States-based college or university.",
+   "sponsorship": "Sponsorship is not available for this role."
+  },
+  "read_at": 1795199420,
+  "tech": "AI/ML",
+  "title": "Summer 2027 AI and Estimation Intern",
+  "us": true,
+  "was": "needs review: citizenship, sponsorship"
+ },
  "heartflow|platform engineering intern": {
   "company": "HeartFlow",
   "confidence": 88,
