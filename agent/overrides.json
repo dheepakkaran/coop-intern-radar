@@ -278,6 +278,27 @@
   "us": true,
   "was": "match"
  },
+ "state street|state street investment management fixed income technology 2027 summer internship": {
+  "company": "State Street",
+  "confidence": 90,
+  "jd_hash": "948071c14948601f",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Is currently pursuing a Bachelor's / master's degree in computer science, Engineering, Finance, Information Systems."
+  },
+  "read_at": 1795153041,
+  "tech": "Software",
+  "title": "State Street Investment Management - Fixed Income Technology - 2027 Summer Internship",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "trimble|qa engineer intern": {
   "company": "Trimble",
   "confidence": 90,
