@@ -216,6 +216,27 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
+ "nvidia|finance ai engineering intern summer 2027": {
+  "company": "NVIDIA",
+  "confidence": 93,
+  "jd_hash": "9423bca6fc03b6e1",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in computer science, software engineering, data science, engineering, or a related technical field."
+  },
+  "read_at": 1795147640,
+  "tech": "AI/ML",
+  "title": "Finance AI Engineering Intern - Summer 2027",
+  "us": true,
+  "was": "fails: degree"
+ },
  "piper sandler|data engineering intern": {
   "company": "Piper Sandler",
   "confidence": 90,
