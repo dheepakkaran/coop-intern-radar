@@ -194,6 +194,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "nvidia|math libraries intern cuest summer 2027": {
+  "company": "NVIDIA",
+  "confidence": 94,
+  "jd_hash": "a7497478dc9dae57",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a BS, MS, or PhD degree in Computational Chemistry, Computational Physics, Computer Science, Applied Math, or an equivalent program area."
+  },
+  "read_at": 1795122289,
+  "tech": "Software",
+  "title": "Math Libraries Intern, cuEST - Summer 2027",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "piper sandler|data engineering intern": {
   "company": "Piper Sandler",
   "confidence": 90,
@@ -340,5 +361,48 @@
   "title": "State Street Model Risk Management - Quantitative Analyst - 2027 Summer Internship",
   "us": true,
   "was": "match"
+ },
+ "symbotic|software engineer intern front end": {
+  "company": "Symbotic",
+  "confidence": 90,
+  "jd_hash": "b3152aed4295e12c",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Computer Science or related discipline."
+  },
+  "read_at": 1795190388,
+  "tech": "Software",
+  "title": "Software Engineer Intern - Front-End",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "umb|ai intern": {
+  "company": "UMB",
+  "confidence": 93,
+  "jd_hash": "f79364eeedca13bd",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Data Science, AI, or a related technical field.",
+   "sponsorship": "Work Visa sponsorship is not available for this position."
+  },
+  "read_at": 1795190388,
+  "tech": "AI/ML",
+  "title": "AI Intern",
+  "us": true,
+  "was": "needs review: sponsorship"
  }
 }
