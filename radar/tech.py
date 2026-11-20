@@ -51,7 +51,10 @@ TITLE_NOT = re.compile(
     r"data entry|real estate develop|land develop|business develop|fund ?develop|talent develop|"
     r"leadership develop|organi[sz]ational develop|professional develop|community develop|economic develop|"
     r"(insurance|travel|leasing|customer service|sales|real estate) agent|patient care|nurse|nursing|"
-    r"teaching assistant|\bweb ?(content|copy|writer|editor)|social media", re.I)
+    r"teaching assistant|\bweb ?(content|copy|writer|editor)|social media|"
+    # MBA-program internships and product marketing name a business job even with "AI" in the title
+    # (NVIDIA "Technical Product Marketing MBA Intern, AI Infrastructure", 2026-11-20 agent report)
+    r"\bmba\b|product marketing", re.I)
 
 # ---- JD vocabulary ----------------------------------------------------------------------------------------
 JD_CORE = [

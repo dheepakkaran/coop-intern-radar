@@ -406,7 +406,9 @@ def test_tech_titles():
     assert tech.title_field("Data Center Software Engineer Intern")  # still a tech job
     for t in ["Mechanical Engineering Intern", "Finance Intern", "Data Entry Intern", "Business Development Intern",
               "Insurance Agent Intern", "Marketing Intern", "Supply Chain Co-op", "Teaching Assistant - Data Structures",
-              "2027 Data Center Growth & Development Intern - NYC", "Grad Intern - Computational Chemistry"]:  # live audit
+              "2027 Data Center Growth & Development Intern - NYC", "Grad Intern - Computational Chemistry",
+              "Product Marketing MBA Intern, AI Infrastructure — Summer 2027",
+              "Technical Product Marketing MBA Intern, AI Infrastructure - Summer 2027"]:  # live audit
         assert tech.title_field(t) is None, t
 
 

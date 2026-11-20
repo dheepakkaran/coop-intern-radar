@@ -21,7 +21,7 @@ from datetime import datetime, timezone
 
 GRAD = (2028, 5)  # the site owner's expected graduation (year, month): MS, May 2028
 US_SINCE = (2026, 1)  # in the US since January 2026 (MS started Spring 2026): "N years of US residency" needs N <= this
-RULES_VERSION = 13  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
+RULES_VERSION = 14  # bump when the rules here or in tech.py change: cached JD verdicts are then redone
 TERM_TAG = False  # Dheepak decides later: True -> a JD that offers only a summer term gets the tag "Term: summer"
 
 TAG = re.compile(r"<[^>]+>")
