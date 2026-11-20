@@ -1,4 +1,92 @@
 {
+ "cas|business data analytics intern ai ml focus": {
+  "company": "CAS",
+  "confidence": 85,
+  "jd_hash": "f4ef40224126a6a6",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Data Analytics, Computer Science, Information Systems, Information Technology, Computer Engineering, or a related field.",
+   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
+  },
+  "read_at": 1795174284,
+  "tech": "Data",
+  "title": "Business Data Analytics Intern - AI/ML Focus",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "cas|cheminformatics scientist intern": {
+  "company": "CAS",
+  "confidence": 88,
+  "jd_hash": "7b53917055332797",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Chemistry, Cheminformatics, Bioinformatics, Computer Science, or a related field.",
+   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
+  },
+  "read_at": 1795174284,
+  "tech": "Software",
+  "title": "Cheminformatics Scientist Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
+ "cas|technology intern application technology": {
+  "company": "CAS",
+  "confidence": 88,
+  "jd_hash": "311ea7da323aaaa0",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a degree in the Information Technology field or a related discipline (like Computer Science, Information Systems, Data Analytics, or Computer Engineering)",
+   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
+  },
+  "read_at": 1795174284,
+  "tech": "Software",
+  "title": "Technology Intern - Application Technology",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "cas|technology intern software engineering": {
+  "company": "CAS",
+  "confidence": 90,
+  "jd_hash": "fe7e35bd3f255775",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a degree in the Information Technology field or a related discipline (like Computer Science, Information Systems, Data Analytics, or Computer Engineering)",
+   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
+  },
+  "read_at": 1795174284,
+  "tech": "Software",
+  "title": "Technology Intern - Software Engineering",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "ford motor company|vehicle access system engineering intern advanced ev": {
   "company": "Ford Motor Company",
   "confidence": 88,
@@ -20,6 +108,28 @@
   "title": "Vehicle Access System Engineering Intern - Advanced EV",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
+ },
+ "heartflow|platform engineering intern": {
+  "company": "HeartFlow",
+  "confidence": 88,
+  "jd_hash": "cc684afa1a5fe99d",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Target Graduation Date: Currently pursuing a degree in Computer Science, Software Engineering, or a related technical field, with an expected graduation date that aligns with seeking a full-time role in the following year (2028).",
+   "grad": "We are looking for candidates who are seeking a full-time role in the following year (e.g., graduating in late 2027 or Spring 2028)."
+  },
+  "read_at": 1795129549,
+  "tech": "Software",
+  "title": "Platform Engineering Intern",
+  "us": true,
+  "was": "needs review: degree"
  },
  "llnl|computing graduate student intern summer 2027": {
   "company": "LLNL",
