@@ -1,25 +1,4 @@
 {
- "analog devices|information technology intern": {
-  "company": "Analog Devices",
-  "confidence": 85,
-  "jd_hash": "8e09bdcd102410b7",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's Degree in Computer Science, Information Technology, Computer Engineering, Information Systems, or a related field."
-  },
-  "read_at": 1795113257,
-  "tech": "Software",
-  "title": "Information Technology Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
  "barry s|undergraduate summer scholar intern data analyst": {
   "company": "Barry's",
   "confidence": 92,
@@ -42,71 +21,6 @@
   "us": true,
   "was": "match"
  },
- "bristol myers squibb|data science intern ms phd summer 2027": {
-  "company": "Bristol Myers Squibb",
-  "confidence": 85,
-  "jd_hash": "bec7b4033a0310df",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Data Science Intern (MS/PhD)-Summer 2027",
-   "grad": "-Currently in a quantitative sciences program ( Computer Science, Math, Computational Biology), and should not have graduated from the program before the end of internship (Aug 2027)",
-   "sponsorship": "-Please note that immigration or visa sponsorship is not available for this position"
-  },
-  "read_at": 1795021686,
-  "tech": "Data",
-  "title": "Data Science Intern (MS/PhD)-Summer 2027",
-  "us": true,
-  "was": "needs review: sponsorship, grad"
- },
- "copart|software engineering intern": {
-  "company": "Copart",
-  "confidence": 92,
-  "jd_hash": "199230cd5eb5fd40",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Bachelor's degree or higher in computer science, Engineering or similar"
-  },
-  "read_at": 1795045808,
-  "tech": "Software",
-  "title": "Software Engineering Intern",
-  "us": true,
-  "was": "fails: citizenship"
- },
- "delta dental|internship application development": {
-  "company": "Delta Dental",
-  "confidence": 92,
-  "jd_hash": "525121603bc6352c",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Must be currently enrolled in an undergraduate or graduate program and have completed at least one course or equivalent experience with programming in Java, Python, C++, or other similar languages."
-  },
-  "read_at": 1795030752,
-  "tech": "Software",
-  "title": "Internship- Application Development",
-  "us": true,
-  "was": "needs review: degree"
- },
  "ford motor company|vehicle access system engineering intern advanced ev": {
   "company": "Ford Motor Company",
   "confidence": 88,
@@ -128,28 +42,6 @@
   "title": "Vehicle Access System Engineering Intern - Advanced EV",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
- },
- "johnson controls|software engineering co op": {
-  "company": "Johnson Controls",
-  "confidence": 92,
-  "jd_hash": "b777097a2b74805e",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Computer Engineering, Electrical Engineering, Software Engineering, Computer Science, or a related technical discipline.",
-   "sponsorship": "Must be legally authorized to work in the United States without current or future sponsorship."
-  },
-  "read_at": 1795040348,
-  "tech": "Software",
-  "title": "Software Engineering Co-Op",
-  "us": true,
-  "was": "needs review: degree"
  },
  "llnl|computing graduate student intern summer 2027": {
   "company": "LLNL",
@@ -235,28 +127,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "ptc|full stack engineering intern cloud data management cad": {
-  "company": "PTC",
-  "confidence": 93,
-  "jd_hash": "78ff02012076b68b",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Software Engineering, Applied Mathematics, Electrical Engineering, or a related field.",
-   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
-  },
-  "read_at": 1795113257,
-  "tech": "Software",
-  "title": "Full-Stack Engineering Intern, Cloud Data Management (CAD)",
-  "us": true,
-  "was": "needs review: degree"
- },
  "ralliant|software engineer intern": {
   "company": "Ralliant",
   "confidence": 88,
@@ -299,32 +169,10 @@
   "us": true,
   "was": "needs review: degree"
  },
- "trimble|qa engineer intern": {
-  "company": "Trimble",
-  "confidence": 90,
-  "jd_hash": "8cd568ceaf67dcb2",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Current enrollment in a Bachelor's or Master's degree program in Computer Science, Software Engineering, or a related technical field.",
-   "sponsorship": "Visa sponsorship is not available for this position."
-  },
-  "read_at": 1795025292,
-  "tech": "Software",
-  "title": "QA Engineer Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "vibrantz technologies|applied ai automation intern": {
-  "company": "Vibrantz Technologies",
-  "confidence": 88,
-  "jd_hash": "805450128ecbd896",
+ "state street|state street model risk management quantitative analyst 2027 summer internship": {
+  "company": "State Street",
+  "confidence": 87,
+  "jd_hash": "49de17b5949e3d59",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -332,36 +180,14 @@
    "grad": "not_stated",
    "sponsorship": "silent"
   },
-  "now": "match",
+  "now": "not an AI/ML, Data or Software role",
   "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Engineering, Information Systems, Artificial Intelligence, or a related field, or able to demonstrate equivalent learning through projects or other training."
+   "degree": "Working toward a Bachelor's or Master's degree in Finance, Economics, Risk Management, Engineering, Data Science, Mathematics, Statistics, or other quantitative/analytical disciplines."
   },
-  "read_at": 1795044008,
-  "tech": "AI/ML",
-  "title": "Applied AI & Automation Intern",
+  "read_at": 1795154841,
+  "tech": null,
+  "title": "State Street Model Risk Management - Quantitative Analyst - 2027 Summer Internship",
   "us": true,
-  "was": "needs review: degree"
- },
- "zillow|data science intern": {
-  "company": "Zillow",
-  "confidence": 93,
-  "jd_hash": "462041a4affe5846",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's degree in Data Science, Statistics, Mathematics, Computer Science, Economics, Engineering, Finance, or a related quantitative field.",
-   "grad": "You're targeting a graduation date before December 2028."
-  },
-  "read_at": 1795042178,
-  "tech": "Data",
-  "title": "Data Science Intern",
-  "us": true,
-  "was": "needs review: degree"
+  "was": "match"
  }
 }
