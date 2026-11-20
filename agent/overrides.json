@@ -43,6 +43,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "barry s|undergraduate summer scholar intern data analyst": {
+  "company": "Barry's",
+  "confidence": 92,
+  "jd_hash": "aa81d669b2edbe59",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ug_only",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "fails: degree",
+  "quotes": {
+   "degree": "Undergraduate student graduating between December 2027 and June 2028 in Computer Science, Data Science, Statistics, Economics, Business Analytics or a related field",
+   "grad": "Undergraduate student graduating between December 2027 and June 2028 in Computer Science, Data Science, Statistics, Economics, Business Analytics or a related field"
+  },
+  "read_at": 1795133210,
+  "tech": "Data",
+  "title": "Undergraduate Summer Scholar Intern - Data Analyst",
+  "us": true,
+  "was": "match"
+ },
  "bose|software engineer co op": {
   "company": "Bose",
   "confidence": 88,
@@ -195,6 +217,27 @@
   "title": "Full-Stack Engineering Intern, Cloud Data Management (CAD)",
   "us": true,
   "was": "needs review: degree"
+ },
+ "ralliant|software engineer intern": {
+  "company": "Ralliant",
+  "confidence": 88,
+  "jd_hash": "418c2f1be3989c22",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ug_only",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "fails: degree",
+  "quotes": {
+   "degree": "Currently pursuing a bachelor's degree in Computer Science, Software Engineering, Computer Engineering, or a related field."
+  },
+  "read_at": 1795133210,
+  "tech": "Software",
+  "title": "Software Engineer Intern",
+  "us": true,
+  "was": "match"
  },
  "trimble|qa engineer intern": {
   "company": "Trimble",
