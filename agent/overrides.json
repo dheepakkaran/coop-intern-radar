@@ -130,6 +130,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "ford motor company|vehicle access system engineering intern advanced ev": {
+  "company": "Ford Motor Company",
+  "confidence": 88,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a BS or MS in Computer Science, Software Engineering, Computer Engineering, Data Science, or similar",
+   "sponsorship": "Visa sponsorship is not available for this position."
+  },
+  "read_at": 1795136840,
+  "tech": "Software",
+  "title": "Vehicle Access System Engineering Intern - Advanced EV",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "johnson controls|software engineering co op": {
   "company": "Johnson Controls",
   "confidence": 92,
@@ -170,6 +192,27 @@
   "read_at": 1795135040,
   "tech": "Software",
   "title": "Computing Graduate Student Intern - Summer 2027",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
+ "lucid motors|intern infotainment sw validation automation summer 2027": {
+  "company": "Lucid Motors",
+  "confidence": 85,
+  "jd_hash": "73303b13d14d1d78",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in a Bachelor's or Master's Degree program at an accredited university"
+  },
+  "read_at": 1795136840,
+  "tech": "Software",
+  "title": "Intern, Infotainment SW Validation Automation, Summer 2027",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
