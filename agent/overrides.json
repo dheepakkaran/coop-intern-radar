@@ -192,28 +192,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "ford motor company|vehicle access system engineering intern advanced ev": {
-  "company": "Ford Motor Company",
-  "confidence": 88,
-  "jd_hash": null,
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a BS or MS in Computer Science, Software Engineering, Computer Engineering, Data Science, or similar",
-   "sponsorship": "Visa sponsorship is not available for this position."
-  },
-  "read_at": 1795136840,
-  "tech": "Software",
-  "title": "Vehicle Access System Engineering Intern - Advanced EV",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
  "garmin|software engineer intern web mobile": {
   "company": "Garmin",
   "confidence": 88,
