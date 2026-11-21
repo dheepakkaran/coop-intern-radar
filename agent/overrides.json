@@ -62,27 +62,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "calamos investments|data engineer intern": {
-  "company": "Calamos Investments",
-  "confidence": 90,
-  "jd_hash": "2a0b55d2ec7ce899",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Must be at least Bachlor's degree candidate in a relevant STEM area of study"
-  },
-  "read_at": 1795222840,
-  "tech": "Data",
-  "title": "Data Engineer Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
  "cas|business data analytics intern ai ml focus": {
   "company": "CAS",
   "confidence": 85,
@@ -192,7 +171,7 @@
   "us": true,
   "was": "needs review: degree"
  },
- "first premier bank|premier analytics internship": {
+ "first premier bank|analytics intern": {
   "company": "First PREMIER Bank",
   "confidence": 85,
   "jd_hash": "2e6b3b48927818fd",
@@ -207,33 +186,11 @@
   "quotes": {
    "degree": "Applicant should be enrolled in or pursuing higher education"
   },
-  "read_at": 1795234679,
+  "read_at": 1795273533,
   "tech": "Data",
-  "title": "PREMIER Analytics Internship",
+  "title": "Analytics Intern",
   "us": true,
   "was": "needs review: degree"
- },
- "ford motor company|vehicle access system engineering intern advanced ev": {
-  "company": "Ford Motor Company",
-  "confidence": 88,
-  "jd_hash": null,
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a BS or MS in Computer Science, Software Engineering, Computer Engineering, Data Science, or similar",
-   "sponsorship": "Visa sponsorship is not available for this position."
-  },
-  "read_at": 1795136840,
-  "tech": "Software",
-  "title": "Vehicle Access System Engineering Intern - Advanced EV",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
  },
  "garmin|software engineer intern web mobile": {
   "company": "Garmin",
@@ -342,6 +299,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "idaho national laboratory|stochastic tools software intern summer 2027": {
+  "company": "Idaho National Laboratory",
+  "confidence": 85,
+  "jd_hash": "79ce31dedad2f818",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "cpt": "Authorization to work in the U.S. (including CPT and OPT)",
+   "degree": "Upcoming graduate, current graduate, or PhD student enrolled full time at an accredited college/university studying Nuclear Engineering, Mechanical Engineering, Applied Mathematics, Statistics, Computer Science or a closely related field"
+  },
+  "read_at": 1795215629,
+  "tech": "Software",
+  "title": "Stochastic Tools Software Intern - Summer 2027",
+  "us": true,
+  "was": "needs review: sponsorship"
+ },
  "llnl|computing graduate student intern summer 2027": {
   "company": "LLNL",
   "confidence": 85,
@@ -405,10 +384,10 @@
   "us": true,
   "was": "needs review: degree"
  },
- "nvidia|finance ai engineering intern summer 2027": {
+ "nvidia|accounting ai solution engineer intern summer 2027": {
   "company": "NVIDIA",
-  "confidence": 93,
-  "jd_hash": "9423bca6fc03b6e1",
+  "confidence": 90,
+  "jd_hash": "6c5f78f20536fbd4",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -418,76 +397,11 @@
   },
   "now": "match",
   "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's degree in computer science, software engineering, data science, engineering, or a related technical field."
+   "degree": "Currently pursuing a Bachelor's or Master's degree in accounting, finance, information systems, computer science, engineering, or a related field."
   },
-  "read_at": 1795147640,
+  "read_at": 1795273533,
   "tech": "AI/ML",
-  "title": "Finance AI Engineering Intern - Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
- },
- "nvidia|math libraries intern cuest summer 2027": {
-  "company": "NVIDIA",
-  "confidence": 94,
-  "jd_hash": "a7497478dc9dae57",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a BS, MS, or PhD degree in Computational Chemistry, Computational Physics, Computer Science, Applied Math, or an equivalent program area."
-  },
-  "read_at": 1795122289,
-  "tech": "Software",
-  "title": "Math Libraries Intern, cuEST - Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
- },
- "piper sandler|equities trading technology intern": {
-  "company": "Piper Sandler",
-  "confidence": 85,
-  "jd_hash": "a6e1193fb1c929c4",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "This internship is open to undergraduate or graduate students who graduate in December 2027 or Spring 2028 and have a GPA of 3.3 or above.",
-   "grad": "This internship is open to undergraduate or graduate students who graduate in December 2027 or Spring 2028 and have a GPA of 3.3 or above."
-  },
-  "read_at": 1795236479,
-  "tech": "Software",
-  "title": "Equities Trading Technology Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "ptc|full stack engineering intern cloud data management cad": {
-  "company": "PTC",
-  "confidence": 93,
-  "jd_hash": "5c34463e559e1f47",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Software Engineering, Applied Mathematics, Electrical Engineering, or a related field.",
-   "sponsorship": "This position is not eligible for employment-based immigration sponsorship."
-  },
-  "read_at": 1795222840,
-  "tech": "Software",
-  "title": "Full-Stack Engineering Intern, Cloud Data Management (CAD)",
+  "title": "Accounting AI Solution Engineer Intern - Summer 2027",
   "us": true,
   "was": "needs review: degree"
  },
