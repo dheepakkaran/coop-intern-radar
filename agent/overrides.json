@@ -1,4 +1,25 @@
 {
+ "baltimore aircoil company|hris intern": {
+  "company": "Baltimore Aircoil Company",
+  "confidence": 90,
+  "jd_hash": "ccfa4e1757966903",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently senior pursuing a bachelor's or a student pursuing a master's degree from an accredited college or university."
+  },
+  "read_at": 1795221030,
+  "tech": "AI/ML",
+  "title": "HRIS Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "cas|business data analytics intern ai ml focus": {
   "company": "CAS",
   "confidence": 85,
@@ -108,6 +129,27 @@
   "title": "Vehicle Access System Engineering Intern - Advanced EV",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
+ },
+ "garmin|software engineer intern web mobile": {
+  "company": "Garmin",
+  "confidence": 88,
+  "jd_hash": "ad85b7cc2c040533",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a degree in Computer Science, Electrical Engineering, Computer Engineering, or a field relevant to perform the essential functions of this job description"
+  },
+  "read_at": 1795221030,
+  "tech": "Software",
+  "title": "Software Engineer Intern - Web/Mobile",
+  "us": true,
+  "was": "needs review: degree"
  },
  "general dynamics information technology|summer 2027 ai and estimation intern": {
   "company": "General Dynamics Information Technology",
@@ -279,10 +321,10 @@
   "us": true,
   "was": "needs review: degree"
  },
- "piper sandler|data engineering intern": {
-  "company": "Piper Sandler",
-  "confidence": 90,
-  "jd_hash": "e5f9698e28d2785e",
+ "ralliant|software design engineer intern": {
+  "company": "Ralliant",
+  "confidence": 88,
+  "jd_hash": "36b1d0c372d4c7b3",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -292,34 +334,13 @@
   },
   "now": "match",
   "quotes": {
-   "degree": "Currently pursuing a degree in Computer Science, Data Science, Engineering, or a related field."
+   "degree": "Pursuing a degree in Computer Engineering, Electrical Engineering, or Computer Science (Computer Engineering preferred)."
   },
-  "read_at": 1795124119,
-  "tech": "Data",
-  "title": "Data Engineering Intern",
+  "read_at": 1795221030,
+  "tech": "Software",
+  "title": "Software Design Engineer Intern",
   "us": true,
   "was": "needs review: degree"
- },
- "ralliant|software engineer intern": {
-  "company": "Ralliant",
-  "confidence": 88,
-  "jd_hash": "418c2f1be3989c22",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ug_only",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "fails: degree",
-  "quotes": {
-   "degree": "Currently pursuing a bachelor's degree in Computer Science, Software Engineering, Computer Engineering, or a related field."
-  },
-  "read_at": 1795133210,
-  "tech": "Software",
-  "title": "Software Engineer Intern",
-  "us": true,
-  "was": "match"
  },
  "servicenow|security software engineer intern": {
   "company": "ServiceNow",
@@ -405,6 +426,27 @@
   "title": "Research Engineer Intern",
   "us": true,
   "was": "needs review: cpt, sponsorship"
+ },
+ "ssr|gis intern": {
+  "company": "SSR",
+  "confidence": 88,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Geography, Geographic Information Systems (GIS), Environmental Science, or a related field."
+  },
+  "read_at": 1795221030,
+  "tech": "Data",
+  "title": "GIS Intern",
+  "us": true,
+  "was": "unverified: no job description"
  },
  "state street|state street investment management fixed income technology 2027 summer internship": {
   "company": "State Street",
