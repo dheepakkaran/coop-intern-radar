@@ -364,28 +364,6 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
- "los angeles dodgers|summer analyst intern": {
-  "company": "Los Angeles Dodgers",
-  "confidence": 85,
-  "jd_hash": "bf2878ee6211ff83",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "rejected",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "fails: cpt",
-  "quotes": {
-   "cpt": "Unrestricted authorization to work in the United States",
-   "degree": "Must be a rising sophomore, junior, or senior pursuing a bachelor's degree OR are currently enrolled in a graduate program at an accredited institution"
-  },
-  "read_at": 1795222840,
-  "tech": "Data",
-  "title": "Summer Analyst Intern",
-  "us": true,
-  "was": "match"
- },
  "lucid motors|infotainment sw validation automation intern": {
   "company": "Lucid Motors",
   "confidence": 85,
