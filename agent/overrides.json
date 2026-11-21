@@ -192,6 +192,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "ford motor company|vehicle access system engineering intern advanced ev": {
+  "company": "Ford Motor Company",
+  "confidence": 88,
+  "jd_hash": null,
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a BS or MS in Computer Science, Software Engineering, Computer Engineering, Data Science, or similar",
+   "sponsorship": "Visa sponsorship is not available for this position."
+  },
+  "read_at": 1795136840,
+  "tech": "Software",
+  "title": "Vehicle Access System Engineering Intern - Advanced EV",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "garmin|software engineer intern web mobile": {
   "company": "Garmin",
   "confidence": 88,
@@ -276,28 +298,6 @@
   "title": "Fab Systems Setup & Routing Intern (Summer 2027)",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
- },
- "heartflow|platform engineering intern": {
-  "company": "HeartFlow",
-  "confidence": 88,
-  "jd_hash": "cc684afa1a5fe99d",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Target Graduation Date: Currently pursuing a degree in Computer Science, Software Engineering, or a related technical field, with an expected graduation date that aligns with seeking a full-time role in the following year (2028).",
-   "grad": "We are looking for candidates who are seeking a full-time role in the following year (e.g., graduating in late 2027 or Spring 2028)."
-  },
-  "read_at": 1795129549,
-  "tech": "Software",
-  "title": "Platform Engineering Intern",
-  "us": true,
-  "was": "needs review: degree"
  },
  "idaho national laboratory|stochastic tools software intern summer 2027": {
   "company": "Idaho National Laboratory",
