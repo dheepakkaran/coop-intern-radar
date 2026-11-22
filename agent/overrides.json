@@ -62,94 +62,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "cas|business data analytics intern ai ml focus": {
-  "company": "CAS",
-  "confidence": 85,
-  "jd_hash": "f4ef40224126a6a6",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Data Analytics, Computer Science, Information Systems, Information Technology, Computer Engineering, or a related field.",
-   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
-  },
-  "read_at": 1795174284,
-  "tech": "Data",
-  "title": "Business Data Analytics Intern - AI/ML Focus",
-  "us": true,
-  "was": "needs review: degree"
- },
- "cas|cheminformatics scientist intern": {
-  "company": "CAS",
-  "confidence": 88,
-  "jd_hash": "7b53917055332797",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Chemistry, Cheminformatics, Bioinformatics, Computer Science, or a related field.",
-   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
-  },
-  "read_at": 1795174284,
-  "tech": "Software",
-  "title": "Cheminformatics Scientist Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "cas|technology intern application technology": {
-  "company": "CAS",
-  "confidence": 88,
-  "jd_hash": "311ea7da323aaaa0",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a degree in the Information Technology field or a related discipline (like Computer Science, Information Systems, Data Analytics, or Computer Engineering)",
-   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
-  },
-  "read_at": 1795174284,
-  "tech": "Software",
-  "title": "Technology Intern - Application Technology",
-  "us": true,
-  "was": "needs review: degree"
- },
- "cas|technology intern software engineering": {
-  "company": "CAS",
-  "confidence": 90,
-  "jd_hash": "fe7e35bd3f255775",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a degree in the Information Technology field or a related discipline (like Computer Science, Information Systems, Data Analytics, or Computer Engineering)",
-   "sponsorship": "Candidates for this position must be authorized to work in the United States and not require work authorization sponsorship by our company for this position now or in the future."
-  },
-  "read_at": 1795174284,
-  "tech": "Software",
-  "title": "Technology Intern - Software Engineering",
-  "us": true,
-  "was": "needs review: degree"
- },
  "ep wealth advisors|data ai engineer intern": {
   "company": "EP Wealth Advisors",
   "confidence": 90,
@@ -192,70 +104,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "general dynamics information technology|summer 2027 ai and estimation intern": {
-  "company": "General Dynamics Information Technology",
-  "confidence": 88,
-  "jd_hash": "26759fb3d6258be7",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a bachelor's or master's degree program in computer science, IT, engineering, or other STEM field from a United States-based college or university.",
-   "sponsorship": "Sponsorship is not available for this role."
-  },
-  "read_at": 1795199420,
-  "tech": "AI/ML",
-  "title": "Summer 2027 AI and Estimation Intern",
-  "us": true,
-  "was": "needs review: citizenship, sponsorship"
- },
- "globalfoundries|contamination free manufacturing cfm intern summer 2027": {
-  "company": "GlobalFoundries",
-  "confidence": 85,
-  "jd_hash": "416ae74b251ecbec",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Education \u2013 At least a sophomore at time of application and actively pursuing a degree in Chemical Engineering, Electrical Engineering, Materials Science, or a related field through an accredited degree program during the time of internship."
-  },
-  "read_at": 1795211899,
-  "tech": "AI/ML",
-  "title": "Contamination Free Manufacturing (CFM) Intern (Summer 2027)",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "globalfoundries|fab systems setup routing intern summer 2027": {
-  "company": "GlobalFoundries",
-  "confidence": 88,
-  "jd_hash": "89a2e0974e075ae1",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Education \u2013 Actively pursuing a Bachelor or master's in computer engineering, Computer Science or related field."
-  },
-  "read_at": 1795215629,
-  "tech": "Software",
-  "title": "Fab Systems Setup & Routing Intern (Summer 2027)",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
  "method|engineering resident intern": {
   "company": "Method",
   "confidence": 88,
@@ -274,27 +122,6 @@
   "read_at": 1795222840,
   "tech": "Software",
   "title": "Engineering Resident Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "nvidia|accounting ai solution engineer intern summer 2027": {
-  "company": "NVIDIA",
-  "confidence": 90,
-  "jd_hash": "6c5f78f20536fbd4",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's degree in accounting, finance, information systems, computer science, engineering, or a related field."
-  },
-  "read_at": 1795273533,
-  "tech": "AI/ML",
-  "title": "Accounting AI Solution Engineer Intern - Summer 2027",
   "us": true,
   "was": "needs review: degree"
  },
@@ -319,69 +146,6 @@
   "title": "Security Software Engineer Intern",
   "us": true,
   "was": "needs review: grad"
- },
- "smule|applied research scientist intern": {
-  "company": "Smule",
-  "confidence": 92,
-  "jd_hash": "e8500306f74d3533",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Degree (B.S., M.S., or Ph.D.) in Computer Science, Software Engineering, Electrical Engineering, or a related technical discipline, or currently pursuing one."
-  },
-  "read_at": 1795176084,
-  "tech": "AI/ML",
-  "title": "Applied Research Scientist Intern",
-  "us": true,
-  "was": "needs review: cpt, sponsorship"
- },
- "smule|machine learning engineer intern": {
-  "company": "Smule",
-  "confidence": 92,
-  "jd_hash": "fa297097d61ff4fc",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Degree (B.S., M.S., or Ph.D.) in Computer Science, Software Engineering, Electrical Engineering, or a related technical discipline, or currently pursuing one."
-  },
-  "read_at": 1795176084,
-  "tech": "AI/ML",
-  "title": "Machine Learning Engineer Intern",
-  "us": true,
-  "was": "needs review: cpt, sponsorship"
- },
- "smule|research engineer intern": {
-  "company": "Smule",
-  "confidence": 88,
-  "jd_hash": "5ca45824864fb3a0",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Degree (B.S., M.S., or Ph.D.) in Computer Science, Software Engineering, Electrical Engineering, or a related technical discipline, or currently pursuing one."
-  },
-  "read_at": 1795176084,
-  "tech": "AI/ML",
-  "title": "Research Engineer Intern",
-  "us": true,
-  "was": "needs review: cpt, sponsorship"
  },
  "ssr|gis intern": {
   "company": "SSR",
@@ -424,71 +188,6 @@
   "title": "Algorithms Intern",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
- },
- "state street|state street investment management fixed income technology 2027 summer internship": {
-  "company": "State Street",
-  "confidence": 90,
-  "jd_hash": "948071c14948601f",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Is currently pursuing a Bachelor's / master's degree in computer science, Engineering, Finance, Information Systems."
-  },
-  "read_at": 1795153041,
-  "tech": "Software",
-  "title": "State Street Investment Management - Fixed Income Technology - 2027 Summer Internship",
-  "us": true,
-  "was": "needs review: degree"
- },
- "umb|ai intern": {
-  "company": "UMB",
-  "confidence": 93,
-  "jd_hash": "f79364eeedca13bd",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Data Science, AI, or a related technical field.",
-   "sponsorship": "Work Visa sponsorship is not available for this position."
-  },
-  "read_at": 1795190388,
-  "tech": "AI/ML",
-  "title": "AI Intern",
-  "us": true,
-  "was": "needs review: sponsorship"
- },
- "valeo|systems engineering co op software": {
-  "company": "Valeo",
-  "confidence": 90,
-  "jd_hash": "88438207f2bc1335",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ug_only",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "fails: degree",
-  "quotes": {
-   "degree": "You are a currently a student pursuing your Bachelor's Degree in Electrical Engineering, Computer Engineering, or related field.",
-   "sponsorship": "Applicants must be authorized to work in the US without the need for visa sponsorship now or in the future."
-  },
-  "read_at": 1795211899,
-  "tech": "Software",
-  "title": "Systems Engineering Co-Op (Software)",
-  "us": true,
-  "was": "match"
  },
  "werner electric supply|ai intern": {
   "company": "Werner Electric Supply",
