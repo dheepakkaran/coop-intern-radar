@@ -42,6 +42,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "first premier bank|premier collections analytics internship": {
+  "company": "First PREMIER Bank",
+  "confidence": 85,
+  "jd_hash": "2e6b3b48927818fd",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Applicant should be enrolled in or pursuing higher education"
+  },
+  "read_at": 1795466934,
+  "tech": "Data",
+  "title": "PREMIER Collections Analytics Internship",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "jabil|it programmer analyst intern": {
   "company": "Jabil",
   "confidence": 92,
