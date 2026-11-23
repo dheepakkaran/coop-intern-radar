@@ -1,1 +1,44 @@
-{}
+{
+ "artefact north america|ai strategy intern": {
+  "company": "Artefact North America",
+  "confidence": 85,
+  "jd_hash": "c6359bb0ccfc101b",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "not an AI/ML, Data or Software role",
+  "quotes": {
+   "degree": "This is a paid internship in New York for students in a Bachelor's or Master's programme."
+  },
+  "read_at": 1795408430,
+  "tech": null,
+  "title": "AI Strategy Intern",
+  "us": true,
+  "was": "match"
+ },
+ "linkedin job wrapping|ai strategy intern": {
+  "company": "LinkedIn Job Wrapping",
+  "confidence": 85,
+  "jd_hash": "c6359bb0ccfc101b",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "not an AI/ML, Data or Software role",
+  "quotes": {
+   "degree": "This is a paid internship in New York for students in a Bachelor's or Master's programme."
+  },
+  "read_at": 1795408430,
+  "tech": null,
+  "title": "AI Strategy Intern",
+  "us": true,
+  "was": "match"
+ }
+}
