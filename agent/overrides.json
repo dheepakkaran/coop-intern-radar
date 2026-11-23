@@ -61,5 +61,26 @@
   "title": "Embedded Security Intern, Electronics Prototype",
   "us": true,
   "was": "needs review: degree"
+ },
+ "mitre|generative and agentic ai intern": {
+  "company": "MITRE",
+  "confidence": 88,
+  "jd_hash": "2c468fd4896139c3",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Must be a student enrolled full-time in an accredited degree-seeking program in Computer Science, Linguistics, Data Science, or a related degree and continue to be enrolled full-time the semester following the internship."
+  },
+  "read_at": 1795429747,
+  "tech": "AI/ML",
+  "title": "Generative and Agentic AI Intern",
+  "us": true,
+  "was": "needs review: degree"
  }
 }
