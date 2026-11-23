@@ -82,5 +82,28 @@
   "title": "Generative and Agentic AI Intern",
   "us": true,
   "was": "needs review: degree"
+ },
+ "motorola|mission critical networks software engineer summer 2027 internship": {
+  "company": "Motorola",
+  "confidence": 92,
+  "jd_hash": "e831910665e4f58d",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "cpt": "Must be a US Citizen, permanent resident or be an MS student with work authorization (F1 Visa on CPT accepted only for masters-level students).",
+   "degree": "Pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering or related field.",
+   "grad": "Must graduate on or after December 2027."
+  },
+  "read_at": 1795445998,
+  "tech": "Software",
+  "title": "Mission Critical Networks Software Engineer - Summer 2027 Internship",
+  "us": true,
+  "was": "needs review: citizenship, degree"
  }
 }
