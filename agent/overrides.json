@@ -149,5 +149,27 @@
   "title": "Mission Critical Networks Software Engineer - Summer 2027 Internship",
   "us": true,
   "was": "needs review: citizenship, degree"
+ },
+ "rockwell automation|intern software engineer": {
+  "company": "Rockwell Automation",
+  "confidence": 92,
+  "jd_hash": "b1c37bb30a6c3a95",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "You must be currently pursuing a bachelor's or advanced degree from an accredited college or university.",
+   "sponsorship": "We will not sponsor individuals for employment visas, now or in the future."
+  },
+  "read_at": 1795453219,
+  "tech": "Software",
+  "title": "Intern, Software Engineer",
+  "us": true,
+  "was": "needs review: degree"
  }
 }
