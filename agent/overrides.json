@@ -42,6 +42,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "jabil|it programmer analyst intern": {
+  "company": "Jabil",
+  "confidence": 92,
+  "jd_hash": "57367eb974e469a5",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing or recently completed a diploma, undergraduate, or postgraduate program in a relevant field."
+  },
+  "read_at": 1795465132,
+  "tech": "Software",
+  "title": "IT Programmer Analyst Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "jp morgan chase|2027 applied ai hr cdao summer associate": {
   "company": "JP Morgan Chase",
   "confidence": 95,
