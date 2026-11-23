@@ -171,5 +171,27 @@
   "title": "Intern, Software Engineer",
   "us": true,
   "was": "needs review: degree"
+ },
+ "samsung|software development engineer intern": {
+  "company": "Samsung",
+  "confidence": 90,
+  "jd_hash": "5e121cf9a59395c8",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a Bachelor's or Master's in Computer Science or a related field",
+   "sponsorship": "This role is not eligible for immigration sponsorship"
+  },
+  "read_at": 1795456819,
+  "tech": "Software",
+  "title": "Software Development Engineer - Intern",
+  "us": true,
+  "was": "needs review: degree"
  }
 }
