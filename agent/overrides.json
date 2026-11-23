@@ -193,5 +193,28 @@
   "title": "Software Development Engineer - Intern",
   "us": true,
   "was": "needs review: degree"
+ },
+ "state employees credit union secu|intern product strategy business intelligence analyst": {
+  "company": "State Employees' Credit Union (SECU)",
+  "confidence": 92,
+  "jd_hash": "69af33d760290a9b",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "rejected",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "fails: cpt",
+  "quotes": {
+   "cpt": "Authorized to work in the Unites States without Sponsorship now or in the future or without receiving CPT/OPT through university/college.",
+   "degree": "Must be a rising Sophomore, Junior, Senior or Graduate Student.",
+   "sponsorship": "Authorized to work in the Unites States without Sponsorship now or in the future or without receiving CPT/OPT through university/college."
+  },
+  "read_at": 1795461504,
+  "tech": "Data",
+  "title": "Intern \u2013 Product Strategy Business Intelligence Analyst",
+  "us": true,
+  "was": "match"
  }
 }
