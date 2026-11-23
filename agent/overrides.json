@@ -169,8 +169,8 @@
   "us": true,
   "was": "needs review: degree"
  },
- "motorola|mission critical networks software engineer summer 2027 internship": {
-  "company": "Motorola",
+ "motorola solutions|mission critical networks software engineer intern": {
+  "company": "Motorola Solutions",
   "confidence": 92,
   "jd_hash": "e831910665e4f58d",
   "labels": {
@@ -186,9 +186,9 @@
    "degree": "Pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering or related field.",
    "grad": "Must graduate on or after December 2027."
   },
-  "read_at": 1795445998,
+  "read_at": 1795470566,
   "tech": "Software",
-  "title": "Mission Critical Networks Software Engineer - Summer 2027 Internship",
+  "title": "Mission Critical Networks Software Engineer Intern",
   "us": true,
   "was": "needs review: citizenship, degree"
  },
