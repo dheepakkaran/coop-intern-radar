@@ -20,6 +20,50 @@
   "us": true,
   "was": "match"
  },
+ "cai|cybersecurity analyst intern": {
+  "company": "CAI",
+  "confidence": 88,
+  "jd_hash": "bae263b8f8393741",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Enrollment in or recent completion of a degree, certificate, or training program in Cybersecurity, Information Technology, Computer Science, or a related field",
+   "sponsorship": "Only candidates with work authorization that does not require sponsorship now or in the future will be considered."
+  },
+  "read_at": 1795449598,
+  "tech": "Software",
+  "title": "Cybersecurity Analyst Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "jp morgan chase|2027 applied ai hr cdao summer associate": {
+  "company": "JP Morgan Chase",
+  "confidence": 95,
+  "jd_hash": "2c8dd1f264ae985f",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research, Data Science, or a related quantitative field, with an expected graduation date between December 2027 and August 2028",
+   "grad": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research, Data Science, or a related quantitative field, with an expected graduation date between December 2027 and August 2028"
+  },
+  "read_at": 1795449598,
+  "tech": "AI/ML",
+  "title": "2027 Applied AI - HR CDAO - Summer Associate",
+  "us": true,
+  "was": "needs review: grad"
+ },
  "linkedin job wrapping|ai strategy intern": {
   "company": "LinkedIn Job Wrapping",
   "confidence": 85,
