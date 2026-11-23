@@ -40,5 +40,26 @@
   "title": "AI Strategy Intern",
   "us": true,
   "was": "match"
+ },
+ "mitre|embedded security intern electronics prototype": {
+  "company": "MITRE",
+  "confidence": 85,
+  "jd_hash": "7f29f1d9ea662d83",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Must be a student enrolled full-time in an accredited degree-seeking program in Electrical/Computer Engineering, Computer Science or a related degree and continue to be enrolled full-time the semester following the internship."
+  },
+  "read_at": 1795413830,
+  "tech": "Software",
+  "title": "Embedded Security Intern, Electronics Prototype",
+  "us": true,
+  "was": "needs review: degree"
  }
 }
