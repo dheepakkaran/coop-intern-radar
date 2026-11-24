@@ -42,6 +42,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "contoro|robotics software engineer intern autonomy automation": {
+  "company": "Contoro",
+  "confidence": 88,
+  "jd_hash": "fb416e1358056e95",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Are pursuing a degree in computer science, robotics, mechanical or electrical engineering, or a related field, with a strong software focus"
+  },
+  "read_at": 1795475021,
+  "tech": "Software",
+  "title": "Robotics Software Engineer Intern - Autonomy - Automation",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "first premier bank|premier collections analytics internship": {
   "company": "First PREMIER Bank",
   "confidence": 85,
@@ -62,6 +83,29 @@
   "title": "PREMIER Collections Analytics Internship",
   "us": true,
   "was": "needs review: degree"
+ },
+ "illumio|engineering intern security platforms": {
+  "company": "Illumio",
+  "confidence": 92,
+  "jd_hash": "94c80b0a8e3a628c",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "cpt": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered.",
+   "degree": "Current enrollment in a full-time bachelor's or master's program in computer science, software engineering, or a related technical field.",
+   "sponsorship": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered."
+  },
+  "read_at": 1795480457,
+  "tech": "Software",
+  "title": "Engineering Intern, Security Platforms",
+  "us": true,
+  "was": "needs review: cpt"
  },
  "jabil|it programmer analyst intern": {
   "company": "Jabil",
@@ -84,7 +128,7 @@
   "us": true,
   "was": "needs review: degree"
  },
- "jp morgan chase|2027 applied ai hr cdao summer associate": {
+ "jp morgan chase|applied ai intern hr cdao": {
   "company": "JP Morgan Chase",
   "confidence": 95,
   "jd_hash": "2c8dd1f264ae985f",
@@ -100,11 +144,32 @@
    "degree": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research, Data Science, or a related quantitative field, with an expected graduation date between December 2027 and August 2028",
    "grad": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research, Data Science, or a related quantitative field, with an expected graduation date between December 2027 and August 2028"
   },
-  "read_at": 1795449598,
+  "read_at": 1795480457,
   "tech": "AI/ML",
-  "title": "2027 Applied AI - HR CDAO - Summer Associate",
+  "title": "Applied AI Intern - HR CDAO",
   "us": true,
   "was": "needs review: grad"
+ },
+ "lifeway|software engineer intern full stack back end": {
+  "company": "Lifeway",
+  "confidence": 90,
+  "jd_hash": "385a25ade14a89c6",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Eligibility : Candidates must be enrolled in an undergraduate or graduate program and have completed at least two years of study by the internship start date."
+  },
+  "read_at": 1795480457,
+  "tech": "Software",
+  "title": "Software Engineer Intern - Full Stack - Back-End",
+  "us": true,
+  "was": "fails: grad"
  },
  "linkedin job wrapping|ai strategy intern": {
   "company": "LinkedIn Job Wrapping",
