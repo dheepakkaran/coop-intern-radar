@@ -63,9 +63,9 @@
   "us": true,
   "was": "needs review: degree"
  },
- "illumio|engineering intern security platforms": {
+ "illumio|security platforms engineer intern security platforms": {
   "company": "Illumio",
-  "confidence": 92,
+  "confidence": 85,
   "jd_hash": "94c80b0a8e3a628c",
   "labels": {
    "citizenship": "not_required",
@@ -80,9 +80,9 @@
    "degree": "Current enrollment in a full-time bachelor's or master's program in computer science, software engineering, or a related technical field.",
    "sponsorship": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered."
   },
-  "read_at": 1795480457,
+  "read_at": 1795490178,
   "tech": "Software",
-  "title": "Engineering Intern, Security Platforms",
+  "title": "Security Platforms Engineer Intern - Security Platforms",
   "us": true,
   "was": "needs review: cpt"
  },
