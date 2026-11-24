@@ -1,25 +1,4 @@
 {
- "artefact north america|ai strategy intern": {
-  "company": "Artefact North America",
-  "confidence": 85,
-  "jd_hash": "c6359bb0ccfc101b",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "not an AI/ML, Data or Software role",
-  "quotes": {
-   "degree": "This is a paid internship in New York for students in a Bachelor's or Master's programme."
-  },
-  "read_at": 1795408430,
-  "tech": null,
-  "title": "AI Strategy Intern",
-  "us": true,
-  "was": "match"
- },
  "cai|cybersecurity analyst intern": {
   "company": "CAI",
   "confidence": 88,
@@ -173,27 +152,6 @@
   "us": true,
   "was": "fails: grad"
  },
- "linkedin job wrapping|ai strategy intern": {
-  "company": "LinkedIn Job Wrapping",
-  "confidence": 85,
-  "jd_hash": "c6359bb0ccfc101b",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "not an AI/ML, Data or Software role",
-  "quotes": {
-   "degree": "This is a paid internship in New York for students in a Bachelor's or Master's programme."
-  },
-  "read_at": 1795408430,
-  "tech": null,
-  "title": "AI Strategy Intern",
-  "us": true,
-  "was": "match"
- },
  "meijer|information technology intern summer 2027": {
   "company": "Meijer",
   "confidence": 85,
@@ -258,6 +216,27 @@
   "title": "Mission Critical Networks Software Engineer Intern",
   "us": true,
   "was": "needs review: citizenship, degree"
+ },
+ "motorola|software engineering intern 2027 internship program": {
+  "company": "Motorola",
+  "confidence": 95,
+  "jd_hash": "00dcfb2fa5bae53e",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a Bachelor's or Master's Degree in Computer Science, Computer Engineering, or a related technical discipline."
+  },
+  "read_at": 1795537286,
+  "tech": "Software",
+  "title": "Software Engineering Intern - 2027 Internship Program",
+  "us": true,
+  "was": "needs review: degree"
  },
  "rockwell automation|intern software engineer": {
   "company": "Rockwell Automation",
