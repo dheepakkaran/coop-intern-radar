@@ -64,6 +64,29 @@
   "us": true,
   "was": "needs review: citizenship, sponsorship"
  },
+ "great american insurance company|quality assurance intern summer 2027": {
+  "company": "Great American Insurance Company",
+  "confidence": 85,
+  "jd_hash": "1d24c619a50ab9be",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Pursuing a degree In Computer Science, Business Administration (with technical focus), or related",
+   "grad": "2028 graduation year preferred",
+   "sponsorship": "Applicants must be authorized to work in the United States without the need for current or future sponsorship."
+  },
+  "read_at": 1795553782,
+  "tech": "Software",
+  "title": "Quality Assurance Intern - Summer 2027",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "illumio|security platforms engineer intern security platforms": {
   "company": "Illumio",
   "confidence": 85,
