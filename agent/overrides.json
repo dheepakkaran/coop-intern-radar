@@ -63,6 +63,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "general dynamics information technology|gdit summer internship program summer 2027 ai ml software development and engineering internship": {
+  "company": "General Dynamics Information Technology",
+  "confidence": 90,
+  "jd_hash": "544fc2b9a947acf2",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in an associate's, bachelor's or master's degree program in computer science, IT, engineering, or other STEM field from a United States-based college or university.",
+   "sponsorship": "Sponsorship is not available for this role."
+  },
+  "read_at": 1795533679,
+  "tech": "AI/ML",
+  "title": "GDIT Summer Internship Program - Summer 2027 AI/ML Software Development and Engineering Internship",
+  "us": true,
+  "was": "needs review: citizenship, sponsorship"
+ },
  "illumio|security platforms engineer intern security platforms": {
   "company": "Illumio",
   "confidence": 85,
