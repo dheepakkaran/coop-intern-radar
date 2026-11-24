@@ -238,6 +238,27 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "nasdaq|data engineering intern 2027 summer internship": {
+  "company": "Nasdaq",
+  "confidence": 90,
+  "jd_hash": "41782b8d7f3873d7",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing or recently completed a degree in computer science or related area."
+  },
+  "read_at": 1795540887,
+  "tech": "Data",
+  "title": "Data Engineering Intern - 2027 Summer Internship",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "rockwell automation|intern software engineer": {
   "company": "Rockwell Automation",
   "confidence": 92,
