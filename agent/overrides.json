@@ -303,6 +303,28 @@
   "us": true,
   "was": "needs review: degree"
  },
+ "royal bank of canada|summer 2027 us wealth management technology internship": {
+  "company": "Royal Bank of Canada",
+  "confidence": 93,
+  "jd_hash": "97d4947490445bc3",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Must be a Sophomore, Junior, or in a Masters program (graduation date December 2027 \u2013 May 2029) with a major in Software Engineering, Computer Science, Management Information Systems, Data Science, or other technology-related disciplines",
+   "grad": "Must be a Sophomore, Junior, or in a Masters program (graduation date December 2027 \u2013 May 2029) with a major in Software Engineering, Computer Science, Management Information Systems, Data Science, or other technology-related disciplines"
+  },
+  "read_at": 1795551977,
+  "tech": "Software",
+  "title": "Summer 2027 US Wealth Management Technology Internship",
+  "us": true,
+  "was": "needs review: grad"
+ },
  "samsung|software development engineer intern": {
   "company": "Samsung",
   "confidence": 90,
