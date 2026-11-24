@@ -107,6 +107,29 @@
   "us": true,
   "was": "needs review: cpt"
  },
+ "illumio|technical product management intern": {
+  "company": "Illumio",
+  "confidence": 85,
+  "jd_hash": "d5052750a89cb34c",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "welcome",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "no_sponsorship"
+  },
+  "now": "match",
+  "quotes": {
+   "cpt": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered.",
+   "degree": "Currently enrolled in a full-time Bachelor's or Graduate degree program in Computer Science, Engineering, Information Technology, Network Security, or a related field",
+   "sponsorship": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered."
+  },
+  "read_at": 1795484747,
+  "tech": "AI/ML",
+  "title": "Technical Product Management Intern",
+  "us": true,
+  "was": "needs review: cpt"
+ },
  "jabil|it programmer analyst intern": {
   "company": "Jabil",
   "confidence": 92,
