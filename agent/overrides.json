@@ -130,28 +130,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "jp morgan chase|applied ai intern hr cdao": {
-  "company": "JP Morgan Chase",
-  "confidence": 95,
-  "jd_hash": "2c8dd1f264ae985f",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research, Data Science, or a related quantitative field, with an expected graduation date between December 2027 and August 2028",
-   "grad": "Currently enrolled in a PhD or MS program in Computer Science, Electrical Engineering, Mathematics, Operations Research, Data Science, or a related quantitative field, with an expected graduation date between December 2027 and August 2028"
-  },
-  "read_at": 1795480457,
-  "tech": "AI/ML",
-  "title": "Applied AI Intern - HR CDAO",
-  "us": true,
-  "was": "needs review: grad"
- },
  "lifeway|software engineer intern full stack back end": {
   "company": "Lifeway",
   "confidence": 90,
@@ -194,26 +172,26 @@
   "us": true,
   "was": "match"
  },
- "mitre|embedded security intern electronics prototype": {
-  "company": "MITRE",
+ "meijer|information technology intern summer 2027": {
+  "company": "Meijer",
   "confidence": 85,
-  "jd_hash": "7f29f1d9ea662d83",
+  "jd_hash": "a7192e7306662a94",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
-   "degree": "ms_ok",
+   "degree": "ug_only",
    "grad": "not_stated",
    "sponsorship": "silent"
   },
-  "now": "match",
+  "now": "fails: degree",
   "quotes": {
-   "degree": "Must be a student enrolled full-time in an accredited degree-seeking program in Electrical/Computer Engineering, Computer Science or a related degree and continue to be enrolled full-time the semester following the internship."
+   "degree": "Progress toward a bachelor's degree in Information Systems, Computer Science, Computer Engineering, Data Science, or a related field"
   },
-  "read_at": 1795413830,
+  "read_at": 1795531849,
   "tech": "Software",
-  "title": "Embedded Security Intern, Electronics Prototype",
+  "title": "Information Technology Intern- Summer 2027",
   "us": true,
-  "was": "needs review: degree"
+  "was": "match"
  },
  "mitre|generative and agentic ai intern": {
   "company": "MITRE",
@@ -322,6 +300,27 @@
   "read_at": 1795456819,
   "tech": "Software",
   "title": "Software Development Engineer - Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
+ "servco pacific|cybersecurity analyst intern": {
+  "company": "Servco Pacific",
+  "confidence": 90,
+  "jd_hash": "a547d78f5af25359",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in or graduated within the last 6 months from a college/university program"
+  },
+  "read_at": 1795531849,
+  "tech": "Software",
+  "title": "Cybersecurity Analyst Intern",
   "us": true,
   "was": "needs review: degree"
  },
