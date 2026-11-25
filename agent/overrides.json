@@ -169,9 +169,9 @@
   "us": true,
   "was": "needs review: degree"
  },
- "nasdaq|data engineering intern 2027 summer internship": {
+ "nasdaq|data engineering intern": {
   "company": "Nasdaq",
-  "confidence": 90,
+  "confidence": 92,
   "jd_hash": "41782b8d7f3873d7",
   "labels": {
    "citizenship": "not_required",
@@ -184,9 +184,9 @@
   "quotes": {
    "degree": "Currently pursuing or recently completed a degree in computer science or related area."
   },
-  "read_at": 1795540887,
+  "read_at": 1795638291,
   "tech": "Data",
-  "title": "Data Engineering Intern - 2027 Summer Internship",
+  "title": "Data Engineering Intern",
   "us": true,
   "was": "needs review: degree"
  },
