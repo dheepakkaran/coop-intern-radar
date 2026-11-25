@@ -43,6 +43,28 @@
   "us": true,
   "was": "needs review: citizenship, sponsorship"
  },
+ "lightmatter|design verification intern summer 2027": {
+  "company": "Lightmatter",
+  "confidence": 85,
+  "jd_hash": "24a9567c6c8fcce5",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently enrolled in a Graduate Engineering program such as Electrical Engineering, Computer Engineering, or ECE degree",
+   "tech": "Create UVM test benches for subsystem-level verification and provide support for full-chip verification."
+  },
+  "read_at": 1795571245,
+  "tech": "AI/ML",
+  "title": "Design Verification, Intern Summer 2027",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "medpace|clinical intelligence intern": {
   "company": "Medpace",
   "confidence": 88,
