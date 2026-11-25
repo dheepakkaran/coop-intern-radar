@@ -21,27 +21,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "contoro|robotics software engineer intern autonomy automation": {
-  "company": "Contoro",
-  "confidence": 88,
-  "jd_hash": "fb416e1358056e95",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Are pursuing a degree in computer science, robotics, mechanical or electrical engineering, or a related field, with a strong software focus"
-  },
-  "read_at": 1795475021,
-  "tech": "Software",
-  "title": "Robotics Software Engineer Intern - Autonomy - Automation",
-  "us": true,
-  "was": "needs review: degree"
- },
  "general dynamics information technology|gdit summer internship program summer 2027 ai ml software development and engineering internship": {
   "company": "General Dynamics Information Technology",
   "confidence": 90,
@@ -64,56 +43,10 @@
   "us": true,
   "was": "needs review: citizenship, sponsorship"
  },
- "illumio|security platforms engineer intern security platforms": {
-  "company": "Illumio",
-  "confidence": 85,
-  "jd_hash": "94c80b0a8e3a628c",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "welcome",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "cpt": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered.",
-   "degree": "Current enrollment in a full-time bachelor's or master's program in computer science, software engineering, or a related technical field.",
-   "sponsorship": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered."
-  },
-  "read_at": 1795490178,
-  "tech": "Software",
-  "title": "Security Platforms Engineer Intern - Security Platforms",
-  "us": true,
-  "was": "needs review: cpt"
- },
- "illumio|technical product management intern": {
-  "company": "Illumio",
-  "confidence": 85,
-  "jd_hash": "d5052750a89cb34c",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "welcome",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "cpt": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered.",
-   "degree": "Currently enrolled in a full-time Bachelor's or Graduate degree program in Computer Science, Engineering, Information Technology, Network Security, or a related field",
-   "sponsorship": "Illumio does not provide immigration sponsorship for internship positions; however, candidates who are independently eligible for employment authorization, including eligible F-1 students who obtain appropriate CPT or OPT authorization, may be considered."
-  },
-  "read_at": 1795484747,
-  "tech": "AI/ML",
-  "title": "Technical Product Management Intern",
-  "us": true,
-  "was": "needs review: cpt"
- },
- "jabil|it programmer analyst intern": {
-  "company": "Jabil",
-  "confidence": 92,
-  "jd_hash": "57367eb974e469a5",
+ "medpace|clinical intelligence intern": {
+  "company": "Medpace",
+  "confidence": 88,
+  "jd_hash": "c35d66e43ab5820f",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -123,55 +56,13 @@
   },
   "now": "match",
   "quotes": {
-   "degree": "Currently pursuing or recently completed a diploma, undergraduate, or postgraduate program in a relevant field."
+   "degree": "Pursuing Bachelor's or Master's degree in Business, Life Science, Computer Science, or related degree with emphasis (minor or experience) in Analytics"
   },
-  "read_at": 1795465132,
-  "tech": "Software",
-  "title": "IT Programmer Analyst Intern",
+  "read_at": 1795567644,
+  "tech": "Data",
+  "title": "Clinical Intelligence Intern",
   "us": true,
-  "was": "needs review: degree"
- },
- "lifeway|software engineer intern full stack back end": {
-  "company": "Lifeway",
-  "confidence": 90,
-  "jd_hash": "385a25ade14a89c6",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Eligibility : Candidates must be enrolled in an undergraduate or graduate program and have completed at least two years of study by the internship start date."
-  },
-  "read_at": 1795480457,
-  "tech": "Software",
-  "title": "Software Engineer Intern - Full Stack - Back-End",
-  "us": true,
-  "was": "fails: grad"
- },
- "lightmatter|design verification intern summer 2027": {
-  "company": "Lightmatter",
-  "confidence": 85,
-  "jd_hash": "24a9567c6c8fcce5",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a Graduate Engineering program such as Electrical Engineering, Computer Engineering, or ECE degree"
-  },
-  "read_at": 1795565844,
-  "tech": "AI/ML",
-  "title": "Design Verification, Intern Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
+  "was": "not an AI/ML, Data or Software role"
  },
  "meijer|information technology intern summer 2027": {
   "company": "Meijer",
@@ -193,27 +84,6 @@
   "title": "Information Technology Intern- Summer 2027",
   "us": true,
   "was": "match"
- },
- "mitre|generative and agentic ai intern": {
-  "company": "MITRE",
-  "confidence": 88,
-  "jd_hash": "2c468fd4896139c3",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Must be a student enrolled full-time in an accredited degree-seeking program in Computer Science, Linguistics, Data Science, or a related degree and continue to be enrolled full-time the semester following the internship."
-  },
-  "read_at": 1795429747,
-  "tech": "AI/ML",
-  "title": "Generative and Agentic AI Intern",
-  "us": true,
-  "was": "needs review: degree"
  },
  "motorola solutions|mission critical networks software engineer intern": {
   "company": "Motorola Solutions",
@@ -303,6 +173,27 @@
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
+ "neuralink|electrical test engineer intern": {
+  "company": "Neuralink",
+  "confidence": 85,
+  "jd_hash": "91bd75e2c1f520b3",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Currently pursuing a degree in Electrical Engineering, Computer Engineering, or a related field"
+  },
+  "read_at": 1795567644,
+  "tech": "Software",
+  "title": "Electrical Test Engineer Intern",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "rockwell automation|intern software engineer": {
   "company": "Rockwell Automation",
   "confidence": 92,
@@ -388,27 +279,6 @@
   "read_at": 1795456819,
   "tech": "Software",
   "title": "Software Development Engineer - Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "servco pacific|cybersecurity analyst intern": {
-  "company": "Servco Pacific",
-  "confidence": 90,
-  "jd_hash": "a547d78f5af25359",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in or graduated within the last 6 months from a college/university program"
-  },
-  "read_at": 1795531849,
-  "tech": "Software",
-  "title": "Cybersecurity Analyst Intern",
   "us": true,
   "was": "needs review: degree"
  },
