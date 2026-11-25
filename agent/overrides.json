@@ -1,26 +1,4 @@
 {
- "cai|cybersecurity analyst intern": {
-  "company": "CAI",
-  "confidence": 88,
-  "jd_hash": "bae263b8f8393741",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Enrollment in or recent completion of a degree, certificate, or training program in Cybersecurity, Information Technology, Computer Science, or a related field",
-   "sponsorship": "Only candidates with work authorization that does not require sponsorship now or in the future will be considered."
-  },
-  "read_at": 1795449598,
-  "tech": "Software",
-  "title": "Cybersecurity Analyst Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
  "general dynamics information technology|gdit summer internship program summer 2027 ai ml software development and engineering internship": {
   "company": "General Dynamics Information Technology",
   "confidence": 90,
@@ -46,7 +24,7 @@
  "lightmatter|design verification intern summer 2027": {
   "company": "Lightmatter",
   "confidence": 85,
-  "jd_hash": "24a9567c6c8fcce5",
+  "jd_hash": "1bf8e72fd87e5e31",
   "labels": {
    "citizenship": "not_required",
    "cpt": "silent",
@@ -56,10 +34,9 @@
   },
   "now": "match",
   "quotes": {
-   "degree": "Currently enrolled in a Graduate Engineering program such as Electrical Engineering, Computer Engineering, or ECE degree",
-   "tech": "Create UVM test benches for subsystem-level verification and provide support for full-chip verification."
+   "degree": "Currently enrolled in a Graduate Engineering program such as Electrical Engineering, Computer Engineering, or ECE degree"
   },
-  "read_at": 1795571245,
+  "read_at": 1795618922,
   "tech": "AI/ML",
   "title": "Design Verification, Intern Summer 2027",
   "us": true,
@@ -106,29 +83,6 @@
   "title": "Information Technology Intern- Summer 2027",
   "us": true,
   "was": "match"
- },
- "motorola solutions|mission critical networks software engineer intern": {
-  "company": "Motorola Solutions",
-  "confidence": 92,
-  "jd_hash": "e831910665e4f58d",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "welcome",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "cpt": "Must be a US Citizen, permanent resident or be an MS student with work authorization (F1 Visa on CPT accepted only for masters-level students).",
-   "degree": "Pursuing a Bachelor's or Master's degree in Computer Science, Computer Engineering or related field.",
-   "grad": "Must graduate on or after December 2027."
-  },
-  "read_at": 1795470566,
-  "tech": "Software",
-  "title": "Mission Critical Networks Software Engineer Intern",
-  "us": true,
-  "was": "needs review: citizenship, degree"
  },
  "motorola|software engineering intern 2027 internship program": {
   "company": "Motorola",
@@ -216,50 +170,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "rockwell automation|intern software engineer": {
-  "company": "Rockwell Automation",
-  "confidence": 92,
-  "jd_hash": "b1c37bb30a6c3a95",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "You must be currently pursuing a bachelor's or advanced degree from an accredited college or university.",
-   "sponsorship": "We will not sponsor individuals for employment visas, now or in the future."
-  },
-  "read_at": 1795453219,
-  "tech": "Software",
-  "title": "Intern, Software Engineer",
-  "us": true,
-  "was": "needs review: degree"
- },
- "rockwell automation|software engineer intern": {
-  "company": "Rockwell Automation",
-  "confidence": 93,
-  "jd_hash": "b1c37bb30a6c3a95",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "You must be currently pursuing a bachelor's or advanced degree from an accredited college or university.",
-   "sponsorship": "We will not sponsor individuals for employment visas, now or in the future."
-  },
-  "read_at": 1795488378,
-  "tech": "Software",
-  "title": "Software Engineer Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
  "royal bank of canada|summer 2027 us wealth management technology internship": {
   "company": "Royal Bank of Canada",
   "confidence": 93,
@@ -281,50 +191,5 @@
   "title": "Summer 2027 US Wealth Management Technology Internship",
   "us": true,
   "was": "needs review: grad"
- },
- "samsung|software development engineer intern": {
-  "company": "Samsung",
-  "confidence": 90,
-  "jd_hash": "5e121cf9a59395c8",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a Bachelor's or Master's in Computer Science or a related field",
-   "sponsorship": "This role is not eligible for immigration sponsorship"
-  },
-  "read_at": 1795456819,
-  "tech": "Software",
-  "title": "Software Development Engineer - Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "state employees credit union secu|intern product strategy business intelligence analyst": {
-  "company": "State Employees' Credit Union (SECU)",
-  "confidence": 92,
-  "jd_hash": "69af33d760290a9b",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "rejected",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "fails: cpt",
-  "quotes": {
-   "cpt": "Authorized to work in the Unites States without Sponsorship now or in the future or without receiving CPT/OPT through university/college.",
-   "degree": "Must be a rising Sophomore, Junior, Senior or Graduate Student.",
-   "sponsorship": "Authorized to work in the Unites States without Sponsorship now or in the future or without receiving CPT/OPT through university/college."
-  },
-  "read_at": 1795461504,
-  "tech": "Data",
-  "title": "Intern \u2013 Product Strategy Business Intelligence Analyst",
-  "us": true,
-  "was": "match"
  }
 }
