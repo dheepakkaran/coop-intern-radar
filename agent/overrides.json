@@ -65,6 +65,25 @@
   "us": true,
   "was": "needs review: citizenship, sponsorship"
  },
+ "kla|internship computational electromagnetics": {
+  "company": "KLA",
+  "confidence": 88,
+  "jd_hash": "a79163366a213324",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "unclear",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {},
+  "read_at": 1795631517,
+  "tech": "AI/ML",
+  "title": "Internship: Computational & Electromagnetics",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "marvell|applied ai ml research scientist intern": {
   "company": "Marvell",
   "confidence": 88,
