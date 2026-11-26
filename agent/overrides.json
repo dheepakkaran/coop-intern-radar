@@ -43,9 +43,9 @@
   "us": true,
   "was": "needs review: sponsorship"
  },
- "first premier bank|premier it architecture internship": {
+ "first premier bank|it architecture intern": {
   "company": "First PREMIER Bank",
-  "confidence": 88,
+  "confidence": 85,
   "jd_hash": "ed2f18bb0849e862",
   "labels": {
    "citizenship": "not_required",
@@ -58,9 +58,9 @@
   "quotes": {
    "degree": "Applicants should be enrolled in or pursuing higher education."
   },
-  "read_at": 1795627916,
+  "read_at": 1795734909,
   "tech": "AI/ML",
-  "title": "PREMIER IT Architecture Internship",
+  "title": "IT Architecture Intern",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
@@ -124,27 +124,6 @@
   "title": "Internship: Computational & Electromagnetics",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
- },
- "lightmatter|design verification intern summer 2027": {
-  "company": "Lightmatter",
-  "confidence": 85,
-  "jd_hash": "1bf8e72fd87e5e31",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a Graduate Engineering program such as Electrical Engineering, Computer Engineering, or ECE degree"
-  },
-  "read_at": 1795720508,
-  "tech": "AI/ML",
-  "title": "Design Verification, Intern Summer 2027",
-  "us": true,
-  "was": "needs review: degree"
  },
  "lucid motors|salesforce engineer intern": {
   "company": "Lucid Motors",
