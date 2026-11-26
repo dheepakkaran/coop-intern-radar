@@ -87,6 +87,25 @@
   "us": true,
   "was": "needs review: citizenship, sponsorship"
  },
+ "kla|computational electromagnetics intern": {
+  "company": "KLA",
+  "confidence": 88,
+  "jd_hash": "a79163366a213324",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "unclear",
+   "grad": "not_stated",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {},
+  "read_at": 1795674455,
+  "tech": "AI/ML",
+  "title": "Computational & Electromagnetics Intern",
+  "us": true,
+  "was": "not an AI/ML, Data or Software role"
+ },
  "kla|internship computational electromagnetics": {
   "company": "KLA",
   "confidence": 88,
