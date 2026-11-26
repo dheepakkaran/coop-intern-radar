@@ -168,27 +168,6 @@
   "us": true,
   "was": "needs review: grad"
  },
- "medpace|clinical intelligence intern": {
-  "company": "Medpace",
-  "confidence": 88,
-  "jd_hash": "c35d66e43ab5820f",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing Bachelor's or Master's degree in Business, Life Science, Computer Science, or related degree with emphasis (minor or experience) in Analytics"
-  },
-  "read_at": 1795567644,
-  "tech": "Data",
-  "title": "Clinical Intelligence Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
  "neuralink|electrical test engineer intern": {
   "company": "Neuralink",
   "confidence": 85,
