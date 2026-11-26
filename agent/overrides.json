@@ -65,28 +65,6 @@
   "us": true,
   "was": "match"
  },
- "general dynamics information technology|gdit summer internship program summer 2027 ai ml software development and engineering internship": {
-  "company": "General Dynamics Information Technology",
-  "confidence": 90,
-  "jd_hash": "544fc2b9a947acf2",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in an associate's, bachelor's or master's degree program in computer science, IT, engineering, or other STEM field from a United States-based college or university.",
-   "sponsorship": "Sponsorship is not available for this role."
-  },
-  "read_at": 1795533679,
-  "tech": "AI/ML",
-  "title": "GDIT Summer Internship Program - Summer 2027 AI/ML Software Development and Engineering Internship",
-  "us": true,
-  "was": "needs review: citizenship, sponsorship"
- },
  "kla|computational electromagnetics intern": {
   "company": "KLA",
   "confidence": 88,
@@ -165,92 +143,6 @@
   "read_at": 1795567644,
   "tech": "Data",
   "title": "Clinical Intelligence Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "meijer|information technology intern summer 2027": {
-  "company": "Meijer",
-  "confidence": 85,
-  "jd_hash": "a7192e7306662a94",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ug_only",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "fails: degree",
-  "quotes": {
-   "degree": "Progress toward a bachelor's degree in Information Systems, Computer Science, Computer Engineering, Data Science, or a related field"
-  },
-  "read_at": 1795531849,
-  "tech": "Software",
-  "title": "Information Technology Intern- Summer 2027",
-  "us": true,
-  "was": "match"
- },
- "motorola|software engineering intern 2027 internship program": {
-  "company": "Motorola",
-  "confidence": 95,
-  "jd_hash": "00dcfb2fa5bae53e",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's Degree in Computer Science, Computer Engineering, or a related technical discipline."
-  },
-  "read_at": 1795537286,
-  "tech": "Software",
-  "title": "Software Engineering Intern - 2027 Internship Program",
-  "us": true,
-  "was": "needs review: degree"
- },
- "nasdaq|data engineering intern": {
-  "company": "Nasdaq",
-  "confidence": 92,
-  "jd_hash": "41782b8d7f3873d7",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing or recently completed a degree in computer science or related area."
-  },
-  "read_at": 1795638291,
-  "tech": "Data",
-  "title": "Data Engineering Intern",
-  "us": true,
-  "was": "needs review: degree"
- },
- "national interstate insurance|quality assurance intern": {
-  "company": "National Interstate Insurance",
-  "confidence": 85,
-  "jd_hash": "1d24c619a50ab9be",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Pursuing a degree In Computer Science, Business Administration (with technical focus), or related 2028 graduation year preferred",
-   "grad": "Pursuing a degree In Computer Science, Business Administration (with technical focus), or related 2028 graduation year preferred",
-   "sponsorship": "This position is not eligible for employment visa sponsorship."
-  },
-  "read_at": 1795565844,
-  "tech": "Software",
-  "title": "Quality Assurance Intern",
   "us": true,
   "was": "not an AI/ML, Data or Software role"
  },
@@ -361,27 +253,5 @@
   "title": "Software Engineering Internship - Summer 2027",
   "us": true,
   "was": "needs review: degree"
- },
- "royal bank of canada|summer 2027 us wealth management technology internship": {
-  "company": "Royal Bank of Canada",
-  "confidence": 93,
-  "jd_hash": "97d4947490445bc3",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Must be a Sophomore, Junior, or in a Masters program (graduation date December 2027 \u2013 May 2029) with a major in Software Engineering, Computer Science, Management Information Systems, Data Science, or other technology-related disciplines",
-   "grad": "Must be a Sophomore, Junior, or in a Masters program (graduation date December 2027 \u2013 May 2029) with a major in Software Engineering, Computer Science, Management Information Systems, Data Science, or other technology-related disciplines"
-  },
-  "read_at": 1795551977,
-  "tech": "Software",
-  "title": "Summer 2027 US Wealth Management Technology Internship",
-  "us": true,
-  "was": "needs review: grad"
  }
 }
