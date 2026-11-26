@@ -1,4 +1,26 @@
 {
+ "atoms careers page|software engineering intern 2027 summer term": {
+  "company": "ATOMS Careers page",
+  "confidence": 93,
+  "jd_hash": "87f76e1f4cdb1241",
+  "labels": {
+   "citizenship": "not_required",
+   "cpt": "silent",
+   "degree": "ms_ok",
+   "grad": "fits",
+   "sponsorship": "silent"
+  },
+  "now": "match",
+  "quotes": {
+   "degree": "Actively pursuing a Bachelor/Master in Computer Science, Engineering or a related technical field",
+   "grad": "Graduating in Fall/Winter 2027 or Spring/Summer 2028."
+  },
+  "read_at": 1795722308,
+  "tech": "Software",
+  "title": "Software Engineering Intern - 2027 Summer Term",
+  "us": true,
+  "was": "needs review: degree"
+ },
  "coderabbit|software engineer intern": {
   "company": "CodeRabbit",
   "confidence": 90,
