@@ -21,28 +21,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "coderabbit|software engineer intern": {
-  "company": "CodeRabbit",
-  "confidence": 90,
-  "jd_hash": "c8a2ce38b3365b84",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Software Engineering, or a related field, with graduation in 2027 or 2028 [confirm]",
-   "grad": "Currently pursuing a Bachelor's or Master's degree in Computer Science, Software Engineering, or a related field, with graduation in 2027 or 2028 [confirm]"
-  },
-  "read_at": 1795656415,
-  "tech": "Software",
-  "title": "Software Engineer Intern",
-  "us": true,
-  "was": "needs review: sponsorship"
- },
  "first premier bank|it architecture intern": {
   "company": "First PREMIER Bank",
   "confidence": 85,
@@ -168,27 +146,6 @@
   "title": "Applied AI/ML Research Scientist Intern",
   "us": true,
   "was": "needs review: grad"
- },
- "neuralink|electrical test engineer intern": {
-  "company": "Neuralink",
-  "confidence": 85,
-  "jd_hash": "91bd75e2c1f520b3",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently pursuing a degree in Electrical Engineering, Computer Engineering, or a related field"
-  },
-  "read_at": 1795567644,
-  "tech": "Software",
-  "title": "Electrical Test Engineer Intern",
-  "us": true,
-  "was": "needs review: degree"
  },
  "occ|year round intern servicenow": {
   "company": "OCC",
