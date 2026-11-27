@@ -21,88 +21,6 @@
   "us": true,
   "was": "needs review: degree"
  },
- "first premier bank|it architecture intern": {
-  "company": "First PREMIER Bank",
-  "confidence": 85,
-  "jd_hash": "ed2f18bb0849e862",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Applicants should be enrolled in or pursuing higher education."
-  },
-  "read_at": 1795734909,
-  "tech": "AI/ML",
-  "title": "IT Architecture Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "generac|intern ai engineering": {
-  "company": "Generac",
-  "confidence": 92,
-  "jd_hash": "ddeb4cb90644c3bf",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "rejected",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "no_sponsorship"
-  },
-  "now": "fails: cpt",
-  "quotes": {
-   "cpt": "This position is not available to candidates who require H-1B, OPT, or other employment-based sponsorship.",
-   "degree": "Currently pursuing a Master's degree in Industrial Engineering, Manufacturing Engineering, Systems Engineering, Mechanical Engineering, Data Science, Operations Research, Supply Chain Analytics, Computer Engineering, or a related discipline.",
-   "sponsorship": "Candidates must be legally authorized to work in the United States without employer sponsorship now or in the future."
-  },
-  "read_at": 1795627916,
-  "tech": "AI/ML",
-  "title": "Intern AI Engineering",
-  "us": true,
-  "was": "match"
- },
- "kla|computational electromagnetics intern": {
-  "company": "KLA",
-  "confidence": 88,
-  "jd_hash": "a79163366a213324",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "unclear",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {},
-  "read_at": 1795674455,
-  "tech": "AI/ML",
-  "title": "Computational & Electromagnetics Intern",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
- "kla|internship computational electromagnetics": {
-  "company": "KLA",
-  "confidence": 88,
-  "jd_hash": "a79163366a213324",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "unclear",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {},
-  "read_at": 1795631517,
-  "tech": "AI/ML",
-  "title": "Internship: Computational & Electromagnetics",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
- },
  "lucid motors|salesforce engineer intern": {
   "company": "Lucid Motors",
   "confidence": 90,
@@ -124,50 +42,6 @@
   "title": "Salesforce Engineer Intern",
   "us": false,
   "was": "match"
- },
- "marvell|applied ai ml research scientist intern": {
-  "company": "Marvell",
-  "confidence": 88,
-  "jd_hash": "e63367cddaccc4b0",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "Currently enrolled in a Master's program in Computer Science, Electrical Engineering, Data Science, or a related field, with a research focus in machine learning, AI systems, or a related area with an expected graduation of December 2027- May 2028.",
-   "grad": "Currently enrolled in a Master's program in Computer Science, Electrical Engineering, Data Science, or a related field, with a research focus in machine learning, AI systems, or a related area with an expected graduation of December 2027- May 2028."
-  },
-  "read_at": 1795627916,
-  "tech": "AI/ML",
-  "title": "Applied AI/ML Research Scientist Intern",
-  "us": true,
-  "was": "needs review: grad"
- },
- "occ|year round intern servicenow": {
-  "company": "OCC",
-  "confidence": 85,
-  "jd_hash": "779cee49f5115543",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "fits",
-   "sponsorship": "silent"
-  },
-  "now": "match",
-  "quotes": {
-   "degree": "OCC's Year-Round Internship Program is a 12-month opportunity running from January through December and is open to both undergraduate and graduate students who are actively enrolled at a college or university.",
-   "grad": "Rising senior or second-year graduate student, graduating December 2027 or May/August 2028."
-  },
-  "read_at": 1795627916,
-  "tech": "Software",
-  "title": "Year-Round Intern - ServiceNow",
-  "us": true,
-  "was": "not an AI/ML, Data or Software role"
  },
  "opensesame|software engineer intern": {
   "company": "OpenSesame",
