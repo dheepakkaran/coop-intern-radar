@@ -20,27 +20,5 @@
   "title": "Software Engineer Intern",
   "us": true,
   "was": "needs review: degree"
- },
- "lucid motors|salesforce engineer intern": {
-  "company": "Lucid Motors",
-  "confidence": 90,
-  "jd_hash": "397f00d6be655b46",
-  "labels": {
-   "citizenship": "not_required",
-   "cpt": "silent",
-   "degree": "ms_ok",
-   "grad": "not_stated",
-   "sponsorship": "silent"
-  },
-  "now": "not US",
-  "quotes": {
-   "degree": "Currently enrolled in a Bachelor's or Master's program in Computer Science, Software Engineering, Information Technology, Business Information Management, Business Analysis, or a related field",
-   "us": "We're looking for an enthusiastic Salesforce Developer Intern to join our team in Europe."
-  },
-  "read_at": 1795705284,
-  "tech": "Software",
-  "title": "Salesforce Engineer Intern",
-  "us": false,
-  "was": "match"
  }
 }
